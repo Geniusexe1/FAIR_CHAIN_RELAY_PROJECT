@@ -61,23 +61,53 @@ Noise: `--sigma-shadow --corr --sigma-fast`. Link threshold: `--threshold`.
 
 Maps show clean + shadowing (an expectation surface); link readings add fast fading.
 
-## Measured: Rajant AG1-5250M pair (2026-10-07)
+## Parameters
 
-`rajant_link_quality.py`, 3 snapshots, two radios powered:
-
-| band | readings (dBm) | note |
+| | value | source |
 |---|---|---|
-| 5 GHz `wlan1` ch 161 | -67 -64 -64 / -63 -64 -63, mean **-64.2** | stable; the band InstaMesh routes over |
-| 2.4 GHz `wlan0` ch 1 | -40 -46 -52 / -25 -32 -37 | +-12 dB, 15 dB asymmetric - unusable for calibration |
+| P0 | **-60.8 dBm** | measured, see below |
+| n | 2 | paper (Seo et al., RA-L 2025) Fig. 6c |
+| alpha | 35 | paper Fig. 6c |
+| sigma_n (per-reading noise) | 3 dB | paper Table I |
+| threshold eta | -85 dBm | paper Table I |
+| link colours | > -65 green, -65..-85 yellow, < -85 red | paper Fig. 9 |
+| shadowing | 4 dB, 3 m correlation | ours (the paper's GP term has no published sigma) |
 
-`P0 = RSSI + 10 n log10(d)` needs the separation `d` at measurement time: -64.2 dBm at 1 m,
--54.7 at 3 m (n=2), -44.2 at 10 m (n=2). **Pending: the actual separation.**
+**P0, measured 2026-10-07:** Rajant Cardinal pair 1 m apart, antennas facing, 5 GHz ch161,
+10 snapshots: -61.4 / -60.2 dBm per direction, sd < 1 dB. At 1 m, log10(d) = 0, so this is P0
+directly. It is **31 dB below the paper's -30** on the same radio model, i.e. our TX power is
+configured low; free-space range to -85 is ~16 m instead of ~280 m. Re-measure if the radios
+are reconfigured. Every output also exists with the paper's P0 (`paperP0_*`).
 
-## Defaults are placeholders
+At the measured P0 the two-relay chain cannot cover the 43.7 m Phase 2 route: the head
+disconnects at ~30 m because ~14 m hops fall below -85 even with line of sight.
 
-`P0 = -40 dBm`, `n = 2.0`, `alpha = 20`, threshold `-85 dBm`. With `n = 2` the whole
-hospital is in range and the relays are never needed; `n = 3` makes them necessary.
-Replace with measured or paper values.
+## Live ROS 2 node
+
+Predicts every link from the robots' **current** positions in the sim.
+
+```bash
+rssi/ros/run_rssi_node.sh            # own container (fair_rssi), domain 42, --ipc host
+docker logs -f fair_rssi             # link table every 5 s
+```
+
+From any container on domain 42:
+
+| topic | type | content |
+|---|---|---|
+| `/rssi/chain` | Float32 | paper eq. (5): weakest hop of the fixed chain GCS > relay1 > relay2 > head |
+| `/rssi/end_to_end/<node>` | Float32 | best route from that node to the GCS through any robots |
+| `/rssi/link/<a>__<b>` | Float32 | one link, noisy |
+| `/rssi/links` | String (JSON) | everything: positions, clean + noisy links, routes, chain |
+| `/rssi/markers` | MarkerArray | links coloured by the paper's bands, for RViz (`map` frame) |
+
+`rssi/ros/nodes.yaml` sets the nodes: the GCS is fixed at world (0, 14); relays come from
+`/relayN/odom` (world frame); the head from FAST-LIO `/Odometry` + (0, 12). Change positions or
+add nodes there, then restart. Options: `--no-noise`, `--P0`, `--n`, `--alpha`, `--threshold`,
+`--rate`. Image: `rssi/ros/Dockerfile` = `mesh_sim:humble` + scikit-fmm.
+
+Nothing drives the relays yet, so values only change by noise and by their slow idle creep
+(~2 mm/s).
 
 ## Known model properties
 

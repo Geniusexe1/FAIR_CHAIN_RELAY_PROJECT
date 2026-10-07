@@ -1,0 +1,246 @@
+#!/usr/bin/env python3
+"""Live RSSI monitor: predicts every link between the GCS and the robots from
+their CURRENT positions in the sim, using the dominant-path model (eq. 1).
+
+    run in the fair_rssi container on ROS_DOMAIN_ID=42 -- see run_rssi_node.sh
+
+Subscribes  <topic> (nav_msgs/Odometry) for each tracked node in nodes.yaml
+Publishes
+  /rssi/links                     std_msgs/String  JSON: every link, both clean and noisy
+  /rssi/link/<a>__<b>             std_msgs/Float32 noisy RSSI of one link (dBm)
+  /rssi/end_to_end/<node>         std_msgs/Float32 bottleneck RSSI of the best route
+                                                   from <node> back to the GCS (eq. 5),
+                                                   -inf if no route clears the threshold
+  /rssi/chain                     std_msgs/Float32 paper eq. (5): weakest hop along the FIXED
+                                                   chain in nodes.yaml order (GCS -> relays ->
+                                                   client). -inf if any node is missing
+  /rssi/markers                   visualization_msgs/MarkerArray  links for RViz
+
+Noise (when enabled): static spatially-correlated shadowing per transmitter plus
+fresh N(0, sigma_n) per publication -- the "measurement" a radio would report.
+Positions inside an obstacle cell (a robot hugging a wall) are snapped to the
+nearest free cell.
+"""
+import argparse, json, math, os, sys, time
+
+import numpy as np
+import yaml
+from scipy.ndimage import distance_transform_edt
+
+import rclpy
+from rclpy.node import Node as RosNode
+from rclpy.qos import qos_profile_sensor_data
+from nav_msgs.msg import Odometry
+from std_msgs.msg import Float32, String
+from visualization_msgs.msg import Marker, MarkerArray
+from geometry_msgs.msg import Point
+
+RSSI_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, RSSI_DIR)
+from propagation import GridMap, PropagationParams              # noqa: E402
+from network import Network, Node, NoiseParams, connectivity    # noqa: E402
+
+GOOD_DBM = -65.0          # paper Fig. 9 bands
+
+
+def topic_safe(s):
+    return "".join(ch if ch.isalnum() or ch == "_" else "_" for ch in s)
+
+
+class RssiMonitor(RosNode):
+    def __init__(self, a):
+        super().__init__("rssi_monitor")
+        self.a = a
+        root = os.path.dirname(RSSI_DIR)
+        gt = os.path.join(root, "hospital_world", "gt", "hospital_gt")
+        self.grid = GridMap.load(gt + ".npy", gt + ".json")
+        # nearest-free-cell lookup, for snapping positions that land in obstacles
+        _, self.near = distance_transform_edt(self.grid.occ.astype(bool), return_indices=True)
+
+        self.net = Network(self.grid,
+                           PropagationParams(P0=a.P0, n=a.n, alpha=a.alpha),
+                           NoiseParams(a.sigma_shadow, a.corr, a.sigma_n, enabled=not a.no_noise))
+        self.rng = np.random.default_rng()
+
+        cfg = yaml.safe_load(open(a.config))
+        self.spec = []                                   # (name, kind, topic|None, offset|xy)
+        for i, (name, c) in enumerate(cfg.items()):
+            kind = "gcs" if i == 0 else ("head" if name.startswith("head") else "relay")
+            if "xy" in c:
+                self.spec.append((name, kind, None, tuple(c["xy"])))
+            else:
+                self.spec.append((name, kind, c["topic"], tuple(c.get("offset", [0, 0]))))
+        self.gcs = self.spec[0][0]
+        self.pos = {n: tuple(v) for n, k, t, v in self.spec if t is None}
+        self.last = {}
+
+        for name, kind, topic, off in self.spec:
+            if topic:
+                self.create_subscription(Odometry, topic,
+                                         lambda m, n=name, o=off: self._odom(n, o, m),
+                                         qos_profile_sensor_data)
+        self.pub_links = self.create_publisher(String, "/rssi/links", 10)
+        self.pub_chain = self.create_publisher(Float32, "/rssi/chain", 10)
+        self.pub_markers = self.create_publisher(MarkerArray, "/rssi/markers", 10)
+        self.pub_link, self.pub_e2e = {}, {}
+        self.create_timer(1.0 / a.rate, self._tick)
+        self.create_timer(a.log_every, self._log)
+        self.latest = None
+        self.get_logger().info(
+            f"P0 {a.P0} n {a.n} alpha {a.alpha} | threshold {a.threshold} dBm | "
+            f"noise {'off' if a.no_noise else f'shadow {a.sigma_shadow} dB/{a.corr} m + sigma_n {a.sigma_n} dB'} | "
+            f"GCS '{self.gcs}' | tracking " +
+            ", ".join(f"{n}<-{t}" for n, k, t, o in self.spec if t))
+
+    # ---------------------------------------------------------------- inputs
+    def _odom(self, name, off, msg):
+        p = msg.pose.pose.position
+        self.pos[name] = (p.x + off[0], p.y + off[1])
+        self.last[name] = time.time()
+
+    def _snap(self, xy):
+        r, c = self.grid.world_to_cell(*xy)
+        r = min(max(r, 0), self.grid.shape[0] - 1); c = min(max(c, 0), self.grid.shape[1] - 1)
+        if self.grid.occ[r, c]:
+            r, c = int(self.near[0][r, c]), int(self.near[1][r, c])
+            return tuple(float(v) for v in self.grid.cell_to_world(r, c)), True
+        return xy, False
+
+    # --------------------------------------------------------------- compute
+    def _tick(self):
+        nodes, snapped = [], []
+        for name, kind, topic, _ in self.spec:
+            if name not in self.pos:
+                continue                                        # not heard from yet
+            xy, moved = self._snap(self.pos[name])
+            if moved:
+                snapped.append(name)
+            nodes.append(Node(name, xy, kind))
+        if len(nodes) < 2 or nodes[0].name != self.gcs:
+            return
+        self.net.nodes = nodes
+        links = self.net.links(noisy=True, rng=self.rng)
+        conn = connectivity(links, nodes, self.a.threshold, self.gcs)
+
+        for L in links:
+            key = f"{topic_safe(L['a'])}__{topic_safe(L['b'])}"
+            if key not in self.pub_link:
+                self.pub_link[key] = self.create_publisher(Float32, f"/rssi/link/{key}", 10)
+            self.pub_link[key].publish(Float32(data=float(L["rssi"])))
+        for n in nodes[1:]:
+            if n.name not in self.pub_e2e:
+                self.pub_e2e[n.name] = self.create_publisher(
+                    Float32, f"/rssi/end_to_end/{topic_safe(n.name)}", 10)
+            h = conn.get(n.name)
+            self.pub_e2e[n.name].publish(Float32(data=float(h[0]) if h else -math.inf))
+
+        # paper eq. (5): end-to-end quality of the fixed chain = its weakest hop
+        order = [name for name, *_ in self.spec]
+        byp = {frozenset((L["a"], L["b"])): L["rssi"] for L in links}
+        have = {n.name for n in nodes}
+        if all(nm in have for nm in order):
+            hops = [byp[frozenset((order[i], order[i + 1]))] for i in range(len(order) - 1)]
+            chain_val = float(min(hops))
+        else:
+            hops, chain_val = [], -math.inf
+        self.pub_chain.publish(Float32(data=chain_val))
+
+        payload = {
+            "stamp": time.time(),
+            "params": dict(P0=self.a.P0, n=self.a.n, alpha=self.a.alpha, threshold=self.a.threshold),
+            "nodes": {n.name: dict(kind=n.kind, xy=[round(v, 3) for v in n.xy],
+                                   snapped=n.name in snapped,
+                                   age_s=round(time.time() - self.last[n.name], 2) if n.name in self.last else None)
+                      for n in nodes},
+            "links": [dict(a=L["a"], b=L["b"], rssi=round(L["rssi"], 2), clean=round(L["clean"], 2),
+                           dE=round(L["dE"], 2), dbar=round(L["dbar"], 2), los=L["los"],
+                           up=bool(np.isfinite(L["rssi"]) and L["rssi"] >= self.a.threshold))
+                      for L in links],
+            "routes": {k: dict(bottleneck=round(v[0], 2), path=list(reversed(v[1])))
+                       for k, v in conn.items()},
+            "chain": dict(order=order, hops=[round(h, 2) for h in hops],
+                          weakest=round(chain_val, 2) if np.isfinite(chain_val) else None,
+                          up=bool(np.isfinite(chain_val) and chain_val >= self.a.threshold)),
+        }
+        self.pub_links.publish(String(data=json.dumps(payload)))
+        self.pub_markers.publish(self._markers(nodes, links))
+        self.latest = payload
+
+    def _markers(self, nodes, links):
+        ma = MarkerArray()
+        ox, oy = self.a.marker_offset
+        now = self.get_clock().now().to_msg()
+        for i, L in enumerate(links):
+            a = next(n for n in nodes if n.name == L["a"]); b = next(n for n in nodes if n.name == L["b"])
+            m = Marker(); m.header.frame_id = self.a.marker_frame; m.header.stamp = now
+            m.ns, m.id, m.type, m.action = "rssi_links", i, Marker.LINE_LIST, Marker.ADD
+            m.scale.x = 0.06
+            r = L["rssi"]
+            m.color.r, m.color.g, m.color.b = ((0.17, 0.63, 0.17) if r > GOOD_DBM else
+                                               (0.9, 0.72, 0.0) if r >= self.a.threshold else (0.84, 0.15, 0.16))
+            m.color.a = 1.0 if r >= self.a.threshold else 0.5
+            m.points = [Point(x=a.xy[0] + ox, y=a.xy[1] + oy, z=0.3), Point(x=b.xy[0] + ox, y=b.xy[1] + oy, z=0.3)]
+            ma.markers.append(m)
+            t = Marker(); t.header = m.header; t.ns, t.id = "rssi_labels", i
+            t.type, t.action = Marker.TEXT_VIEW_FACING, Marker.ADD
+            t.pose.position = Point(x=(a.xy[0] + b.xy[0]) / 2 + ox, y=(a.xy[1] + b.xy[1]) / 2 + oy, z=0.6)
+            t.scale.z = 0.35; t.color.r = t.color.g = t.color.b = t.color.a = 1.0
+            t.text = f"{r:.0f}"
+            ma.markers.append(t)
+        return ma
+
+    def _log(self):
+        p = self.latest
+        if not p:
+            waiting = [n for n, k, t, v in self.spec if t and n not in self.pos]
+            self.get_logger().info(f"waiting for positions: {', '.join(waiting)}")
+            return
+        lines = ["nodes: " + "  ".join(
+            f"{k}({v['xy'][0]:.2f},{v['xy'][1]:.2f}){'*snapped' if v['snapped'] else ''}"
+            for k, v in p["nodes"].items())]
+        for L in p["links"]:
+            lines.append(f"  {L['a']+'-'+L['b']:16} {L['rssi']:7.1f} dBm (clean {L['clean']:6.1f})  "
+                         f"dE {L['dE']:5.1f} m  detour {L['dbar']:4.1f} m  "
+                         f"{'UP' if L['up'] else 'down'}{'' if L['los'] else '  NLOS'}")
+        for k, v in p["routes"].items():
+            lines.append(f"  route {k}: {' > '.join(v['path'])}   bottleneck {v['bottleneck']:.1f} dBm")
+        ch = p["chain"]
+        if ch["weakest"] is not None:
+            lines.append(f"  CHAIN (eq.5) {' > '.join(ch['order'])}: hops {ch['hops']}  "
+                         f"weakest {ch['weakest']:.1f} dBm  {'UP' if ch['up'] else 'BROKEN'}")
+        unreach = [n for n in p["nodes"] if n != self.gcs and n not in p["routes"]]
+        if unreach:
+            lines.append(f"  NO ROUTE TO {self.gcs}: {', '.join(unreach)}")
+        self.get_logger().info("\n" + "\n".join(lines))
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "nodes.yaml"))
+    ap.add_argument("--rate", type=float, default=2.0, help="Hz")
+    ap.add_argument("--log-every", type=float, default=5.0, help="s between terminal tables")
+    ap.add_argument("--P0", type=float, default=PropagationParams.P0)
+    ap.add_argument("--n", type=float, default=PropagationParams.n)
+    ap.add_argument("--alpha", type=float, default=PropagationParams.alpha)
+    ap.add_argument("--threshold", type=float, default=-85.0)
+    ap.add_argument("--sigma-shadow", type=float, default=NoiseParams.sigma_shadow)
+    ap.add_argument("--corr", type=float, default=NoiseParams.corr_m)
+    ap.add_argument("--sigma-n", type=float, default=NoiseParams.sigma_fast)
+    ap.add_argument("--no-noise", action="store_true")
+    ap.add_argument("--marker-frame", default="map")
+    ap.add_argument("--marker-offset", nargs=2, type=float, default=[0.0, -12.0],
+                    help="world -> marker frame. map = world - (0, 12) in this setup")
+    a, ros_args = ap.parse_known_args()
+    rclpy.init(args=ros_args)
+    node = RssiMonitor(a)
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.try_shutdown()
+
+
+if __name__ == "__main__":
+    main()

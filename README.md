@@ -27,6 +27,8 @@ FAIR_CHAIN_RELAY_PROJECT/
 │   ├── run_*.sh, spawn_saye.sh, waypoint.sh, stop_all.sh   operational scripts
 │   ├── tools/gt_occupancy.py  ground-truth occupancy grid from collision geometry
 │   └── gt/                    the GT grid: .npy + .json metadata + .png renders
+├── rssi/                      RSSI model (paper eq. 1), heatmaps, noise, live ROS 2 node
+│   └── README.md              ** parameters, measured P0, how to run **
 └── mesh_sim_ws/               the original Gazebo Harmonic two-robot sim + shared Nav2 config
     ├── CLAUDE.md              ** operator notes: machines, invariants, traps **
     ├── RUNBOOK.md, WORKFLOW.md
@@ -116,6 +118,9 @@ Gazebo's window opens **behind other windows** — Alt+Tab to it.
 - Hospital world + chain_robot load and run.
 - Relays spawn, sense, and navigate across the two NUCs.
 - Relay waypoint accuracy **~2–8 cm**, including pure 1 m sideways goals (via reversing K-turns).
+- RSSI prediction (Seo et al., RA-L 2025, eq. 1) on the GT map: heatmaps, noise, link
+  topology, and a live ROS 2 node publishing every link from the robots' sim positions.
+  P0 measured on our Rajant Cardinals: -60.8 dBm. See `rssi/README.md`.
 - Ground-truth occupancy grid: `hospital_world/gt/hospital_gt.npy`
   (uint8, 1 = occupied, 0.05 m/cell, 27.2 × 59.1 m).
 

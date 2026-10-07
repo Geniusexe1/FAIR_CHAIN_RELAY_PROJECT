@@ -1,0 +1,25 @@
+# Nodes the RSSI monitor tracks. The FIRST entry is the GCS (root of every route).
+#
+# Each node is either FIXED (xy, world metres) or TRACKED (an Odometry topic).
+# `offset` converts the topic's frame to WORLD (Gazebo) coordinates:
+#   world = pose + offset
+#
+#   relays : libgazebo_ros_ackermann_drive publishes the model's WORLD pose  -> offset 0
+#   head   : FAST-LIO /Odometry starts at chain_robot's spawn, world (0, 12) -> offset (0, 12)
+
+gcs:
+  # Stationary. Open corridor, 1.25 m from the nearest obstacle, 2 m behind where
+  # the robots start -- not ON chain_robot's spawn at (0, 12).
+  xy: [0.0, 14.0]
+
+relay1:
+  topic: /relay1/odom
+  offset: [0.0, 0.0]
+
+relay2:
+  topic: /relay2/odom
+  offset: [0.0, 0.0]
+
+head:
+  topic: /Odometry
+  offset: [0.0, 12.0]
