@@ -1,0 +1,24 @@
+# --- secrets: never commit ---------------------------------------------------
+.fair_chain.env
+*.env
+.git-credentials
+
+# --- third-party assets: restored by scripts/fetch_assets.sh -----------------
+hospital_world/models/*
+!hospital_world/models/saye_classic/
+hospital_world/models/saye_classic/meshes/
+mesh_sim_ws/src/ackermann-vehicle-gzsim-ros2/saye_description/models/saye/meshes/*.dae
+mesh_sim_ws/src/ackermann-vehicle-gzsim-ros2/saye_description/worlds/warehouse/thumbnails/
+*.zip
+
+# --- proprietary, obtain from Rajant ------------------------------------------
+mesh_sim_ws/vendor/
+
+# --- build / runtime junk ----------------------------------------------------
+build/
+install/
+log/
+__pycache__/
+*.pyc
+*.orig
+*.xwd

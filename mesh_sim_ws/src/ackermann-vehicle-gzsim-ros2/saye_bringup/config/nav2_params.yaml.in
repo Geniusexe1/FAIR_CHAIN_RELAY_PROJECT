@@ -1,0 +1,521 @@
+# Nav2 parameters, ${NS} substituted at launch by nav_robot.launch.py.
+#
+# EVERY node block below MUST carry its own `use_sim_time: True`. Passing
+# `use_sim_time:=true` to nav2_bringup's navigation_launch.py is NOT enough:
+# it applies the value through RewrittenYaml(param_rewrites=...), which only
+# REPLACES keys that already exist in this file and never inserts a missing one.
+# A block without the key silently comes up on the WALL CLOCK while the whole TF
+# tree runs on sim time. The failure is quiet and looks nothing like a clock bug:
+#
+#   [tf_help]: Transform data too old when converting from map to <ns>/odom
+#   [tf_help]: Data time: 1787819004s ..., Transform time: 134s ...
+#   [controller_server]: Reached the goal!      <- robot never moved
+#   [bt_navigator]: Goal succeeded
+#
+# The controller stamps a pose with wall time, the lookup against a sim-time tree
+# fails, and the goal checker reads the resulting garbage pose as "arrived". Nav2
+# reports SUCCESS on every goal while the robot sits still.
+# Verify with: ros2 param get /<ns>/controller_server use_sim_time
+
+amcl:
+  ros__parameters:
+    use_sim_time: True
+    alpha1: 0.2
+    alpha2: 0.2
+    alpha3: 0.2
+    alpha4: 0.2
+    alpha5: 0.2
+    base_frame_id: "${NS}/base_link"
+    beam_skip_distance: 0.5
+    beam_skip_error_threshold: 0.9
+    beam_skip_threshold: 0.3
+    do_beamskip: false
+    global_frame_id: "map"
+    lambda_short: 0.1
+    laser_likelihood_max_dist: 2.0
+    laser_max_range: 50.0
+    laser_min_range: 0.3
+    laser_model_type: "likelihood_field"
+    max_beams: 60
+    max_particles: 500
+    min_particles: 50
+    odom_frame_id: "${NS}/odom"
+    pf_err: 0.05
+    pf_z: 0.99
+    recovery_alpha_fast: 0.0
+    recovery_alpha_slow: 0.0
+    resample_interval: 1
+    robot_model_type: "nav2_amcl::OmniMotionModel"
+    save_pose_rate: 0.5
+    sigma_hit: 0.2
+    tf_broadcast: true
+    transform_tolerance: 1.0
+    update_min_a: 0.3
+    update_min_d: 0.2
+    z_hit: 0.5
+    z_max: 0.05
+    z_rand: 0.5
+    z_short: 0.05
+    scan_topic: /${NS}/scan
+    map_topic: /map
+    set_initial_pose: true
+    always_reset_initial_pose: false  
+    first_map_only: false
+    initial_pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      yaw: 0.0
+
+bt_navigator:
+  ros__parameters:
+    use_sim_time: True
+    global_frame: map
+    robot_base_frame: ${NS}/base_link
+    odom_topic: /${NS}/odom
+    bt_loop_duration: 10
+    default_server_timeout: 20
+    wait_for_service_timeout: 1000
+    action_server_result_timeout: 900.0
+    error_code_names:
+      - compute_path_error_code
+      - follow_path_error_code
+
+controller_server:
+  ros__parameters:
+    use_sim_time: True
+    controller_frequency: 20.0 
+    costmap_update_timeout: 0.30
+    min_x_velocity_threshold: 0.001
+    min_y_velocity_threshold: 0.001
+    min_theta_velocity_threshold: 0.001
+    failure_tolerance: 0.3
+    progress_checker_plugins: ["progress_checker"]
+    goal_checker_plugins: ["general_goal_checker"]
+    controller_plugins: ["FollowPath"]
+    use_realtime_priority: false
+
+    progress_checker:
+      plugin: "nav2_controller::SimpleProgressChecker"
+      required_movement_radius: 0.5
+      # 10.0 was too tight for an Ackermann car: a multi-point turn legitimately
+      # covers less than required_movement_radius in that window, and the
+      # controller then aborts a goal that was progressing fine.
+      movement_time_allowance: 30.0
+      
+    general_goal_checker:
+      stateful: True
+      plugin: "nav2_controller::SimpleGoalChecker"
+      # 0.25 was a hard floor on accuracy: the controller declared success and
+      # stopped 25 cm out. Target is 10 cm, so this must be tighter than that.
+      xy_goal_tolerance: 0.08
+      # Effectively "any heading". These are WAYPOINTS for a car -- the goal is a
+      # position, and the callers (send_waypoints.py, the goal_pose topic examples
+      # in WORKFLOW.md) all leave orientation at yaw=0 without meaning it.
+      # A real tolerance here is unreachable: an Ackermann car cannot rotate in
+      # place, so on arriving at xy with the wrong heading the controller reported
+      #   [controller_server]: Failed to make progress
+      #   [behavior_server]:   Running spin
+      # and thrashed in a recovery that -- as the behavior_server note below says --
+      # can never succeed on this vehicle. The robot sat ON the goal while the
+      # action never completed. Set a real value only if heading actually matters,
+      # and then give the planner room to approach on that heading.
+      yaw_goal_tolerance: 3.15
+      
+    FollowPath:
+      plugin: "nav2_mppi_controller::MPPIController"
+      # 56 x model_dt 0.05 = 2.8 s horizon, too short to plan the reverse/loop
+      # micro-maneuver needed to close the last ~0.4 m on a lateral goal.
+      time_steps: 90
+      model_dt: 0.05  # 匹配20Hz控制频率 (1/20 = 0.05)
+      batch_size: 1000
+      ax_max: 3.0
+      ax_min: -3.0
+      ay_max: 3.0
+      az_max: 3.5
+      vx_std: 0.2
+      vy_std: 0.2
+      wz_std: 0.4
+      vx_max: 0.5
+      vx_min: -0.35
+      vy_max: 0.0
+      wz_max: 1.9
+      iteration_count: 1
+      prune_distance: 1.7
+      transform_tolerance: 0.5  # 增加变换容错性
+      temperature: 0.3
+      gamma: 0.015
+      motion_model: "Ackermann"
+      visualize: true
+      regenerate_noises: true
+      
+      AckermannConstraints:
+        # Geometry: wheel_base 0.2255 / tan(max_steer 0.4) = 0.533 m absolute minimum.
+        # 0.2 claimed a turn 2.7x tighter than the car can physically make, so MPPI
+        # planned arcs it could never execute and dithered near the goal.
+        # 0.70 is the value MEASURED on the Gazebo Classic port (commanded 0.533,
+        # achieved 0.682 with tyre slip + steering PID lag). Harmonic's kinematic
+        # AckermannSteering should sit closer to 0.533, but this file is shared by
+        # both, and OVER-estimating is the safe direction: the car can always turn
+        # tighter than planned, never wider.
+        min_turning_r: 0.70
+        
+      TrajectoryVisualizer:
+        trajectory_step: 5
+        time_step: 3
+        
+      critics: [
+        "ConstraintCritic", "CostCritic", "GoalCritic",
+        "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic",
+        "PathAngleCritic", "PreferForwardCritic", "TwirlingCritic"
+      ]
+      
+      ConstraintCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 4.0
+        
+      GoalCritic:
+        # weight 5.0 -> 24.0. With the old weight the goal term was swamped by the
+        # path-following critics during final approach, so the car settled wherever
+        # the path critics balanced out (~0.3-0.5 m) instead of converging on the goal.
+        enabled: true
+        cost_power: 1
+        cost_weight: 24.0
+        threshold_to_consider: 1.4
+        
+      GoalAngleCritic:
+        # Disabled deliberately. yaw_goal_tolerance above is 3.15 -- this file already
+        # documents that heading is unconstrained because an Ackermann car cannot
+        # rotate in place. This critic contradicted that: it starts pulling heading
+        # toward the goal orientation at threshold_to_consider=0.5 m out, which is
+        # exactly where waypoints stalled (~0.47-0.51 m, repeatable), with tiny
+        # sign-flipping cmd_vel as it fought GoalCritic. Re-enable only if you also
+        # set a real yaw_goal_tolerance and give the planner room to approach on
+        # that heading.
+        enabled: false
+        cost_power: 1
+        cost_weight: 3.0
+        threshold_to_consider: 0.5
+        
+      PreferForwardCritic:
+        # Weight dropped 1.0 -> 0.05. The global plan (Smac Reeds-Shepp) correctly
+        # produces reversing maneuvers, but this critic penalised executing them, so
+        # the robot tracked the plan until it needed to reverse and then stalled with
+        # the plan endpoint only 0.07 m from the goal. Reverse is a legitimate and
+        # necessary primitive for this car (measured reverse turning radius 0.42 m).
+        enabled: true
+        cost_power: 1
+        cost_weight: 0.05
+        threshold_to_consider: 0.8
+        
+      TwirlingCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 10.0
+        
+      CostCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 3.81
+        near_collision_cost: 253
+        critical_cost: 300.0
+        consider_footprint: true
+        collision_cost: 1000000.0
+        near_goal_distance: 1.0
+        trajectory_point_step: 2
+        
+      PathAlignCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 14.0
+        max_path_occupancy_ratio: 0.05
+        trajectory_point_step: 4
+        threshold_to_consider: 0.5
+        offset_from_furthest: 20
+        use_path_orientations: false
+        
+      PathFollowCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 5.0
+        offset_from_furthest: 5
+        threshold_to_consider: 1.4
+        
+      PathAngleCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 2.0
+        offset_from_furthest: 4
+        threshold_to_consider: 0.5
+        max_angle_to_furthest: 1.0
+        mode: 0
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      use_sim_time: True
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      global_frame: ${NS}/odom
+      robot_base_frame: ${NS}/base_link
+      rolling_window: true
+      width: 3
+      height: 3
+      resolution: 0.05
+      # 使用footprint而不是robot_radius，更适合阿克曼车辆
+      footprint: "[[0.15, 0.045], [0.15, -0.045], [-0.15, -0.045], [-0.15, 0.045]]"
+      plugins: ["voxel_layer", "inflation_layer"]
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 3.0
+        inflation_radius: 0.35
+      voxel_layer:
+        plugin: "nav2_costmap_2d::VoxelLayer"
+        enabled: True
+        publish_voxel_map: True
+        origin_z: 0.0
+        z_resolution: 0.05
+        z_voxels: 16
+        max_obstacle_height: 2.0
+        mark_threshold: 0
+        observation_sources: scan
+        scan:
+          topic: /${NS}/scan
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+          raytrace_max_range: 3.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 2.5
+          obstacle_min_range: 0.0
+      always_send_full_costmap: True
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      use_sim_time: True
+      update_frequency: 1.0
+      publish_frequency: 1.0
+      global_frame: map
+      robot_base_frame: ${NS}/base_link
+      # 使用footprint与local_costmap保持一致
+      footprint: "[[0.15, 0.045], [0.15, -0.045], [-0.15, -0.045], [-0.15, 0.045]]"
+      resolution: 0.05
+      track_unknown_space: true
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: scan
+        scan:
+          topic: /${NS}/scan
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+          raytrace_max_range: 3.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 2.5
+          obstacle_min_range: 0.0
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+        # The static layer's own map_topic defaults to the RELATIVE name "map",
+        # which under the /robot2 namespace resolves to /robot2/map -- a topic
+        # nobody publishes. Our occupancy grid is deliberately GLOBAL (/map),
+        # shared by both robots, so pin it absolutely.
+        map_topic: /map
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 3.0
+        inflation_radius: 0.35
+      always_send_full_costmap: True
+
+map_server:
+  ros__parameters:
+    use_sim_time: True
+    yaml_filename: "map.yaml"
+    
+map_saver:
+  ros__parameters:
+    use_sim_time: True
+    save_map_timeout: 5.0
+    free_thresh_default: 0.25
+    occupied_thresh_default: 0.65
+    map_subscribe_transient_local: True
+
+planner_server:
+  ros__parameters:
+    use_sim_time: True
+    expected_planner_frequency: 20.0
+    # NOTE ON IDS: Nav2's stock navigate_to_pose BT hardcodes planner_id="GridBased".
+    # Both planners below were loaded, but ONLY "GridBased" was ever invoked -- so the
+    # Reeds-Shepp planner deliberately configured further down (reverse_penalty 0.3,
+    # "allow reversing when turning around") was dead config and NavFn did all planning.
+    # NavFn is a holonomic grid planner: for a lateral goal it emits a straight sideways
+    # path an Ackermann car cannot follow, which MPPI then failed to track.
+    # "GridBased" is only an ID string, so it now maps to the Smac Hybrid planner.
+    # NavFn is kept available as "NavFn" for comparison.
+    planner_plugins: ["GridBased", "NavFn"]
+    costmap_update_timeout: 1.0
+    
+    NavFn:
+      plugin: "nav2_navfn_planner/NavfnPlanner"
+      tolerance: 0.5
+      use_astar: false
+      allow_unknown: true
+    
+    GridBased:
+      plugin: "nav2_smac_planner/SmacPlannerHybrid"
+      downsample_costmap: false
+      downsampling_factor: 1
+      # was 0.25: the PLAN was permitted to terminate 25 cm from the goal, so no
+      # controller could ever have done better regardless of tuning.
+      tolerance: 0.05
+      allow_unknown: true
+      max_iterations: 1000000
+      max_on_approach_iterations: 1000
+      max_planning_time: 10.0  # 增加规划时间以支持复杂机动
+      motion_model_for_search: "REEDS_SHEPP"  # 支持前进/后退的模型
+      angle_quantization_bins: 72
+      analytic_expansion_ratio: 3.5
+      analytic_expansion_max_length: 3.0
+      # Same error as MPPI's AckermannConstraints had: geometry allows only
+      # wheel_base 0.2255 / tan(0.4) = 0.533 m; 0.70 is the measured value.
+      minimum_turning_radius: 0.70
+      reverse_penalty: 0.3  # 显著降低倒车惩罚，允许掉头时倒车
+      change_penalty: 0.1   # 降低方向改变惩罚
+      non_straight_penalty: 1.0  # 降低非直线惩罚
+      cost_penalty: 2.0
+      retrospective_penalty: 0.010  # 降低回溯惩罚
+      lookup_table_size: 20.0
+      cache_obstacle_heuristic: false
+      debug_visualizations: true  # 启用调试可视化
+      use_quadratic_cost_penalty: False
+      downsample_obstacle_heuristic: True
+
+smoother_server:
+  ros__parameters:
+    use_sim_time: True
+    smoother_plugins: ["simple_smoother"]
+    simple_smoother:
+      plugin: "nav2_smoother::SimpleSmoother"
+      tolerance: 1.0e-10
+      max_its: 1000
+      do_refinement: True
+
+behavior_server:
+  ros__parameters:
+    use_sim_time: True
+    local_costmap_topic: local_costmap/costmap_raw
+    global_costmap_topic: global_costmap/costmap_raw
+    local_footprint_topic: local_costmap/published_footprint
+    global_footprint_topic: global_costmap/published_footprint
+    cycle_frequency: 10.0
+    behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
+    # NOTE: "spin" cannot physically succeed on an Ackermann car, but the
+    # default BT XMLs require the action server to exist.
+    spin:
+      plugin: "nav2_behaviors/Spin"
+    backup:
+      plugin: "nav2_behaviors/BackUp"
+    drive_on_heading:
+      plugin: "nav2_behaviors/DriveOnHeading"
+    wait:
+      plugin: "nav2_behaviors/Wait"
+    assisted_teleop:
+      plugin: "nav2_behaviors/AssistedTeleop"
+    local_frame: ${NS}/odom
+    global_frame: map
+    robot_base_frame: ${NS}/base_link
+    transform_tolerance: 0.1
+    simulate_ahead_time: 2.0
+    max_rotational_vel: 1.0
+    min_rotational_vel: 0.4
+    rotational_acc_lim: 3.2
+
+waypoint_follower:
+  ros__parameters:
+    use_sim_time: True
+    loop_rate: 20
+    stop_on_failure: false
+    action_server_result_timeout: 900.0
+    waypoint_task_executor_plugin: "wait_at_waypoint"
+    wait_at_waypoint:
+      plugin: "nav2_waypoint_follower::WaitAtWaypoint"
+      enabled: True
+      waypoint_pause_duration: 200
+
+velocity_smoother:
+  ros__parameters:
+    use_sim_time: True
+    smoothing_frequency: 5.0
+    scale_velocities: False
+    feedback: "OPEN_LOOP"
+    max_velocity: [1.0, 0.0, 1.5]
+    min_velocity: [-1.0, 0.0, -1.5]
+    max_accel: [1.5, 0.0, 3.0]
+    max_decel: [-1.5, 0.0, -3.0]
+    # used in the CLOSED_LOOP feedback mode
+    odom_topic: "/${NS}/odom"
+    odom_duration: 0.1
+    deadband_velocity: [0.0, 0.0, 0.0]
+    velocity_timeout: 1.0
+
+collision_monitor:
+  ros__parameters:
+    use_sim_time: True
+    base_frame_id: "${NS}/base_link"
+    odom_frame_id: "${NS}/odom"
+    cmd_vel_in_topic: "cmd_vel_smoothed"
+    cmd_vel_out_topic: "cmd_vel"
+    state_topic: "collision_monitor_state"
+    transform_tolerance: 0.2
+    source_timeout: 1.0
+    base_shift_correction: True
+    stop_pub_timeout: 2.0
+    polygons: ["FootprintApproach"]
+    FootprintApproach:
+      type: "polygon"
+      action_type: "approach"
+      footprint_topic: "local_costmap/published_footprint"
+      time_before_collision: 1.2
+      simulation_time_step: 0.1
+      min_points: 6
+      visualize: False
+      enabled: True
+    observation_sources: ["scan"]
+    scan:
+      type: "scan"
+      topic: "scan"
+      min_height: 0.15
+      max_height: 2.0
+      enabled: True
+
+loopback_simulator:
+  ros__parameters:
+    use_sim_time: True
+    base_frame_id: "${NS}/base_link"
+    odom_frame_id: "${NS}/odom"
+    map_frame_id: "map"
+    scan_frame_id: "${NS}/base_link/gpu_lidar"
+    update_duration: 0.02
+lifecycle_manager_navigation:
+  ros__parameters:
+    use_sim_time: True
+    autostart: true
+    # Defaults (4s) are too tight here: MPPI's configure step plus a busy
+    # domain-42 graph made get_state time out and aborted bringup.
+    bond_timeout: 30.0
+    attempt_respawn_reconnection: true
+    bond_respawn_max_duration: 20.0
+    node_names:
+      - controller_server
+      - smoother_server
+      - planner_server
+      - behavior_server
+      - bt_navigator
+      - waypoint_follower
+      - velocity_smoother

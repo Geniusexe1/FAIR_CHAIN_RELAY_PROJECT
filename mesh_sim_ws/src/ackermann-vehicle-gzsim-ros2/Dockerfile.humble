@@ -1,0 +1,73 @@
+# ROS 2 Humble + Gazebo Sim Harmonic (the pairing this repo's README targets).
+#
+# NOTE: humble+harmonic has NO apt package. rosdistro releases ros_gz for humble at
+# 0.244.x -- the Ignition/Fortress-era ros_ign* line -- and the OSRF apt repo ships
+# only gz-* binaries, zero ros-* packages. So ros_gz must be COMPILED against Harmonic.
+FROM ros:humble
+
+ENV COLCON_WS=/root/colcon_ws
+ENV COLCON_WS_SRC=/root/colcon_ws/src
+ENV PYTHONWARNINGS="ignore:setup.py install is deprecated::setuptools.command.install"
+ENV DEBIAN_FRONTEND=noninteractive
+
+ARG GZ_VERSION=harmonic
+ENV GZ_VERSION=${GZ_VERSION}
+
+RUN apt-get update -qq \
+    && apt-get install -y wget git lsb-release gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# OSRF repo -> provides the gz-harmonic binaries
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" \
+       > /etc/apt/sources.list.d/gazebo-stable.list
+
+RUN apt-get update -qq \
+    && apt-get install -y \
+        build-essential python3-pip python3-colcon-common-extensions \
+        gz-harmonic \
+        ros-humble-rcl-interfaces ros-humble-rclcpp ros-humble-builtin-interfaces \
+        ros-humble-sdformat-urdf ros-humble-vision-msgs ros-humble-actuator-msgs \
+        ros-humble-image-transport ros-humble-nav2-bringup ros-humble-navigation2 \
+        ros-humble-slam-toolbox ros-humble-joint-state-publisher \
+        ros-humble-robot-state-publisher ros-humble-teleop-twist-keyboard \
+        ros-humble-rviz2 ros-humble-xacro ros-humble-tf2-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+# ros_gz compiled against Harmonic
+RUN mkdir -p /root/ros_gz_ws/src \
+    && git clone https://github.com/gazebosim/ros_gz.git -b humble /root/ros_gz_ws/src/ros_gz \
+    && apt-get update -qq \
+    && rosdep update --rosdistro humble \
+    && (rosdep install -r --from-paths /root/ros_gz_ws/src -i -y --rosdistro humble || true) \
+    && . /opt/ros/humble/setup.sh \
+    && cd /root/ros_gz_ws \
+    && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p ${COLCON_WS_SRC}
+COPY . ${COLCON_WS_SRC}/ackermann-vehicle-gzsim-ros2
+
+RUN . /opt/ros/humble/setup.sh \
+    && . /root/ros_gz_ws/install/setup.sh \
+    && cd ${COLCON_WS} && colcon build
+
+ENV GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:${COLCON_WS_SRC}/ackermann-vehicle-gzsim-ros2
+ENV ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:${COLCON_WS_SRC}/ackermann-vehicle-gzsim-ros2
+
+RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \
+    && echo "source /root/ros_gz_ws/install/setup.bash" >> /root/.bashrc \
+    && echo "source /root/colcon_ws/install/setup.bash" >> /root/.bashrc
+
+# Entrypoint sources all three workspaces so NON-interactive commands work too.
+# (Ubuntu's .bashrc returns early for non-interactive shells, so relying on it
+#  alone breaks `docker run ... bash -c` and scripted use.)
+RUN printf '%s\n' '#!/bin/bash' 'set -e' \
+      'source /opt/ros/humble/setup.bash' \
+      'source /root/ros_gz_ws/install/setup.bash' \
+      'source /root/colcon_ws/install/setup.bash' \
+      'exec "$@"' > /entrypoint.sh \
+    && chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]

@@ -1,0 +1,586 @@
+<sdf version="1.7">
+  <model name="${NS}">
+    <self_collide>false</self_collide>
+    <static>false</static>
+    
+    <!-- Camera sensors (rs_front + 4x RGB) were dropped in this port:
+         ~1.1 Gbps of raw image topics per relay will not cross a Rajant
+         mesh. Lidar + IMU are kept - they are what mapping needs.
+         Regenerate with DROP_CAMERAS=False in port_saye.py to restore. -->
+    <link name="base_link">
+      <inertial>
+        <pose >0 0 0 0 0 0</pose>
+        <mass>3.0</mass>
+        <inertia>
+          <ixx>0.0054</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0252</iyy>
+          <iyz>0</iyz>
+          <izz>0.0252</izz>
+        </inertia>
+      </inertial>
+      <visual name="BaseVisual">
+        <pose>.1371 0 -.0115 -0.018 0 1.5707</pose>
+        <geometry>
+          <mesh>
+           <uri >model://saye_classic/meshes/BaseReduced.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name="saye/TopVisual">
+        <pose>.1371 0 -.0115 -0.018 0 1.5707</pose>
+        <geometry>
+          <mesh>
+           <uri >model://saye_classic/meshes/TopReduced.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="saye/BaseCollision">
+        <pose>0 0 .06 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>.3 .09 .12</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="saye/visual_lidar">
+        <pose>0.05 0 .106 0 0 0</pose> 
+        <geometry>
+          <mesh>
+           <uri >model://saye_classic/meshes/STL27L.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name="saye/camera_rack">
+        <pose>0 0 .184 0 0 0</pose> 
+        <geometry>
+          <box>
+            <size>0.03 0.03 0.03</size>
+          </box>
+        </geometry>
+      </visual>
+
+      <sensor name="imu_sensor" type="imu">
+        <always_on>1</always_on>
+        <update_rate>250</update_rate>
+        <!-- <gz_frame_id>${NS}/base_link</gz_frame_id> -->
+        <topic>${NS}/imu</topic>
+        <imu>
+          <enable_orientation>1</enable_orientation>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.009</stddev>
+                <bias_mean>0.00075</bias_mean>
+                <bias_stddev>0.005</bias_stddev>
+                <dynamic_bias_stddev>0.00002</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>400.0</dynamic_bias_correlation_time>
+                <precision>0.00025</precision>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.009</stddev>
+                <bias_mean>0.00075</bias_mean>
+                <bias_stddev>0.005</bias_stddev>
+                <dynamic_bias_stddev>0.00002</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>400.0</dynamic_bias_correlation_time>
+                <precision>0.00025</precision>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.009</stddev>
+                <bias_mean>0.00075</bias_mean>
+                <bias_stddev>0.005</bias_stddev>
+                <dynamic_bias_stddev>0.00002</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>400.0</dynamic_bias_correlation_time>
+                <precision>0.00025</precision>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.021</stddev>
+                <bias_mean>0.05</bias_mean>
+                <bias_stddev>0.0075</bias_stddev>
+                <dynamic_bias_stddev>0.000375</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>175.0</dynamic_bias_correlation_time>
+                <precision>0.005</precision>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.021</stddev>
+                <bias_mean>0.05</bias_mean>
+                <bias_stddev>0.0075</bias_stddev>
+                <dynamic_bias_stddev>0.000375</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>175.0</dynamic_bias_correlation_time>
+                <precision>0.005</precision>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.021</stddev>
+                <bias_mean>0.05</bias_mean>
+                <bias_stddev>0.0075</bias_stddev>
+                <dynamic_bias_stddev>0.000375</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>175.0</dynamic_bias_correlation_time>
+                <precision>0.005</precision>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+        <plugin name="${NS}_imu" filename="libgazebo_ros_imu_sensor.so">
+          <ros><namespace>/${NS}</namespace><remapping>~/out:=imu</remapping></ros>
+          <frame_name>${NS}/base_link</frame_name>
+        </plugin>
+      </sensor>
+      
+      <sensor name="gpu_lidar" type="ray">
+        <pose>0 0 0.21 0 0 0</pose>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>1024</samples>
+              <resolution>1</resolution>
+              <min_angle>-3.1459</min_angle>
+              <max_angle>3.1459</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>1</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>0</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.3</min>
+            <max>50</max>
+            <resolution>0.01</resolution>
+          </range>
+          <intensity>
+            <min>0</min>
+            <max>65535</max> 
+          </intensity>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.00</stddev>
+          </noise>
+          <visibility_mask>0xffffffff</visibility_mask>
+        </ray>
+        <topic>${NS}/scan</topic>
+        <visualize>true</visualize>
+        <update_rate>10</update_rate>
+        <plugin name="${NS}_lidar" filename="libgazebo_ros_ray_sensor.so">
+          <ros><namespace>/${NS}</namespace><remapping>~/out:=scan</remapping></ros>
+          <!-- LaserScan, not PointCloud2. Mapping is the goal, slam_toolbox and Nav2
+               both want LaserScan, NUC2 has no pointcloud_to_laserscan, and this
+               matches what mesh_sim already fed slam_toolbox on <ns>/scan.
+               Bandwidth over the Rajant mesh: ~41 KB/s here vs ~21 MB/s for the
+               1024x128 cloud. Set LIDAR_2D=False below to go back to 3D. -->
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frame_name>${NS}/base_link</frame_name>
+        </plugin>
+      </sensor>
+
+
+
+
+
+    </link>
+
+    <link name="front_left_wheel_link">
+      <pose relative_to="front_left_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>.05</mass>
+        <inertia>
+          <ixx>0.00003331</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0000204</iyy>
+          <iyz>0</iyz>
+          <izz>0.0000204</izz>
+        </inertia>
+      </inertial>
+      <gravity>true</gravity>
+      <velocity_decay/>
+      <visual name="saye/FrontLeftWheelVisual">
+        <pose>0 0 0 0 0 3.14159</pose>
+        <geometry>
+          <mesh>
+           <uri >model://saye_classic/meshes/Wheel.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="saye/FrontLeftWheelCollision">
+        <pose>0 -.015 0 -1.5707 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.03</length>
+            <radius>0.0365</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.5</mu>
+              <mu2>1.0</mu2>
+              <fdir1>0 0 1</fdir1>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+    <link name="front_left_wheel_steering_link">
+      <pose relative_to="front_left_wheel_steering_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <iyy>0.0001</iyy>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+    </link>
+    <joint name="front_left_wheel_joint" type="revolute">
+      <parent>front_left_wheel_steering_link</parent>
+      <child>front_left_wheel_link</child>
+      <pose relative_to="front_left_wheel_steering_joint">0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+          <effort>2</effort>
+          <velocity>100</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <joint name="front_left_wheel_steering_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>front_left_wheel_steering_link</child>
+      <pose relative_to="base_link">.112 .10 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-0.6</lower>
+          <upper>0.6</upper>
+          <velocity>1.0</velocity>
+          <effort>25</effort>
+        </limit>
+      </axis>
+    </joint>
+
+
+    <link name="front_right_wheel_link">
+      <pose relative_to="front_right_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>.05</mass>
+        <inertia>
+          <ixx>0.00003331</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0000204</iyy>
+          <iyz>0</iyz>
+          <izz>0.0000204</izz>
+        </inertia>
+      </inertial>
+      <gravity>true</gravity>
+      <velocity_decay/>
+      <visual name="saye/FrontRightWheelVisual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+           <uri>model://saye_classic/meshes/Wheel.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="saye/FrontRightWheelCollision">
+        <pose>0 .015 0 -1.5707 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.03</length>
+            <radius>0.0365</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.5</mu>
+              <mu2>1.0</mu2>
+              <fdir1>0 0 1</fdir1>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+    <link name="front_right_wheel_steering_link">
+      <pose relative_to="front_right_wheel_steering_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <iyy>0.0001</iyy>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+    </link>
+    <joint name="front_right_wheel_joint" type="revolute">
+      <parent>front_right_wheel_steering_link</parent>
+      <child>front_right_wheel_link</child>
+      <pose relative_to="front_right_wheel_steering_joint">0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+          <effort>2</effort>
+          <velocity>100</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <joint name="front_right_wheel_steering_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>front_right_wheel_steering_link</child>
+      <pose relative_to="base_link">.112 -.10 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-0.6</lower>
+          <upper>0.6</upper>
+          <velocity>1.0</velocity>
+          <effort>25</effort>
+        </limit>
+      </axis>
+    </joint>
+
+
+    <joint name="rear_right_wheel_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>rear_right_wheel_link</child>
+      <pose relative_to="base_link">-.1135 -.10 0 0 0 0</pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+          <effort>2</effort>
+          <velocity>100</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <joint name="rear_left_wheel_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>rear_left_wheel_link</child>
+      <pose relative_to="base_link">-.1135 .10 0 0 0 0</pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+          <effort>2</effort>
+          <velocity>100</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="rear_right_wheel_link">
+      <pose relative_to="rear_right_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>.05</mass>
+        <inertia>
+          <ixx>0.00003331</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0000204</iyy>
+          <iyz>0</iyz>
+          <izz>0.0000204</izz>
+        </inertia>
+      </inertial>
+      <gravity>true</gravity>
+      <velocity_decay/>
+      <visual name="RearRightWheelVisual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+           <uri >model://saye_classic/meshes/Wheel.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="RearRightWheelCollision">
+        <pose>0 .015 0 -1.5707 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.03</length>
+            <radius>0.0365</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.5</mu>
+              <mu2>1.0</mu2>
+              <fdir1>0 0 1</fdir1>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+    <link name="rear_left_wheel_link">
+      <pose relative_to="rear_left_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>.05</mass>
+        <inertia>
+          <ixx>0.00003331</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0000204</iyy>
+          <iyz>0</iyz>
+          <izz>0.0000204</izz>
+        </inertia>
+      </inertial>
+      <gravity>true</gravity>
+      <velocity_decay/>
+      <visual name="RearLeftWheelVisual">
+        <pose>0 0 0 0 0 3.14159</pose>
+        <geometry>
+          <mesh>
+           <uri >model://saye_classic/meshes/Wheel.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="RearLeftWheelCollision">
+        <pose>0 -.015 0 -1.5707 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.03</length>
+            <radius>0.0365</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.5</mu>
+              <mu2>1.0</mu2>
+              <fdir1>0 0 1</fdir1>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+
+    <!-- ==================================================================
+         Ported from Gazebo Harmonic to Gazebo Classic 11.
+         The four gz-sim system plugins have no Classic equivalent and were
+         replaced as follows:
+           gz-sim-ackermann-steering-system   -> libgazebo_ros_ackermann_drive.so
+           gz-sim-odometry-publisher-system   -> folded into ackermann_drive
+                                                 (publish_odom + publish_odom_tf)
+           gz-sim-joint-state-publisher-system-> libgazebo_ros_joint_state_publisher.so
+           gz-sim-pose-publisher-system       -> dropped. Its only remaining job in
+                 the Harmonic model was sensor poses; in Classic each sensor plugin
+                 declares its own <frame_name>, and robot_state_publisher supplies
+                 the link frames. Re-adding a pose publisher here would recreate the
+                 two-parents-on-base_link bug documented in the original (A10).
+         ================================================================== -->
+
+    <plugin name="${NS}_ackermann" filename="libgazebo_ros_ackermann_drive.so">
+      <ros>
+        <namespace>/${NS}</namespace>
+        <remapping>cmd_vel:=cmd_vel</remapping>
+        <remapping>odom:=odom</remapping>
+        <remapping>distance:=distance</remapping>
+      </ros>
+      <update_rate>100.0</update_rate>
+
+      <front_left_joint>front_left_wheel_joint</front_left_joint>
+      <front_right_joint>front_right_wheel_joint</front_right_joint>
+      <rear_left_joint>rear_left_wheel_joint</rear_left_joint>
+      <!-- NOTE: the Harmonic original lists <right_joint>front_right_wheel_joint</right_joint>
+           TWICE and never names rear_right_wheel_joint, so its rear right wheel is
+           undriven. Fixed here. Worth fixing upstream in mesh_sim_ws too. -->
+      <rear_right_joint>rear_right_wheel_joint</rear_right_joint>
+      <left_steering_joint>front_left_wheel_steering_joint</left_steering_joint>
+      <right_steering_joint>front_right_wheel_steering_joint</right_steering_joint>
+      <!-- steering_wheel_joint intentionally omitted: this model has no steering
+           column link. The plugin only warns for that one; the other six joints
+           are the ones whose absence disables it. -->
+
+      <max_steer>0.4</max_steer>
+      <max_steering_angle>0.4</max_steering_angle>
+      <max_speed>10.0</max_speed>
+      <!-- Scaled to THIS robot. The gazebo_ros demo value (1500 0 1) is for the
+           full-size Prius; here the steering links weigh 0.005 kg with a 25 N.m
+           effort limit and no damping, so 1500 drove them straight into the
+           +-0.6 rad stops at 2 rad/s (past their own 1.0 rad/s limit) and the car
+           steered itself in circles with nothing published on cmd_vel.
+           The Harmonic model never needed gains at all - gz's AckermannSteering
+           drives the steering kinematically, which is also why these joints were
+           authored with no damping. -->
+      <left_steering_pid_gain>2.0 0 0.2</left_steering_pid_gain>
+      <left_steering_i_range>0 0</left_steering_i_range>
+      <right_steering_pid_gain>2.0 0 0.2</right_steering_pid_gain>
+      <right_steering_i_range>0 0</right_steering_i_range>
+      <!-- WITHOUT THIS THE CAR DOES NOT DRIVE. The gain defaults to 0, so the
+           plugin applies no wheel torque at all: commanded 0.3 m/s, achieved
+           0.012 m/s. The shipped demo world uses 1000, but that is a ~1500 kg
+           Prius on 0.3 m wheels; this is a 3 kg car on 0.0365 m wheels, so the
+           gain is scaled down by roughly the same ratio. -->
+      <!-- P=150 I=50 D=1 with a real i_range. The stock 10/0/0-range was P-only
+           with integral DISABLED, which could not break static friction at small
+           velocity error: cmd 0.05 m/s drove BACKWARD, cmd 0.10 m/s moved 0.007 m
+           in 12 s (stalled), only >=0.15 tracked. Near a goal MPPI commands exactly
+           those velocities, so the car could never fine-position.
+           Higher P also holds position far better at rest: measured idle drift
+           12 mm/s at P=10 vs ~1.5 mm/s at P=100.
+           Do NOT raise I much past 50: at I=250 integral windup drove the car
+           backward on every command. -->
+      <linear_velocity_pid_gain>100 50 1</linear_velocity_pid_gain>
+      <linear_velocity_i_range>-20 20</linear_velocity_i_range>
+
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>false</publish_wheel_tf>
+      <publish_distance>true</publish_distance>
+      <odometry_frame>${NS}/odom</odometry_frame>
+      <robot_base_frame>${NS}/base_link</robot_base_frame>
+    </plugin>
+
+    <plugin name="${NS}_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
+      <ros><namespace>/${NS}</namespace><remapping>~/out:=joint_states</remapping></ros>
+      <update_rate>20</update_rate>
+      <joint_name>front_left_wheel_joint</joint_name>
+      <joint_name>front_right_wheel_joint</joint_name>
+      <joint_name>rear_left_wheel_joint</joint_name>
+      <joint_name>rear_right_wheel_joint</joint_name>
+      <joint_name>front_left_wheel_steering_joint</joint_name>
+      <joint_name>front_right_wheel_steering_joint</joint_name>
+    </plugin>
+
+  </model>
+</sdf>

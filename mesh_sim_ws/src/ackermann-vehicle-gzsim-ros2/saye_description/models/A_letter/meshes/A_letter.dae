@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor><author>Gemini</author><authoring_tool>Blender 2.79</authoring_tool></contributor>
+    <unit name="meter" meter="1"/><up_axis>Z_UP</up_axis>
+  </asset>
+
+  <library_effects>
+    <effect id="Material_005-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <diffuse><color>0 0.15 0.15 1</color></diffuse>
+            <specular><color>0.5 0.5 0.5 1</color></specular>
+            <shininess><float>50</float></shininess>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+
+  <library_materials>
+    <material id="Material_005-material"><instance_effect url="#Material_005-effect"/></material>
+  </library_materials>
+
+  <library_geometries>
+    <geometry id="A-mesh" name="Letter_A">
+      <mesh>
+        <source id="A-normals">
+          <float_array id="A-normals-array" count="3">0 0 1</float_array>
+          <technique_common><accessor source="#A-normals-array" count="1" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common>
+        </source>
+
+        <source id="A-left-pos">
+          <float_array id="A-left-pos-array" count="12">
+            -0.45 -1.0 0 
+            -0.15 -1.0 0 
+             0.00  1.0 0 
+            -0.15  1.0 0
+          </float_array>
+          <technique_common><accessor source="#A-left-pos-array" count="4" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common>
+        </source>
+
+        <source id="A-right-pos">
+          <float_array id="A-right-pos-array" count="12">
+             0.15 -1.0 0 
+             0.45 -1.0 0 
+             0.15  1.0 0 
+             0.00  1.0 0
+          </float_array>
+          <technique_common><accessor source="#A-right-pos-array" count="4" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common>
+        </source>
+
+        <source id="A-mid-pos">
+          <float_array id="A-mid-pos-array" count="12">
+            -0.23 -0.1 0 
+             0.23 -0.1 0 
+             0.18  0.15 0 
+            -0.18  0.15 0
+          </float_array>
+          <technique_common><accessor source="#A-mid-pos-array" count="4" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common>
+        </source>
+
+        <vertices id="A-left-v"><input semantic="POSITION" source="#A-left-pos"/></vertices>
+        <vertices id="A-right-v"><input semantic="POSITION" source="#A-right-pos"/></vertices>
+        <vertices id="A-mid-v"><input semantic="POSITION" source="#A-mid-pos"/></vertices>
+
+        <triangles material="Material_005-material" count="2">
+          <input semantic="VERTEX" source="#A-left-v" offset="0"/><input semantic="NORMAL" source="#A-normals" offset="1"/>
+          <p>0 0 1 0 2 0  0 0 2 0 3 0</p>
+        </triangles>
+
+        <triangles material="Material_005-material" count="2">
+          <input semantic="VERTEX" source="#A-right-v" offset="0"/><input semantic="NORMAL" source="#A-normals" offset="1"/>
+          <p>0 0 1 0 2 0  0 0 2 0 3 0</p>
+        </triangles>
+
+        <triangles material="Material_005-material" count="2">
+          <input semantic="VERTEX" source="#A-mid-v" offset="0"/><input semantic="NORMAL" source="#A-normals" offset="1"/>
+          <p>0 0 1 0 2 0  0 0 2 0 3 0</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+
+  <library_visual_scenes>
+    <visual_scene id="Scene"><node id="A_Node"><instance_geometry url="#A-mesh"/></node></visual_scene>
+  </library_visual_scenes>
+  <scene><instance_visual_scene url="#Scene"/></scene>
+</COLLADA>

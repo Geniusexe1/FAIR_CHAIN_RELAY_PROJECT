@@ -1,0 +1,52 @@
+---
+# Per-robot bridge. ${NS} is substituted at launch time.
+#
+# NOTE: /tf is deliberately GLOBAL. ROS 2 multi-robot convention keeps one /tf
+# tree and separates robots by FRAME PREFIX, not by topic. The frames inside are
+# already prefixed (robot_state_publisher frame_prefix + the SDF plugin fields).
+#
+# NOTE: `clock` is NOT here. There is one Gazebo, so one clock; it is bridged
+# once, globally, by clock_bridge.yaml. Namespacing it silently stalls every
+# use_sim_time node.
+
+- ros_topic_name: "/${NS}/cmd_vel"
+  gz_topic_name: "/${NS}/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  direction: BIDIRECTIONAL
+
+- ros_topic_name: "/${NS}/odom"
+  gz_topic_name: "/${NS}/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "gz.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/${NS}/scan"
+  gz_topic_name: "/${NS}/scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "gz.msgs.LaserScan"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/${NS}/imu"
+  gz_topic_name: "/${NS}/imu"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/tf"
+  gz_topic_name: "/model/${NS}/pose"
+  ros_type_name: "tf2_msgs/msg/TFMessage"
+  gz_type_name: "gz.msgs.Pose_V"
+  direction: GZ_TO_ROS
+
+# A10: required, not optional. robot_state_publisher only broadcasts a joint's
+# transform when it receives a JointState -- all six joints here are `revolute`,
+# so without this it contributes NOTHING to /tf and the wheel/steering frames
+# vanish the moment the pose publisher stops publishing link poses.
+# robot_state_publisher is inside PushRosNamespace(ns) and subscribes to the
+# relative name `joint_states`, which resolves to this topic with no remap.
+- ros_topic_name: "/${NS}/joint_states"
+  gz_topic_name: "/${NS}/joint_states"
+  ros_type_name: "sensor_msgs/msg/JointState"
+  gz_type_name: "gz.msgs.Model"
+  direction: GZ_TO_ROS
