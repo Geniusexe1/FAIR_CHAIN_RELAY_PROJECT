@@ -144,8 +144,7 @@ Gazebo's window opens **behind other windows** — Alt+Tab to it.
 
 - `mesh_sim_ws/src/ackermann-vehicle-gzsim-ros2` is a modified fork of
   [alitekes1/ackermann-vehicle-gzsim-ros2](https://github.com/alitekes1/ackermann-vehicle-gzsim-ros2)
-  at commit `f61ab5a`. **Upstream has no LICENSE file**, so its default copyright applies —
-  keep this repository private unless that is resolved with the author.
+  at commit `f61ab5a`.
 - Hospital world and models: [mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps](https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps)
   (AWS RoboMaker hospital). Not redistributed here; fetched by `scripts/fetch_assets.sh`.
 - `chain_robot`: from the `gudwls124z/safe_robot` image. Not redistributed here.
