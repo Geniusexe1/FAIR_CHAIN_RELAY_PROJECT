@@ -22,3 +22,9 @@ __pycache__/
 *.pyc
 *.orig
 *.xwd
+
+# --- local python env ------------------------------------------------------
+.venv/
+
+# --- generated RSSI arrays (PNGs are kept) ----------------------------------
+rssi/out/*.npy
