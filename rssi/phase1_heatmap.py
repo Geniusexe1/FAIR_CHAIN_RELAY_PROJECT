@@ -44,9 +44,11 @@ def main():
     ap.add_argument("--P0", type=float, default=PropagationParams.P0)
     ap.add_argument("--n", type=float, default=PropagationParams.n)
     ap.add_argument("--alpha", type=float, default=PropagationParams.alpha)
-    ap.add_argument("--floor", type=float, default=-100.0, help="colour-scale floor, dBm")
+    ap.add_argument("--floor", type=float, default=None, help="colour-scale floor, dBm (default P0-60)")
     ap.add_argument("--tag", default=None)
     a = ap.parse_args()
+    if a.floor is None:
+        a.floor = a.P0 - 60.0
 
     p = PropagationParams(P0=a.P0, n=a.n, alpha=a.alpha)
     grid = GridMap.load(GT + ".npy", GT + ".json")

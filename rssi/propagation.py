@@ -74,9 +74,13 @@ class GridMap:
 # --------------------------------------------------------------------- parameters
 @dataclass
 class PropagationParams:
-    P0: float = -40.0      # dBm at 1 m
-    n: float = 2.0         # path-loss exponent
-    alpha: float = 20.0    # obstacle / detour attenuation weight
+    # P0 MEASURED 2026-10-07: our Rajant Cardinal pair, 1 m apart, antennas facing,
+    # 5 GHz ch161, 10 snapshots: -61.4 / -60.2 dBm per direction (sd < 1 dB).
+    # The paper (Seo et al., RA-L 2025, Table I) uses -30 dBm on the same radio
+    # model -- ours are evidently configured at much lower TX power.
+    P0: float = -60.8      # dBm at 1 m
+    n: float = 2.0         # path-loss exponent        (paper Fig. 6c "true parameters")
+    alpha: float = 35.0    # obstacle/detour weight    (paper Fig. 6c "true parameters")
     d_min: float = 1.0     # dE is clamped below this: the model is referenced at 1 m,
                            # and log10(dE) < 0 would put RSSI ABOVE P0 near the source
 

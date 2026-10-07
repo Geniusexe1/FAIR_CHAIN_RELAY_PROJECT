@@ -42,14 +42,16 @@ def main():
     ap.add_argument("--alpha", type=float, default=PropagationParams.alpha, help="detour weight")
     ap.add_argument("--threshold", type=float, default=-85.0, help="link usable at >= this, dBm")
     ap.add_argument("--noise", action="store_true", help="add shadowing to maps + fast fading to links")
-    ap.add_argument("--sigma-shadow", type=float, default=4.0)
-    ap.add_argument("--corr", type=float, default=3.0)
-    ap.add_argument("--sigma-fast", type=float, default=2.0)
+    ap.add_argument("--sigma-shadow", type=float, default=NoiseParams.sigma_shadow)
+    ap.add_argument("--corr", type=float, default=NoiseParams.corr_m)
+    ap.add_argument("--sigma-fast", type=float, default=NoiseParams.sigma_fast)
     ap.add_argument("--seed", type=int, default=0, help="fast-fading seed")
-    ap.add_argument("--floor", type=float, default=-100.0, help="colour-scale floor, dBm")
+    ap.add_argument("--floor", type=float, default=None, help="colour-scale floor, dBm (default P0-60)")
     ap.add_argument("--per-node", action="store_true", help="also save one map per node")
     ap.add_argument("--name", default="heatmap", help="output file name (no extension)")
     a = ap.parse_args()
+    if a.floor is None:
+        a.floor = a.P0 - 60.0
 
     grid = GridMap.load(GT + ".npy", GT + ".json")
     net = Network(grid, PropagationParams(P0=a.P0, n=a.n, alpha=a.alpha),
@@ -91,7 +93,7 @@ def main():
     fig, ax = plt.subplots(figsize=(7.5, 13))
     im = draw(ax, net, grid, links, conn, a.threshold, cov,
               f"P0 {a.P0} dBm, n {a.n}, alpha {a.alpha}, noise {'on' if a.noise else 'off'}\n"
-              f"colour = best RSSI from any node  |  solid link = >= {a.threshold:g} dBm", norm)
+              f"colour = best RSSI from any node  |  links green > -65, yellow, red dashed < {a.threshold:g}", norm)
     fig.colorbar(im, ax=ax, fraction=0.035, pad=0.02).set_label("RSSI (dBm)")
     ax.set_xlabel("world x (m)"); ax.set_ylabel("world y (m)")
     fig.tight_layout()

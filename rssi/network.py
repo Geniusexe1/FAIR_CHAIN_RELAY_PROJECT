@@ -29,7 +29,7 @@ from propagation import GridMap, PropagationParams, field_from, rssi_from_distan
 class NoiseParams:
     sigma_shadow: float = 4.0   # dB
     corr_m: float = 3.0         # m
-    sigma_fast: float = 2.0     # dB
+    sigma_fast: float = 3.0     # dB  -- paper Table I, measurement noise sigma_n
     enabled: bool = True
 
 

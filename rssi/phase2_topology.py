@@ -57,19 +57,26 @@ def route(grid, start, goal, spacing=0.25):
     return np.c_[np.interp(s, seg, xy[:, 0]), np.interp(s, seg, xy[:, 1])], seg[-1]
 
 
+GOOD_DBM = -65.0   # paper Fig. 9 legend: RSSI > -65 green, -65..-85 yellow, <= -85 red
+
+
+def link_colour(rssi, thr):
+    if not np.isfinite(rssi) or rssi < thr:
+        return "#d62728"
+    return "#2ca02c" if rssi > GOOD_DBM else "#e6b800"
+
+
 def draw(ax, net, grid, links, conn, thr, cov, title, norm):
     show = np.where(np.isfinite(cov), cov, np.where(grid.free, norm.vmin, np.nan))  # sealed -> floor colour
     im = ax.imshow(show, origin="lower", extent=grid.extent(),
                    cmap="turbo", norm=norm, interpolation="nearest", alpha=0.85)
     walls_overlay(ax, grid)
-    lcm = plt.get_cmap("RdYlGn")
-    lnorm = Normalize(thr - 10, net.prop.P0 - 15)
     for L in links:
         a, b = net.node(L["a"]), net.node(L["b"])
         up = np.isfinite(L["rssi"]) and L["rssi"] >= thr
         xs, ys = [a.xy[0], b.xy[0]], [a.xy[1], b.xy[1]]
-        ax.plot(xs, ys, color=lcm(lnorm(L["rssi"])) if up else "0.35",
-                lw=2.6 if up else 1.0, ls="-" if up else (0, (3, 3)), zorder=6)
+        ax.plot(xs, ys, color=link_colour(L["rssi"], thr), lw=2.8 if up else 1.4,
+                ls="-" if up else (0, (3, 3)), zorder=6)
         mx, my = np.mean(xs), np.mean(ys)
         txt = f"{L['rssi']:.0f}" + ("" if L["los"] else "*")
         ax.text(mx, my, txt, fontsize=7.5, ha="center", va="center", zorder=8,
@@ -117,7 +124,7 @@ def noise_check(net, gcs, res_ok):
     chk("links are symmetric (a->b == b->a)", sym < 1e-9, f"|diff| = {sym:.1e} dB")
 
     fig, axs = plt.subplots(1, 4, figsize=(20, 10), gridspec_kw=dict(width_ratios=[1, 1, 1, 1.1]))
-    norm = Normalize(-100, net.prop.P0)
+    norm = Normalize(net.prop.P0 - 60, net.prop.P0)
     g = net.grid
     for ax, img, t in [(axs[0], clean, "GCS clean (Phase 1 model)"),
                        (axs[1], noisy, f"GCS + shadowing (sigma {net.noise.sigma_shadow} dB, {net.noise.corr_m} m)")]:
@@ -148,9 +155,9 @@ def main():
                     help="where the head robot drives to (world m)")
     ap.add_argument("--threshold", type=float, default=-85.0, help="link usable at >= this, dBm")
     ap.add_argument("--frames", type=int, default=36)
-    ap.add_argument("--sigma-shadow", type=float, default=4.0)
-    ap.add_argument("--corr", type=float, default=3.0)
-    ap.add_argument("--sigma-fast", type=float, default=2.0)
+    ap.add_argument("--sigma-shadow", type=float, default=NoiseParams.sigma_shadow)
+    ap.add_argument("--corr", type=float, default=NoiseParams.corr_m)
+    ap.add_argument("--sigma-fast", type=float, default=NoiseParams.sigma_fast)
     ap.add_argument("--P0", type=float, default=PropagationParams.P0)
     ap.add_argument("--n", type=float, default=PropagationParams.n)
     ap.add_argument("--alpha", type=float, default=PropagationParams.alpha)
@@ -222,16 +229,15 @@ def main():
     print(f"\n  [{'PASS' if ok else 'FAIL'}] link 'clean' value equals a fresh eq.(1) evaluation"); results.append(ok)
 
     # ---- plots
-    norm = Normalize(-100, net.prop.P0)
-    picks = sorted(set([0, a.frames // 3, 2 * a.frames // 3, a.frames - 1]))
-    for k in picks:
+    norm = Normalize(net.prop.P0 - 60, net.prop.P0)
+    for k in range(len(frames)):                       # every frame as its own PNG
         _, links, conn, cov, pos, s = frames[k]
         for n in net.nodes: n.xy = pos[n.name]
         fig, ax = plt.subplots(figsize=(7.5, 13))
         im = draw(ax, net, grid, links, conn, a.threshold, cov,
                   f"frame {k}/{a.frames-1}  -  head {s:.1f} m along route\n"
                   f"coverage = best RSSI from any node (noisy)  |  link labels dBm, * = NLOS\n"
-                  f"solid = usable (>= {a.threshold:g} dBm), dashed grey = below", norm)
+                  f"links: green > -65, yellow -65..{a.threshold:g}, red dashed < {a.threshold:g} dBm (paper Fig. 9)", norm)
         fig.colorbar(im, ax=ax, fraction=0.035, pad=0.02).set_label("best RSSI (dBm)")
         ax.set_xlabel("world x (m)"); ax.set_ylabel("world y (m)")
         fig.tight_layout(); fig.savefig(os.path.join(OUT, f"phase2_frame_{k:02d}.png"), dpi=100); plt.close(fig)
