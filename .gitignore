@@ -28,3 +28,6 @@ __pycache__/
 
 # --- generated RSSI arrays (PNGs are kept) ----------------------------------
 rssi/out/*.npy
+
+# --- live node output (root-owned, rewritten continuously) ---------------
+rssi/out/live/

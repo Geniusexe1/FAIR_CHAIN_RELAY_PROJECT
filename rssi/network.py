@@ -8,11 +8,12 @@ Noise model (dB, added to eq. 1)
       together see nearly the same offset, as walls and furniture would cause.
       One static field per transmitter, sigma_shadow dB, correlation length
       corr_m (Gaussian kernel: corr(d) = exp(-(d/corr_m)^2), so corr(corr_m)=1/e).
+      Direction a->b uses a's field at b; b->a uses b's field at a.
   F   FAST FADING / measurement noise. i.i.d. N(0, sigma_fast) per reading.
 
 Shadowing fields are seeded per node name, so a run is reproducible and the same
-node keeps the same field. A link a<->b uses the average of S_a(b) and S_b(a),
-which keeps the link symmetric, as a physical channel is.
+node keeps the same field. Each link is evaluated in BOTH directions and its usable
+value is the weaker one (bidirectional connectivity).
 """
 from __future__ import annotations
 
@@ -100,17 +101,28 @@ class Network:
 
     # -- links
     def link(self, a: Node, b: Node, noisy: bool = True, rng=None) -> dict:
+        """Both directions of a link, and the usable (WEAKER) one.
+
+        Eq. (1) is reciprocal -- dE and dS are the same both ways -- so `clean` is
+        symmetric. The noise is not: a->b sees the transmitter a's shadowing at b,
+        b->a sees b's shadowing at a, and each direction gets its own fast-fading
+        draw. A link is only as good as its weaker direction (it must carry traffic
+        both ways), so `rssi` = min(rssi_ab, rssi_ba).
+        """
         fa = self._field(a)
         rb, cb = self.grid.world_to_cell(*b.xy)
+        ra, ca = self.grid.world_to_cell(*a.xy)
         dE, dbar, los = float(fa.dE[rb, cb]), float(fa.dbar[rb, cb]), bool(fa.los[rb, cb])
         clean = float(rssi_from_distances(dE, dbar, self.prop))
-        P = clean
+        ab = ba = clean
         if noisy and self.noise.enabled and np.isfinite(clean):
-            ra, ca = self.grid.world_to_cell(*a.xy)
-            P += 0.5 * (self._shadow_of(a)[rb, cb] + self._shadow_of(b)[ra, ca])
+            ab += float(self._shadow_of(a)[rb, cb])
+            ba += float(self._shadow_of(b)[ra, ca])
             if rng is not None:
-                P += rng.normal(0.0, self.noise.sigma_fast)
-        return dict(a=a.name, b=b.name, rssi=P, clean=clean, dE=dE, dbar=dbar, los=los)
+                ab += rng.normal(0.0, self.noise.sigma_fast)
+                ba += rng.normal(0.0, self.noise.sigma_fast)
+        return dict(a=a.name, b=b.name, rssi=min(ab, ba), rssi_ab=ab, rssi_ba=ba,
+                    clean=clean, dE=dE, dbar=dbar, los=los)
 
     def links(self, noisy=True, rng=None) -> list[dict]:
         out = []

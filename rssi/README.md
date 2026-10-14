@@ -17,26 +17,45 @@ curl -fsSL https://bootstrap.pypa.io/get-pip.py | .venv/bin/python
 .venv/bin/pip install numpy scipy matplotlib scikit-fmm
 ```
 
+## Connectivity margin map
+
+The heat map is a **client-to-GCS connectivity margin**, not "RSSI to the GCS". GCS and
+relays are held where they are; the client is placed virtually at every cell, keeping its
+**current** relay association (it never switches to whichever node is strongest there):
+
+    margin(x) = min( client@x <-> attached relay,
+                     weakest hop on the attached relay's current path to the GCS ) - eta
+
+- every link uses its **weaker direction** (bidirectional connectivity)
+- a strong link to the relay does not help if the relay's own upstream path is weak:
+  the margin is capped at (weakest upstream hop - eta) everywhere
+- **solid contour = zero margin**, the predicted boundary of the connected region
+- **dashed contour = `--cutoff`** (default -18 dB margin), a second boundary level
+- overlaid: the client's actual position and the current links (chain hops + client link),
+  coloured by the paper's bands, labelled with their RSSI (dBm)
+- colour bar: "Client-to-GCS connectivity margin (dB)"; grey = no propagation path at all
+- code: `margin.py` (`margin_map`, `draw_margin`, `margin_checks`); example: `out/margin_example.png`
+
 ## Try it yourself
 
-Place any nodes, get a coverage heatmap + link table:
+Place nodes **in chain order**: GCS first, client last. The client stays attached to the
+node before it (or `--attach NAME`):
 
 ```bash
-.venv/bin/python rssi/heatmap.py --node GCS 0 12
-.venv/bin/python rssi/heatmap.py --node GCS 0 12 --node relay1 -6.4 -1 --node head -9 -28
-.venv/bin/python rssi/heatmap.py --node GCS 0 12 --node head -9 -28 --noise --n 3 --per-node
+.venv/bin/python rssi/heatmap.py --node GCS 0 14 --node relay2 5 7 --node relay1 5 -1 --node head 5 -8 --noise
+.venv/bin/python rssi/heatmap.py ...same... --attach relay2            # head on relay2 instead
+.venv/bin/python rssi/heatmap.py ...same... --cutoff -10               # move the dashed contour
+.venv/bin/python rssi/heatmap.py ...same... --coverage                 # old best-RSSI map
 ```
 
-- the **first** node is the GCS; names starting `relay`/`head` get those markers
-- output: `rssi/out/user/<--name>.png` (`--per-node` adds one map per node)
-- a node that can't reach the GCS is drawn with a **red** outline
+- output: `rssi/out/user/<--name>.png` + a link table + a one-line margin summary
 - placing a node in a wall or off the map is rejected, with the valid bounds
 
 ## Reproduce the phases
 
 ```bash
 .venv/bin/python rssi/phase1_heatmap.py --gcs 0 12                 # single-GCS heatmap + 6 checks
-.venv/bin/python rssi/phase2_topology.py                           # moving GCS+relays+head, 7 checks
+.venv/bin/python rssi/phase2_topology.py                           # moving relays+head, 14 checks
 .venv/bin/python rssi/phase2_topology.py --n 3.0 --tag stress_n3   # harsher indoor exponent
 ```
 
@@ -50,14 +69,17 @@ Noise: `--sigma-shadow --corr --sigma-fast`. Link threshold: `--threshold`.
 | `propagation.py` | the model: grid, LOS, geodesic distance, eq. (1) |
 | `network.py` | nodes, noise (shadowing + fast fading), links, connectivity |
 | `phase1_heatmap.py` | Phase 1 heatmap + checks |
-| `phase2_topology.py` | Phase 2 dynamic topology + checks |
+| `margin.py` | client-to-GCS connectivity margin map + its checks |
+| `heatmap.py` | place your own nodes, render the margin map |
+| `phase2_topology.py` | Phase 2 dynamic topology: every frame is a margin map (head on relay1) |
 | `out/` | rendered results |
 
 ## Noise model
 
 - **Shadowing** — log-normal, spatially correlated (`sigma_shadow` dB over `corr_m` m),
-  one seeded field per transmitter, averaged both ways so links are symmetric.
-- **Fast fading** — i.i.d. `N(0, sigma_fast)` per reading.
+  one seeded field per transmitter, so a->b and b->a differ; a link's value is the
+  **weaker** direction. The path-loss part is reciprocal.
+- **Fast fading** — i.i.d. `N(0, sigma_fast)` per reading, per direction.
 
 Maps show clean + shadowing (an expectation surface); link readings add fast fading.
 
@@ -100,6 +122,15 @@ From any container on domain 42:
 | `/rssi/link/<a>__<b>` | Float32 | one link, noisy |
 | `/rssi/links` | String (JSON) | everything: positions, clean + noisy links, routes, chain |
 | `/rssi/markers` | MarkerArray | links coloured by the paper's bands, for RViz (`map` frame) |
+| `/rssi/margin/at_client` | Float32 | connectivity margin (dB) at the client's actual position |
+| `/rssi/margin/image` | Image (rgb8) | the margin map (`ros2 run rqt_image_view rqt_image_view`) |
+
+The margin map is also written to `rssi/out/live/margin_latest.png`. The client defaults to the
+last node in `nodes.yaml` (head), attached to the node before it; `--client relay2 --attach relay1`
+maps a relay instead (useful while FAST-LIO isn't running). Hop values are EMA-filtered link
+estimates (`--est-alpha 0.1`). The map is re-rendered only when a node changes cell, a hop
+estimate moves by more than `--est-change` (2 dB), or the topology changes — at most every
+`--map-period` (2 s). Idle, that is about once a minute.
 
 `rssi/ros/nodes.yaml` sets the nodes: the GCS is fixed at world (0, 14); relays come from
 `/relayN/odom` (world frame); the head from FAST-LIO `/Odometry` + (0, 12). Change positions or
@@ -110,6 +141,9 @@ Nothing drives the relays yet, so values only change by noise and by their slow 
 (~2 mm/s).
 
 ## Known model properties
+
+- Every radio, including the GCS's Rajant, uses the same P0: the model assumes identical
+  radios and antennas on every node.
 
 - `dbar` measures detour **length**, not walls crossed: a link that grazes a corner is
   NLOS but costs almost nothing.

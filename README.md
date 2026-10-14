@@ -119,7 +119,8 @@ Gazebo's window opens **behind other windows** — Alt+Tab to it.
 - Relays spawn, sense, and navigate across the two NUCs.
 - Relay waypoint accuracy **~2–8 cm**, including pure 1 m sideways goals (via reversing K-turns).
 - RSSI prediction (Seo et al., RA-L 2025, eq. 1) on the GT map: heatmaps, noise, link
-  topology, and a live ROS 2 node publishing every link from the robots' sim positions.
+  topology, client-to-GCS connectivity margin maps, and a live ROS 2 node publishing every
+  link and the margin map from the robots' sim positions.
   P0 measured on our Rajant Cardinals: -60.8 dBm. See `rssi/README.md`.
 - Ground-truth occupancy grid: `hospital_world/gt/hospital_gt.npy`
   (uint8, 1 = occupied, 0.05 m/cell, 27.2 × 59.1 m).

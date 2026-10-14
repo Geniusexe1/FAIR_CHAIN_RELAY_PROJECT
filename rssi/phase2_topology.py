@@ -9,7 +9,8 @@ and 1/3 of the head's progress. Every frame recomputes the noisy links and the
 best route from each robot back to the GCS.
 
 Writes rssi/out/phase2_noise_check.png   noise statistics vs what was injected
-       rssi/out/phase2_frame_XX.png      snapshots: coverage + links + RSSI labels
+       rssi/out/phase2_frame_XX.png      snapshots: client-to-GCS connectivity margin
+                                         (head attached to relay1) + zero contour + links
        rssi/out/phase2_links.png         every link's RSSI over the run
        rssi/out/phase2_topology.gif      the whole run
 """
@@ -26,6 +27,7 @@ sys.path.insert(0, HERE)
 from propagation import GridMap, PropagationParams, field_from          # noqa: E402
 from network import Network, Node, NoiseParams, connectivity            # noqa: E402
 from phase1_heatmap import walls_overlay                                # noqa: E402
+from margin import margin_map, draw_margin, margin_checks, summary_line, CBAR_LABEL  # noqa: E402
 
 ROOT = os.path.dirname(HERE)
 GT = os.path.join(ROOT, "hospital_world", "gt", "hospital_gt")
@@ -107,9 +109,12 @@ def noise_check(net, gcs, res_ok):
 
     rng = np.random.default_rng(0)
     r1, r2 = net.nodes[0], net.nodes[-1]
-    samples = np.array([net.link(r1, r2, True, rng)["rssi"] for _ in range(4000)])
+    reads = [net.link(r1, r2, True, rng) for _ in range(4000)]
+    samples = np.array([L["rssi_ab"] for L in reads])          # one direction, one reading
     fast_sd = samples.std()
-    sym = abs(net.link(r1, r2, True)["rssi"] - net.link(r2, r1, True)["rssi"])
+    L12, L21 = net.link(r1, r2, True), net.link(r2, r1, True)
+    sym = abs(L12["clean"] - L21["clean"])                     # the path-loss part is reciprocal
+    weaker = all(L["rssi"] == min(L["rssi_ab"], L["rssi_ba"]) for L in reads[:200] + [L12, L21])
 
     print("\nnoise checks")
     def chk(name, ok, det):
@@ -121,7 +126,9 @@ def noise_check(net, gcs, res_ok):
         f"rho({net.noise.corr_m} m) = {rho:.3f}  (target 0.368)")
     chk("fast fading std matches sigma_fast", abs(fast_sd - net.noise.sigma_fast) < 0.1 * net.noise.sigma_fast,
         f"{fast_sd:.2f} dB vs {net.noise.sigma_fast} over 4000 reads")
-    chk("links are symmetric (a->b == b->a)", sym < 1e-9, f"|diff| = {sym:.1e} dB")
+    chk("path loss is reciprocal (clean a->b == b->a)", sym < 1e-9, f"|diff| = {sym:.1e} dB")
+    chk("a link's value is its weaker direction", weaker,
+        f"{r1.name}->{r2.name} {L12['rssi_ab']:.1f} / {r2.name}->{r1.name} {L12['rssi_ba']:.1f} -> {L12['rssi']:.1f} dBm")
 
     fig, axs = plt.subplots(1, 4, figsize=(20, 10), gridspec_kw=dict(width_ratios=[1, 1, 1, 1.1]))
     norm = Normalize(net.prop.P0 - 60, net.prop.P0)
@@ -192,6 +199,13 @@ def main():
     print(f"\n  [{'PASS' if same else 'FAIL'}] noise off reproduces Phase 1 exactly"); results.append(same)
     noise_check(net, gcs, results)
 
+    chain = [n.name for n in net.nodes]                 # GCS > relay2 > relay1 > head, fixed
+    head.xy, r1.xy, r2.xy = tuple(path[len(path) // 2]), tuple(path[len(path) // 3]), tuple(path[len(path) // 6])
+    print("\nmargin checks (head at mid-route)")
+    def rep(name, ok, det):
+        results.append(ok); print(f"  [{'PASS' if ok else 'FAIL'}] {name}: {det}")
+    margin_checks(net, chain, a.threshold, rep)
+
     rng = np.random.default_rng(42)
     idx = np.linspace(0, len(path) - 1, a.frames).round().astype(int)
     frames, history = [], []
@@ -202,7 +216,8 @@ def main():
         r2.xy = tuple(path[int(i * 1 / 3)])
         links = net.links(noisy=True, rng=rng)
         conn = connectivity(links, net.nodes, a.threshold, "GCS")
-        cov = net.coverage_map(noisy=True)
+        est = {(L["a"], L["b"]): L["rssi"] for L in links}      # this frame's link estimates
+        cov = margin_map(net, "head", "relay1", chain, a.threshold, estimates=est)
         frames.append((k, [dict(L) for L in links], conn, cov,
                        {n.name: n.xy for n in net.nodes}, i * 0.25))
         history.append({f"{L['a']}-{L['b']}": L["rssi"] for L in links})
@@ -216,10 +231,12 @@ def main():
         print(f"  {L['a']+'-'+L['b']:16} {L['rssi']:7.1f} {L['clean']:7.1f} {L['dE']:6.1f} {L['dbar']:7.1f}  "
               f"{'UP  ' if up else 'down'}{'' if L['los'] else ' *'}")
     print("\nroute back to GCS per frame (bottleneck RSSI):")
-    for k, links, conn, _, pos, s in frames[:: max(1, a.frames // 9)] + [frames[-1]]:
+    for k, links, conn, res, pos, s in frames[:: max(1, a.frames // 9)] + [frames[-1]]:
         h = conn.get("head")
         print(f"  frame {k:2d}  head at {s:5.1f} m  ->  " +
               (f"{' > '.join(reversed(h[1]))}   (weakest hop {h[0]:.1f} dBm)" if h else "HEAD DISCONNECTED"))
+        for n in net.nodes: n.xy = pos[n.name]
+        print(f"             {summary_line(res, net)}")
 
     # ---- per-link verification against the model, last frame
     L = frames[-1][1][0]
@@ -231,14 +248,14 @@ def main():
     # ---- plots
     norm = Normalize(net.prop.P0 - 60, net.prop.P0)
     for k in range(len(frames)):                       # every frame as its own PNG
-        _, links, conn, cov, pos, s = frames[k]
+        _, links, conn, res, pos, s = frames[k]
         for n in net.nodes: n.xy = pos[n.name]
         fig, ax = plt.subplots(figsize=(7.5, 13))
-        im = draw(ax, net, grid, links, conn, a.threshold, cov,
-                  f"frame {k}/{a.frames-1}  -  head {s:.1f} m along route\n"
-                  f"coverage = best RSSI from any node (noisy)  |  link labels dBm, * = NLOS\n"
-                  f"links: green > -65, yellow -65..{a.threshold:g}, red dashed < {a.threshold:g} dBm (paper Fig. 9)", norm)
-        fig.colorbar(im, ax=ax, fraction=0.035, pad=0.02).set_label("best RSSI (dBm)")
+        im = draw_margin(ax, net, res,
+                         f"frame {k}/{a.frames-1}  -  head {s:.1f} m along route, attached to relay1 (fixed)\n"
+                         f"chain GCS > relay2 > relay1 > head  |  solid = zero margin, dashed = cutoff\n"
+                         f"links: green > -65, yellow -65..{a.threshold:g}, red dashed < {a.threshold:g} dBm (paper Fig. 9)")
+        fig.colorbar(im, ax=ax, fraction=0.035, pad=0.02).set_label(CBAR_LABEL)
         ax.set_xlabel("world x (m)"); ax.set_ylabel("world y (m)")
         fig.tight_layout(); fig.savefig(os.path.join(OUT, f"phase2_frame_{k:02d}.png"), dpi=100); plt.close(fig)
 
@@ -255,9 +272,9 @@ def main():
         fig, ax = plt.subplots(figsize=(5.2, 9))
         def upd(j):
             ax.clear()
-            _, links, conn, cov, pos, s = frames[j]
+            _, links, conn, res, pos, s = frames[j]
             for n in net.nodes: n.xy = pos[n.name]
-            draw(ax, net, grid, links, conn, a.threshold, cov, f"head {s:.1f} m along route", norm)
+            draw_margin(ax, net, res, f"connectivity margin - head {s:.1f} m along route")
             ax.set_xticks([]); ax.set_yticks([])
         anim = animation.FuncAnimation(fig, upd, frames=len(frames))
         anim.save(os.path.join(OUT, "phase2_topology.gif"), writer=animation.PillowWriter(fps=3), dpi=70)

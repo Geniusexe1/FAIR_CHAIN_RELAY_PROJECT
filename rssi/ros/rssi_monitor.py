@@ -15,6 +15,19 @@ Publishes
                                                    chain in nodes.yaml order (GCS -> relays ->
                                                    client). -inf if any node is missing
   /rssi/markers                   visualization_msgs/MarkerArray  links for RViz
+  /rssi/margin/at_client          std_msgs/Float32 client-to-GCS connectivity margin (dB) at
+                                                   the client's actual position
+  /rssi/margin/image              sensor_msgs/Image  the margin heat map (rgb8), re-rendered
+                                                   only when something changed (see below)
+  + <map-dir>/margin_latest.png   same image on disk
+
+Margin map (margin.py): GCS and relays held fixed, the client placed virtually at
+every cell, association FIXED (client -> --attach, default the node before it in
+nodes.yaml), margin(x) = min(client@x <-> attach, weakest hop attach -> GCS) - eta,
+weaker direction of every link. Zero contour = connected boundary, dashed contour
+= --cutoff. Hop values are the EMA-filtered link estimates. The map is re-rendered
+when a node moves to another cell, a hop estimate moves by > --est-change dB, or
+the topology (node set / client / attach) changes -- at most every --map-period s.
 
 Noise (when enabled): static spatially-correlated shadowing per transmitter plus
 fresh N(0, sigma_n) per publication -- the "measurement" a radio would report.
@@ -32,6 +45,7 @@ from rclpy.node import Node as RosNode
 from rclpy.qos import qos_profile_sensor_data
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Float32, String
+from sensor_msgs.msg import Image
 from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Point
 
@@ -39,6 +53,11 @@ RSSI_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, RSSI_DIR)
 from propagation import GridMap, PropagationParams              # noqa: E402
 from network import Network, Node, NoiseParams, connectivity    # noqa: E402
+from margin import margin_map, draw_margin, summary_line, CBAR_LABEL, CUTOFF_DB  # noqa: E402
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 GOOD_DBM = -65.0          # paper Fig. 9 bands
 
@@ -83,6 +102,16 @@ class RssiMonitor(RosNode):
         self.pub_chain = self.create_publisher(Float32, "/rssi/chain", 10)
         self.pub_markers = self.create_publisher(MarkerArray, "/rssi/markers", 10)
         self.pub_link, self.pub_e2e = {}, {}
+        self.pub_margin = self.create_publisher(Float32, "/rssi/margin/at_client", 10)
+        self.pub_image = self.create_publisher(Image, "/rssi/margin/image", 1)
+        order = [n for n, *_ in self.spec]
+        self.client = a.client or order[-1]
+        self.attach = a.attach or order[order.index(self.client) - 1]
+        self.chain = order[:order.index(self.attach) + 1] + [self.client]
+        self.est = {}                    # (a, b) -> EMA-filtered RSSI estimate (dBm)
+        self.drawn = None                # state the current map was rendered from
+        self.drawn_at = 0.0
+        os.makedirs(a.map_dir, exist_ok=True)
         self.create_timer(1.0 / a.rate, self._tick)
         self.create_timer(a.log_every, self._log)
         self.latest = None
@@ -90,7 +119,9 @@ class RssiMonitor(RosNode):
             f"P0 {a.P0} n {a.n} alpha {a.alpha} | threshold {a.threshold} dBm | "
             f"noise {'off' if a.no_noise else f'shadow {a.sigma_shadow} dB/{a.corr} m + sigma_n {a.sigma_n} dB'} | "
             f"GCS '{self.gcs}' | tracking " +
-            ", ".join(f"{n}<-{t}" for n, k, t, o in self.spec if t))
+            ", ".join(f"{n}<-{t}" for n, k, t, o in self.spec if t) +
+            f" | margin map: {self.client} fixed on {self.attach}, chain {' > '.join(self.chain)}, "
+            f"cutoff {a.cutoff:+g} dB -> {a.map_dir}")
 
     # ---------------------------------------------------------------- inputs
     def _odom(self, name, off, msg):
@@ -165,6 +196,55 @@ class RssiMonitor(RosNode):
         self.pub_links.publish(String(data=json.dumps(payload)))
         self.pub_markers.publish(self._markers(nodes, links))
         self.latest = payload
+        self._margin(nodes, links)
+
+    # ---------------------------------------------------------- margin map
+    def _margin(self, nodes, links):
+        k = self.a.est_alpha
+        for L in links:
+            key = (L["a"], L["b"])
+            if np.isfinite(L["rssi"]):
+                prev = self.est.get(key)
+                self.est[key] = L["rssi"] if prev is None or not np.isfinite(prev) else (1 - k) * prev + k * L["rssi"]
+            else:
+                self.est[key] = L["rssi"]
+        have = {n.name for n in nodes}
+        if not all(n in have for n in self.chain):
+            return                                              # chain incomplete: nothing to map
+        cells = {n.name: self.grid.world_to_cell(*n.xy) for n in nodes if n.name in self.chain}
+        hops = {key: v for key, v in self.est.items() if key[0] in self.chain and key[1] in self.chain}
+        state = (tuple(self.chain), cells, hops)
+        now = time.time()
+        if self.drawn is not None:
+            topo, cells0, hops0 = self.drawn
+            same = (topo == state[0] and cells0 == cells and
+                    all(abs(hops[h] - hops0.get(h, np.inf)) <= self.a.est_change
+                        or (not np.isfinite(hops[h]) and not np.isfinite(hops0.get(h, 0.0)))
+                        for h in hops))
+            if same or now - self.drawn_at < self.a.map_period:
+                return
+        res = margin_map(self.net, self.client, self.attach, self.chain, self.a.threshold, estimates=self.est)
+        r, c = cells[self.client]
+        self.pub_margin.publish(Float32(data=float(res["margin"][r, c])))
+        fig, ax = plt.subplots(figsize=(6, 10.5), dpi=80)
+        im = draw_margin(ax, self.net, res,
+                         f"{time.strftime('%H:%M:%S')}  {self.client} fixed on {self.attach}  |  "
+                         f"P0 {self.a.P0} n {self.a.n} alpha {self.a.alpha} eta {self.a.threshold:g}\n"
+                         f"solid = zero margin, dashed = {self.a.cutoff:+g} dB  |  hop labels = filtered estimates (dBm)",
+                         cutoff=self.a.cutoff)
+        fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02).set_label(CBAR_LABEL)
+        ax.set_xlabel("world x (m)"); ax.set_ylabel("world y (m)")
+        fig.tight_layout(); fig.canvas.draw()
+        rgb = np.asarray(fig.canvas.buffer_rgba())[:, :, :3].copy()
+        tmp = os.path.join(self.a.map_dir, ".margin_latest.png")
+        fig.savefig(tmp); os.replace(tmp, os.path.join(self.a.map_dir, "margin_latest.png"))
+        plt.close(fig)
+        img = Image(height=rgb.shape[0], width=rgb.shape[1], encoding="rgb8", is_bigendian=0,
+                    step=rgb.shape[1] * 3, data=rgb.tobytes())
+        img.header.stamp = self.get_clock().now().to_msg(); img.header.frame_id = "map"
+        self.pub_image.publish(img)
+        self.drawn, self.drawn_at = state, now
+        self.margin_note = summary_line(res, self.net, self.a.cutoff)
 
     def _markers(self, nodes, links):
         ma = MarkerArray()
@@ -208,6 +288,8 @@ class RssiMonitor(RosNode):
         if ch["weakest"] is not None:
             lines.append(f"  CHAIN (eq.5) {' > '.join(ch['order'])}: hops {ch['hops']}  "
                          f"weakest {ch['weakest']:.1f} dBm  {'UP' if ch['up'] else 'BROKEN'}")
+        if getattr(self, "margin_note", None):
+            lines.append(f"  MARGIN {self.margin_note}")
         unreach = [n for n in p["nodes"] if n != self.gcs and n not in p["routes"]]
         if unreach:
             lines.append(f"  NO ROUTE TO {self.gcs}: {', '.join(unreach)}")
@@ -227,6 +309,14 @@ def main():
     ap.add_argument("--corr", type=float, default=NoiseParams.corr_m)
     ap.add_argument("--sigma-n", type=float, default=NoiseParams.sigma_fast)
     ap.add_argument("--no-noise", action="store_true")
+    ap.add_argument("--client", default=None, help="client node (default: last in nodes.yaml)")
+    ap.add_argument("--attach", default=None, help="client's FIXED relay (default: the node before it)")
+    ap.add_argument("--cutoff", type=float, default=CUTOFF_DB, help="dashed contour, margin dB")
+    ap.add_argument("--map-dir", default="/live", help="where margin_latest.png is written")
+    ap.add_argument("--map-period", type=float, default=2.0, help="min s between map renders")
+    ap.add_argument("--est-change", type=float, default=2.0,
+                    help="re-render when a hop estimate moves by more than this (dB)")
+    ap.add_argument("--est-alpha", type=float, default=0.1, help="EMA weight of a new link reading")
     ap.add_argument("--marker-frame", default="map")
     ap.add_argument("--marker-offset", nargs=2, type=float, default=[0.0, -12.0],
                     help="world -> marker frame. map = world - (0, 12) in this setup")
