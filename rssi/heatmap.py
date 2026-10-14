@@ -28,7 +28,7 @@ sys.path.insert(0, HERE)
 from propagation import GridMap, PropagationParams                     # noqa: E402
 from network import Network, Node, NoiseParams, connectivity           # noqa: E402
 from phase2_topology import draw, GT                                   # noqa: E402
-from margin import margin_map, draw_margin, summary_line, CBAR_LABEL, CUTOFF_DB  # noqa: E402
+from margin import margin_map, draw_margin, summary_line, CBAR_LABEL, STRONG_DBM  # noqa: E402
 
 KINDS = {"gcs": "gcs", "relay": "relay", "head": "head"}
 
@@ -57,8 +57,8 @@ def main():
     ap.add_argument("--per-node", action="store_true", help="also save one map per node")
     ap.add_argument("--client", default=None, help="client node (default: the last one)")
     ap.add_argument("--attach", default=None, help="client's relay (default: the node before it in the chain)")
-    ap.add_argument("--cutoff", type=float, default=CUTOFF_DB,
-                    help="second contour, margin level in dB (the 'strong enough' boundary)")
+    ap.add_argument("--strong", type=float, default=STRONG_DBM,
+                    help="dashed contour: end-to-end RSSI counted as strong, dBm (paper green band)")
     ap.add_argument("--coverage", action="store_true", help="best-RSSI coverage map instead of the margin")
     ap.add_argument("--name", default="heatmap", help="output file name (no extension)")
     a = ap.parse_args()
@@ -112,13 +112,13 @@ def main():
         upchain = chain[:chain.index(attach) + 1] + [client]
         est = {(L["a"], L["b"]): L["rssi"] for L in links}          # the readings printed above
         res = margin_map(net, client, attach, upchain, a.threshold, estimates=est, noisy=a.noise)
-        print("\n  " + summary_line(res, net, a.cutoff))
+        print("\n  " + summary_line(res, net, a.strong))
         im = draw_margin(ax, net, res,
                          f"P0 {a.P0} dBm, n {a.n}, alpha {a.alpha}, threshold {a.threshold:g} dBm, "
                          f"noise {'on' if a.noise else 'off'}\n"
-                         f"{client} attached to {attach} (fixed)  |  solid = zero margin, dashed = {a.cutoff:+g} dB\n"
+                         f"{client} attached to {attach} (fixed)  |  solid = zero margin, dashed = strong ({a.strong:g} dBm)\n"
                          f"links: green > -65, yellow -65..{a.threshold:g}, red dashed < {a.threshold:g} dBm",
-                         cutoff=a.cutoff)
+                         strong_dbm=a.strong)
         fig.colorbar(im, ax=ax, fraction=0.035, pad=0.02).set_label(CBAR_LABEL)
     else:
         im = draw(ax, net, grid, links, conn, a.threshold, cov,

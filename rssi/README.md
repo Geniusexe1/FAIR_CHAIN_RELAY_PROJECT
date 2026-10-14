@@ -30,11 +30,12 @@ relays are held where they are; the client is placed virtually at every cell, ke
 - a strong link to the relay does not help if the relay's own upstream path is weak:
   the margin is capped at (weakest upstream hop - eta) everywhere
 - **solid contour = zero margin**, the predicted boundary of the connected region
-- **dashed contour = `--cutoff`** (default -18 dB margin), a second boundary level
+- **dashed contour = strong link**: end-to-end RSSI of `--strong` dBm (default -65, the paper's
+  green band), i.e. margin = -65 - eta = **+20 dB**
 - overlaid: the client's actual position and the current links (chain hops + client link),
   coloured by the paper's bands, labelled with their RSSI (dBm)
 - colour bar: "Client-to-GCS connectivity margin (dB)"; grey = no propagation path at all
-- code: `margin.py` (`margin_map`, `draw_margin`, `margin_checks`); example: `out/margin_example.png`
+- code: `margin.py` (`margin_map`, `draw_margin`, `margin_checks`); examples: `out/v3_margin_strong-65dBm/margin_example*.png`
 
 ## Try it yourself
 
@@ -44,7 +45,7 @@ node before it (or `--attach NAME`):
 ```bash
 .venv/bin/python rssi/heatmap.py --node GCS 0 14 --node relay2 5 7 --node relay1 5 -1 --node head 5 -8 --noise
 .venv/bin/python rssi/heatmap.py ...same... --attach relay2            # head on relay2 instead
-.venv/bin/python rssi/heatmap.py ...same... --cutoff -10               # move the dashed contour
+.venv/bin/python rssi/heatmap.py ...same... --strong -70               # move the dashed contour (dBm)
 .venv/bin/python rssi/heatmap.py ...same... --coverage                 # old best-RSSI map
 ```
 
@@ -61,6 +62,17 @@ node before it (or `--attach NAME`):
 
 Positions are **world** coordinates (Gazebo frame). Model parameters: `--P0 --n --alpha`.
 Noise: `--sigma-shadow --corr --sigma-fast`. Link threshold: `--threshold`.
+
+## Result folders (kept as a record, never overwritten)
+
+| folder | what the phase-2 frames show |
+|---|---|
+| `out/v1_coverage/` | original: best RSSI from any node (before the mentor's revision) |
+| `out/v2_margin_strong-18dB/` | connectivity margin, dashed contour at margin -18 dB |
+| `out/v3_margin_strong-65dBm/` | **current**: connectivity margin, dashed contour at -65 dBm (margin +20 dB) |
+
+Each holds `phase2_measuredP0/` (P0 -60.8) and `phase2_paperP0/` (P0 -30). New runs:
+`phase2_topology.py --tag vN_<what>/phase2_measuredP0`.
 
 ## Files
 

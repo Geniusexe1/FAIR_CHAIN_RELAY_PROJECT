@@ -25,7 +25,7 @@ Margin map (margin.py): GCS and relays held fixed, the client placed virtually a
 every cell, association FIXED (client -> --attach, default the node before it in
 nodes.yaml), margin(x) = min(client@x <-> attach, weakest hop attach -> GCS) - eta,
 weaker direction of every link. Zero contour = connected boundary, dashed contour
-= --cutoff. Hop values are the EMA-filtered link estimates. The map is re-rendered
+= --strong (end-to-end RSSI, dBm). Hop values are the EMA-filtered link estimates. The map is re-rendered
 when a node moves to another cell, a hop estimate moves by > --est-change dB, or
 the topology (node set / client / attach) changes -- at most every --map-period s.
 
@@ -53,7 +53,7 @@ RSSI_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, RSSI_DIR)
 from propagation import GridMap, PropagationParams              # noqa: E402
 from network import Network, Node, NoiseParams, connectivity    # noqa: E402
-from margin import margin_map, draw_margin, summary_line, CBAR_LABEL, CUTOFF_DB  # noqa: E402
+from margin import margin_map, draw_margin, summary_line, CBAR_LABEL, STRONG_DBM  # noqa: E402
 
 import matplotlib
 matplotlib.use("Agg")
@@ -121,7 +121,7 @@ class RssiMonitor(RosNode):
             f"GCS '{self.gcs}' | tracking " +
             ", ".join(f"{n}<-{t}" for n, k, t, o in self.spec if t) +
             f" | margin map: {self.client} fixed on {self.attach}, chain {' > '.join(self.chain)}, "
-            f"cutoff {a.cutoff:+g} dB -> {a.map_dir}")
+            f"strong {a.strong:g} dBm -> {a.map_dir}")
 
     # ---------------------------------------------------------------- inputs
     def _odom(self, name, off, msg):
@@ -230,8 +230,8 @@ class RssiMonitor(RosNode):
         im = draw_margin(ax, self.net, res,
                          f"{time.strftime('%H:%M:%S')}  {self.client} fixed on {self.attach}  |  "
                          f"P0 {self.a.P0} n {self.a.n} alpha {self.a.alpha} eta {self.a.threshold:g}\n"
-                         f"solid = zero margin, dashed = {self.a.cutoff:+g} dB  |  hop labels = filtered estimates (dBm)",
-                         cutoff=self.a.cutoff)
+                         f"solid = zero margin, dashed = strong ({self.a.strong:g} dBm)  |  hop labels = filtered estimates (dBm)",
+                         strong_dbm=self.a.strong)
         fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02).set_label(CBAR_LABEL)
         ax.set_xlabel("world x (m)"); ax.set_ylabel("world y (m)")
         fig.tight_layout(); fig.canvas.draw()
@@ -244,7 +244,7 @@ class RssiMonitor(RosNode):
         img.header.stamp = self.get_clock().now().to_msg(); img.header.frame_id = "map"
         self.pub_image.publish(img)
         self.drawn, self.drawn_at = state, now
-        self.margin_note = summary_line(res, self.net, self.a.cutoff)
+        self.margin_note = summary_line(res, self.net, self.a.strong)
 
     def _markers(self, nodes, links):
         ma = MarkerArray()
@@ -311,7 +311,7 @@ def main():
     ap.add_argument("--no-noise", action="store_true")
     ap.add_argument("--client", default=None, help="client node (default: last in nodes.yaml)")
     ap.add_argument("--attach", default=None, help="client's FIXED relay (default: the node before it)")
-    ap.add_argument("--cutoff", type=float, default=CUTOFF_DB, help="dashed contour, margin dB")
+    ap.add_argument("--strong", type=float, default=STRONG_DBM, help="dashed contour: strong end-to-end RSSI, dBm")
     ap.add_argument("--map-dir", default="/live", help="where margin_latest.png is written")
     ap.add_argument("--map-period", type=float, default=2.0, help="min s between map renders")
     ap.add_argument("--est-change", type=float, default=2.0,

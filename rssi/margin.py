@@ -26,7 +26,8 @@ from scipy.ndimage import distance_transform_edt
 from propagation import rssi_from_distances
 
 CBAR_LABEL = "Client-to-GCS connectivity margin (dB)"
-CUTOFF_DB = -18.0      # second contour: the "strong enough" boundary, as a margin level (dB)
+STRONG_DBM = -65.0     # dashed contour: "strong" end-to-end link (paper Fig. 9 green band), dBm.
+                       # Drawn at margin = STRONG_DBM - threshold (+20 dB at eta -85).
 
 
 def upstream_path(chain: list[str], attach: str) -> list[str]:
@@ -92,9 +93,9 @@ def _contour_field(m, grid):
     return np.ma.masked_array(m[tuple(idx)], mask=sealed)
 
 
-def draw_margin(ax, net, res: dict, title: str = "", vmin: float = -30.0, vmax: float = 10.0,
-                cutoff: float | None = CUTOFF_DB):
-    """Margin heatmap + zero contour + cutoff contour + actual client + current chain links.
+def draw_margin(ax, net, res: dict, title: str = "", vmin: float = -30.0, vmax: float = 25.0,
+                strong_dbm: float | None = STRONG_DBM):
+    """Margin heatmap + zero contour + strong-link contour + actual client + current chain links.
 
     The scale is diverging about 0 but asymmetric: the margin can never exceed
     (weakest upstream hop - threshold), so the positive side is short.
@@ -113,8 +114,9 @@ def draw_margin(ax, net, res: dict, title: str = "", vmin: float = -30.0, vmax: 
     ys = grid.origin[1] + (np.arange(H) + 0.5) * grid.res
     show = _contour_field(m, grid)
     legend = []
+    cutoff = None if strong_dbm is None else strong_dbm - res["threshold"]
     for lvl, ls, lab in [(0.0, "-", "zero margin (connected boundary)"),
-                         (cutoff, (0, (5, 3)), f"margin {cutoff:+g} dB cutoff" if cutoff is not None else "")]:
+                         (cutoff, (0, (5, 3)), f"strong: {strong_dbm:g} dBm end-to-end (margin {cutoff:+g} dB)" if cutoff is not None else "")]:
         if lvl is None:
             continue
         if show.min() < lvl < show.max():           # skip levels the map never crosses
@@ -151,7 +153,8 @@ def draw_margin(ax, net, res: dict, title: str = "", vmin: float = -30.0, vmax: 
     return im
 
 
-def summary_line(res: dict, net, cutoff: float | None = CUTOFF_DB) -> str:
+def summary_line(res: dict, net, strong_dbm: float | None = STRONG_DBM) -> str:
+    cutoff = None if strong_dbm is None else strong_dbm - res["threshold"]
     c = res["client"]
     nodes = {n.name: n for n in net.nodes}
     r, cc = net.grid.world_to_cell(*nodes[c].xy)
@@ -160,7 +163,7 @@ def summary_line(res: dict, net, cutoff: float | None = CUTOFF_DB) -> str:
     up = (f"upstream {' > '.join(res['path'])} weakest {w[0]}-{w[1]} {w[2]:.1f} dBm"
           if w else "attached directly to GCS")
     pct = np.nanmean(res["margin"] >= 0) * 100
-    cut = "" if cutoff is None else f", >= {cutoff:+g} dB {np.nanmean(res['margin'] >= cutoff) * 100:.1f}%"
+    cut = "" if cutoff is None else f", strong (>= {strong_dbm:g} dBm) {np.nanmean(res['margin'] >= cutoff) * 100:.1f}%"
     return (f"client {c} on {res['attach']} | margin at client {here:+.1f} dB | {up} | "
             f"floor area: margin >= 0 {pct:.1f}%{cut}")
 

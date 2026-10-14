@@ -27,7 +27,7 @@ sys.path.insert(0, HERE)
 from propagation import GridMap, PropagationParams, field_from          # noqa: E402
 from network import Network, Node, NoiseParams, connectivity            # noqa: E402
 from phase1_heatmap import walls_overlay                                # noqa: E402
-from margin import margin_map, draw_margin, margin_checks, summary_line, CBAR_LABEL  # noqa: E402
+from margin import margin_map, draw_margin, margin_checks, summary_line, CBAR_LABEL, STRONG_DBM  # noqa: E402
 
 ROOT = os.path.dirname(HERE)
 GT = os.path.join(ROOT, "hospital_world", "gt", "hospital_gt")
@@ -170,6 +170,7 @@ def main():
     ap.add_argument("--alpha", type=float, default=PropagationParams.alpha)
     ap.add_argument("--tag", default="", help="suffix for output files")
     ap.add_argument("--no-gif", action="store_true")
+    ap.add_argument("--strong", type=float, default=STRONG_DBM, help="dashed contour, dBm")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
 
@@ -236,7 +237,7 @@ def main():
         print(f"  frame {k:2d}  head at {s:5.1f} m  ->  " +
               (f"{' > '.join(reversed(h[1]))}   (weakest hop {h[0]:.1f} dBm)" if h else "HEAD DISCONNECTED"))
         for n in net.nodes: n.xy = pos[n.name]
-        print(f"             {summary_line(res, net)}")
+        print(f"             {summary_line(res, net, a.strong)}")
 
     # ---- per-link verification against the model, last frame
     L = frames[-1][1][0]
@@ -253,8 +254,9 @@ def main():
         fig, ax = plt.subplots(figsize=(7.5, 13))
         im = draw_margin(ax, net, res,
                          f"frame {k}/{a.frames-1}  -  head {s:.1f} m along route, attached to relay1 (fixed)\n"
-                         f"chain GCS > relay2 > relay1 > head  |  solid = zero margin, dashed = cutoff\n"
-                         f"links: green > -65, yellow -65..{a.threshold:g}, red dashed < {a.threshold:g} dBm (paper Fig. 9)")
+                         f"chain GCS > relay2 > relay1 > head  |  solid = zero margin, dashed = strong ({a.strong:g} dBm)\n"
+                         f"links: green > -65, yellow -65..{a.threshold:g}, red dashed < {a.threshold:g} dBm (paper Fig. 9)",
+                         strong_dbm=a.strong)
         fig.colorbar(im, ax=ax, fraction=0.035, pad=0.02).set_label(CBAR_LABEL)
         ax.set_xlabel("world x (m)"); ax.set_ylabel("world y (m)")
         fig.tight_layout(); fig.savefig(os.path.join(OUT, f"phase2_frame_{k:02d}.png"), dpi=100); plt.close(fig)
@@ -274,7 +276,7 @@ def main():
             ax.clear()
             _, links, conn, res, pos, s = frames[j]
             for n in net.nodes: n.xy = pos[n.name]
-            draw_margin(ax, net, res, f"connectivity margin - head {s:.1f} m along route")
+            draw_margin(ax, net, res, f"connectivity margin - head {s:.1f} m along route", strong_dbm=a.strong)
             ax.set_xticks([]); ax.set_yticks([])
         anim = animation.FuncAnimation(fig, upd, frames=len(frames))
         anim.save(os.path.join(OUT, "phase2_topology.gif"), writer=animation.PillowWriter(fps=3), dpi=70)
