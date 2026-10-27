@@ -48,7 +48,7 @@ class Explorer:
         self.rg = RoadGraph.build(self.g, cache_dir=os.path.join(HERE, "cache"))
         self.pred = Predictor(self.g, PropagationParams(P0=a.P0, n=a.n, alpha=a.alpha),
                               NoiseParams(sigma_fast=a.sigma_n))
-        self.pp = PlannerParams(sigma=a.sigma_n, keep_deployed=a.keep_deployed, B_mcts=a.mcts)
+        self.pp = PlannerParams(sigma=a.sigma_n, keep_deployed=a.keep_deployed, B_mcts=a.mcts, d_sep=a.d_sep)
         self.pl = RelayPlanner(self.g, self.rg, self.pred, tuple(a.gcs), self.pp, seed=a.seed)
         self.rng = np.random.default_rng(a.seed)
         self.client = Robot("head", tuple(a.client), "client", a.v_client)
@@ -61,7 +61,8 @@ class Explorer:
         self.reachable = reach & (self.clear >= a.clearance)
         self.blacklist = np.zeros(self.g.shape, bool)
         self.t = 0.0
-        self.log, self.trace = [], []          # decisions; (time, coverage, chain RSSI, n relays)
+        self.log, self.trace = [], []          # decisions; (time, coverage, chain RSSI, n relays, min sep)
+        self.close, self.decision = [], 0      # robot pairs closer than 0.5 m, with context
         self.out = os.path.join(HERE, "out", "explore", a.tag)
         os.makedirs(self.out, exist_ok=True)
 
@@ -124,7 +125,7 @@ class Explorer:
     def execute(self, plan):
         robots = {r.name: r for r in self.relays + [self.client]}
         sched = schedule(plan, {n: robots[n].vmax for n in plan.seg})
-        tf = self.pp.t_f
+        tf = len(next(iter(plan.seg.values())))      # per plan: the ladder may refine t_f
         cr_ok = cr_n = 0
         for t in range(1, tf + 1):
             dt = sched[t - 1]["dt"]
@@ -147,7 +148,15 @@ class Explorer:
                     self.sense(self.client.xy)
                 P = self.chain_rssi(plan.chain, pos, noisy=True)
                 cr_n += 1; cr_ok += P >= self.pp.eta
-                self.trace.append((self.t + f * dt, self.coverage(), P, len(self.engaged)))
+                bots = self.relays + [self.client]
+                sep, pa, pb = min((np.hypot(a_.xy[0] - b_.xy[0], a_.xy[1] - b_.xy[1]), a_, b_)
+                                  for i_, a_ in enumerate(bots) for b_ in bots[i_ + 1:])
+                if sep < 0.5:                                      # probable contact: keep the evidence
+                    self.close.append((self.decision, plan.decision, t, round(self.t + f * dt, 1), pa.name, pb.name,
+                                       *np.round(pa.xy, 2), *np.round(pb.xy, 2), round(sep, 2),
+                                       pa.name in plan.seg and plan.seg[pa.name][t - 1] > 0.05,
+                                       pb.name in plan.seg and plan.seg[pb.name][t - 1] > 0.05))
+                self.trace.append((self.t + f * dt, self.coverage(), P, len(self.engaged), sep))
             self.t += dt
         return sched, cr_ok, cr_n
 
@@ -255,6 +264,7 @@ class Explorer:
                     continue                           # all tried were blacklisted; re-detect
                 if plan.decision == "deploy":
                     self.engaged = [n for n in plan.chain if n.startswith("relay")]
+                self.decision = k + 1
                 sched, ok, n = self.execute(plan)
                 k += 1
                 cov = 100 * self.coverage()
@@ -273,12 +283,20 @@ class Explorer:
         self.summary(time.time() - wall0)
 
     def summary(self, wall):
-        tr = np.array(self.trace) if self.trace else np.zeros((1, 4))
+        with open(os.path.join(self.out, "close_passes.csv"), "w", newline="") as fh:
+            w = csv.writer(fh)
+            w.writerow(["decision", "decision_type", "interval", "sim_time_s", "robot_a", "robot_b",
+                        "a_x", "a_y", "b_x", "b_y", "sep_m", "a_moving", "b_moving"])
+            w.writerows(self.close)
+        tr = np.array(self.trace) if self.trace else np.zeros((1, 5))
         cr = 100 * np.mean(tr[:, 2] >= self.pp.eta)
+        # robot bodies are ~0.3 m: closer than 0.5 m centre-to-centre is a probable contact
+        close = 100 * np.mean(tr[:, 4] < 0.5)
         fig, axs = plt.subplots(3, 1, figsize=(11, 9), sharex=True)
         axs[0].plot(tr[:, 0], 100 * tr[:, 1]); axs[0].set_ylabel("explored (%)"); axs[0].grid(alpha=.3)
         axs[0].set_title(f"P0 {self.a.P0} dBm  |  final coverage {100 * tr[-1, 1]:.1f}% of reachable floor  |  "
-                         f"channel reliability CR {cr:.1f}%  |  {len(self.relays)} relays", fontsize=10)
+                         f"channel reliability CR {cr:.1f}%  |  {len(self.relays)} relays  |  "
+                         f"closest robots {tr[:, 4].min():.2f} m", fontsize=10)
         axs[1].plot(tr[:, 0], tr[:, 2], lw=0.7, label="end-to-end chain RSSI (simulated reading)")
         axs[1].axhline(self.pp.eta, color="r", ls="--", lw=1, label=f"eta {self.pp.eta:g} dBm")
         axs[1].axhline(-65, color="g", ls=":", lw=1, label="-65 dBm")
@@ -286,7 +304,8 @@ class Explorer:
         axs[2].step(tr[:, 0], tr[:, 3], where="post"); axs[2].set_ylabel("relays engaged")
         axs[2].set_xlabel("sim time (s)"); axs[2].grid(alpha=.3)
         fig.tight_layout(); fig.savefig(os.path.join(self.out, "summary.png"), dpi=90); plt.close(fig)
-        print(f"\ndone: coverage {100 * tr[-1, 1]:.1f}% | CR {cr:.1f}% | sim time {self.t:.0f} s | "
+        print(f"\ndone: coverage {100 * tr[-1, 1]:.1f}% | CR {cr:.1f}% | closest robots {tr[:, 4].min():.2f} m "
+              f"(< 0.5 m in {close:.1f}% of samples) | sim time {self.t:.0f} s | "
               f"relays engaged {len(self.engaged)} | wall {wall:.0f} s\nwrote {os.path.relpath(self.out)}")
 
 
@@ -299,7 +318,8 @@ def main():
     ap.add_argument("--sigma-n", type=float, default=3.0)
     ap.add_argument("--gcs", nargs=2, type=float, default=[0.0, 14.0])
     ap.add_argument("--client", nargs=2, type=float, default=[0.0, 12.0])
-    ap.add_argument("--relays", nargs="+", type=float, default=[2.5, 12.0, 3.5, 12.0], help="x y x y ...")
+    ap.add_argument("--relays", nargs="+", type=float, default=[-1.75, 14.0, -1.75, 13.0],
+                    help="x y x y ... (parked off the road graph, west of the GCS)")
     ap.add_argument("--v-client", type=float, default=0.7, help="m/s (chain_robot DWB max_vel_x)")
     ap.add_argument("--v-relay", type=float, default=0.5, help="m/s (relay MPPI vx_max)")
     ap.add_argument("--sensor", type=float, default=8.0, help="mapping range (m)")
@@ -309,6 +329,7 @@ def main():
     ap.add_argument("--max-decisions", type=int, default=400)
     ap.add_argument("--mcts", type=int, default=300)
     ap.add_argument("--keep-deployed", action="store_true")
+    ap.add_argument("--d-sep", type=float, default=PlannerParams.d_sep, help="robot separation (m); 0 = off")
     ap.add_argument("--seed", type=int, default=0)
     Explorer(ap.parse_args()).run()
 

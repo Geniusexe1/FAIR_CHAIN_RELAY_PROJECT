@@ -86,42 +86,79 @@ For each next frontier (nearest first, as the explorer ranks them):
   robot's remaining distance.
 - Engaged relays are **re-placed** for each new mission point (the paper). `--keep-deployed`
   instead never moves a relay once placed (cuts coverage; see results).
+- **Safe moves only**: if MCTS cannot keep every step above the requirement it retries with
+  more routes and finer steps (|J|, t_f) = (3,5) -> (5,5) -> (5,8) -> (6,12); a move that still
+  cannot is not executed -- the goal is skipped.
+- **Robots keep apart** (`d_sep` 0.8 m): routes avoid the other robots, MCTS rejects any step
+  where two robots come closer than 0.8 m during the interval, and relay spots / goal / parked
+  relays must be 0.8 m apart. Idle relays **park off the road graph**, west of the GCS
+  (`nodes.yaml` `park`), not on the corridor in the client's way.
+- **Known space only** (live): Nav2 plans only through what the robots' own map knows, so the
+  coordinator turns `/map` into a known-free mask and routes / waypoints / relay spots stay in it
+  (`RoadGraph.routes(allowed=...)`, `RelayPlanner.allowed`).
 - Predictions use the GT map and the model's expectation with sigma = sigma_n; the paper's
   KF-GPR needs real RSSI readings to train, which the sim does not have.
 
-Offline (the whole run on the GT map, frames + summary + events.csv per run):
+Offline (the whole run on the GT map; frames, summary, events.csv, close_passes.csv per run):
 
 ```bash
-.venv/bin/python rssi/explore_sim.py --P0 -30 --tag v1_paperP0_replace
-.venv/bin/python rssi/explore_sim.py --P0 -30 --keep-deployed --tag v1_paperP0_stayPut
+.venv/bin/python rssi/explore_sim.py --P0 -30 --tag my_run            # current method
+.venv/bin/python rssi/explore_sim.py --P0 -30 --d-sep 0 --tag no_avoid # robot avoidance off
+.venv/bin/python rssi/explore_sim.py --P0 -30 --keep-deployed --tag stay_put
 ```
 
-Results (`out/explore/`, 2 relays, client 0.7 m/s, relays 0.5 m/s, 8 m mapping range):
+Results (`out/explore/`, 2 relays, client 0.7 m/s, relays 0.5 m/s, 8 m mapping range, P0 -30
+unless noted). CR = simulated readings >= -85 dBm; "close" = samples with two robots < 0.5 m
+apart (bodies are ~0.3 m, so a probable contact):
 
-| run | coverage | CR (sim readings >= -85) | sim time |
-|---|---|---|---|
-| `v1_paperP0_replace` (P0 -30, paper method) | **100%** | 97.1% | 1840 s |
-| `v1_paperP0_stayPut` (P0 -30, relays never re-placed) | 97.9% | 98.0% | 1473 s |
-| `v1_measuredP0_replace` (P0 -60.8) | 48.0% | 80.1% | 682 s |
-| `v1_measuredP0_stayPut` (P0 -60.8) | 27.9% | 88.8% | 141 s |
-| `v0_*` | first attempt, kept as a record: relays never re-placed and the per-direction requirement was -83.0 dBm | | |
+| run | what changed | coverage | CR | closest / close |
+|---|---|---|---|---|
+| `v0_*` | first attempt: relays never re-placed, per-direction requirement -83.0 dBm | 37% (P0 -60.8) | 75% | - |
+| `v1_paperP0_replace` | paper re-placement, requirement -81.7 dBm | **100%** | 97.1% | - |
+| `v1_paperP0_stayPut` | relays never re-placed | 97.9% | 98.0% | - |
+| `v1_measuredP0_replace` / `_stayPut` | P0 -60.8 | 48.0% / 27.9% | 80.1% / 88.8% | - |
+| `v2_paperP0_replace_safeMoves` | moves that can't keep every step are skipped | 99.3% | **99.4%** | - |
+| `v3_paperP0_noAvoid_baseline` | v2 + old relay spawn in the corridor, no avoidance | 99.3% | 99.4% | 0.02 m / 1.7% |
+| `v3_paperP0_avoidRobots` | + robot separation, relays parked off the road | 99.3% | 98.8% | 0.06 m / **0.1%** |
+| `v4_paperP0_avoidContinuous` | + separation checked through each whole interval | 99.3% | 98.8% | 0.06 m / 0.2% |
+| `v5_paperP0_closePassLog` | v4 + every close pass logged (`close_passes.csv`) | see folder | | |
 
 At the measured 5 GHz P0, two relays cannot cover the hospital, and with every hop near the
 limit a 3-hop chain holds only ~0.75^3 of the time -- the per-hop theta is the paper's.
 CR dips happen between waypoints: like the paper, the constraint is enforced at the discrete
 steps only.
 
-Live (needs the chain stack without `--explore` and both relays' Nav2 up):
+### Live
 
 ```bash
-rssi/ros/run_exploration.sh          # coordinator container + explorer (remapped) in safe_robot
-docker logs -f fair_coord            # every decision: CLIENT_ONLY / DEPLOY / SKIP
+rssi/ros/run_full_live.sh run4 --P0 -30   # EVERYTHING: stack, relays parked, brains, Nav2 checks,
+                                          # RSSI monitor, coordinator, explorer, ground-truth logger
+docker logs -f fair_coord                 # every decision: CLIENT_ONLY / DEPLOY / SKIP / REJECTED
 ```
 
-The explorer's `navigate_to_pose` is remapped to `/coord/navigate_to_pose`; a skipped goal
-is rejected, which makes the explorer try its next-ranked frontier. The coordinator publishes
-`/coord/chain`, which `rssi_monitor.py` follows (`--chain-topic`) so the live margin map tracks
-the current topology. Not yet run end-to-end on the live sim.
+The explorer's `navigate_to_pose` action is remapped (its five hidden endpoints -- Humble does
+not remap an action by its name) to `/coord/navigate_to_pose`; a rejected goal makes it try its
+next-ranked frontier. What the coordinator does besides planning:
+
+| | why |
+|---|---|
+| restarts a Nav2 stack (wait -> STARTUP -> RESET + STARTUP) when it rejects a goal | at RTF ~0.2 a node misses Nav2's 4 s bond heartbeat and the lifecycle manager shuts the whole stack down |
+| aborts the explorer's goal when the client cannot follow its plan; rejects a goal after 2 failures | otherwise the explorer re-sends the same unreachable frontier forever |
+| rejects goals within 0.6 m of a reached one or of the client | the explorer re-sends frontiers it cannot clear from where it stands |
+| station keeping: an idle relay > 0.3 m from its spot is driven back (also during plans) | the relays creep ~5 mm/s when idle (drive plugin, `hospital_world/CHECKPOINT.md`) |
+| re-publishes `/map` cropped to the explored area on `/coord/map` for the explorer + detector | some participants on this host fall back to UDP, where a large map does not arrive |
+| plans only through known-free space | Nav2 cannot plan through unknown space |
+
+`rssi/ros/live_logger.sh` records Gazebo ground-truth poses every 20 s: `out/live_runs/*.csv`.
+
+**Live result (run3, P0 -30, 16 min wall):** the coordinator gated every explorer goal (12
+planned client moves, 417 skips, 1 Nav2 revival, 9 station-keeping corrections); chain_robot
+reached 5 goals and drove 12.6 m from its spawn into the north-east room; **closest approach
+between any two robots 0.82 m** (an earlier run, before the fixes, had chain_robot push relay1
+~4 m). It then wedged itself 0.10 m from a wall: with Nav2's 0.5 m inflation its start is in
+an obstacle, so no plan and no backup recovery succeed. That is chain_robot's own controller /
+costmap behaviour, below this layer, and is what currently stops a full live exploration.
+Logs: `out/live_runs/run3_*`.
 
 ## Result folders (kept as a record, never overwritten)
 

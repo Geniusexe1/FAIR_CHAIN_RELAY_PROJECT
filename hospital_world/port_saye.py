@@ -252,6 +252,19 @@ classic_plugins = '''    <!-- ==================================================
 '''
 s = s[:gz_block_start] + classic_plugins + s[gz_block_end:]
 
+# Body collision: upstream's is a 0.30 x 0.09 x 0.12 m spine box, far smaller than the car
+# (wheels at x +-0.11, y +-0.10, camera rack at z 0.184). Gazebo lidars only hit collision
+# shapes, so other robots' lidars barely saw a relay and chain_robot drove into them.
+# Body-sized box: 0.32 x 0.23 x 0.18 m, bottom at the axle (base_link z = 0), wheels still
+# carry the contacts with the floor.
+s, nb = re.subn(r'(<collision name="saye/BaseCollision">\s*<pose>)0 0 \.06 0 0 0(</pose>.*?<size>)\.3 \.09 \.12(</size>)',
+                r'\g<1>0 0 .10 0 0 0\g<2>.32 .23 .18\g<3>', s, count=1, flags=re.S)
+assert nb == 1, 'BaseCollision box not found'
+
+# Ray visualisation: gzclient draws every lidar ray (the blue fan) each frame, which
+# made the GUI lag badly with two relays. The sensor itself is unaffected.
+s = s.replace('<visualize>true</visualize>', '<visualize>false</visualize>')
+
 open(DST, 'w').write(s)
 print(f'wrote {DST}')
 print(f'  gz_frame_id removed : {before}')

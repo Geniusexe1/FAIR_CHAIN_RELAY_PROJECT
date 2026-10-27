@@ -1,0 +1,32 @@
+# occ_grid_mapping parameters for the hospital world. Same as the package's default.yaml
+# except the map size: theirs is 1200 x 1300 cells (120 x 130 m, 1.5 MB per /map message).
+#
+# A 1.5 MB /map does not fit FastDDS's default 512 KB shared-memory segment and, over UDP,
+# the kernel's default socket buffers (net.core.rmem_max = 212992) drop its fragments --
+# so the frontier detector, the explorer, the coordinator and Nav2 silently stopped
+# receiving the map. The hospital is 27 x 59 m: this grid covers it with 2 m to spare,
+# 320 x 630 cells = 197 KB, which every node receives with default transports.
+#
+# Map frame = chain_robot's spawn = world (0, 12). Hospital in the map frame:
+#   x -13.6 .. 13.6,  y -48.1 .. 11.0   ->  grid x -16 .. 16, y -50 .. 13
+mapping:
+  ros__parameters:
+    mapping:
+      map:
+        sizex: 320
+        sizey: 630
+        initx: 160
+        inity: 500
+        cell_size: 0.1
+      robot_laser:
+        x: 0.0
+        y: 0.0
+        theta: 0.0
+      sensor_model:
+        P_occ: 0.99
+        P_free: 0.3
+        P_prior: 0.5
+      gap_thresh: 0.1
+      occ_thresh: 0.50005
+      free_thresh: 0.49995
+      r_max: 7.0

@@ -36,7 +36,9 @@ R "ros2 launch fast_lio mapping.launch.py rviz:=false" /tmp/2_fastlio.log
 W "Initialize the map kdtree" /tmp/2_fastlio.log "fast_lio"
 
 echo "[3/7] occupancy grid"
-R "ros2 launch occ_grid_mapping mapping.launch.xml" /tmp/3_occ.log
+# Our copy of the package's launch with a hospital-sized map: theirs is 1.5 MB per /map,
+# which nodes silently stop receiving (see occ_grid_hospital.yaml).
+R "ros2 launch /hw/hospital_mapping.launch.xml" /tmp/3_occ.log
 W "mapped_cell_area" /tmp/3_occ.log "occ_grid"
 
 echo "[4/7] chain robot controller"

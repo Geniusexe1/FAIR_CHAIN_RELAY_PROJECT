@@ -12,13 +12,17 @@ gcs:
   # the robots start -- not ON chain_robot's spawn at (0, 12).
   xy: [0.0, 14.0]
 
+# park: where an idle relay waits (world). Off the road graph, west of the GCS, so it is
+# not in the client's way; the exploration coordinator keeps it there (station keeping).
 relay1:
   topic: /relay1/odom
   offset: [0.0, 0.0]
+  park: [-1.75, 14.0]
 
 relay2:
   topic: /relay2/odom
   offset: [0.0, 0.0]
+  park: [-1.75, 13.0]
 
 head:
   topic: /Odometry

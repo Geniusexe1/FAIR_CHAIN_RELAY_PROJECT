@@ -50,6 +50,7 @@ class PlannerParams:            # paper Table I unless noted
     t_f: int = 5                # rollout length = number of synchronised intervals
     C_p: float = 1.0            # UCT balancing coefficient
     n_routes: int = 3           # candidate trajectories per robot (|J|)       -- ours
+    d_sep: float = 0.8          # min distance between robots at every waypoint (m) -- ours
     keep_deployed: bool = False # True: relays never move once placed; False (paper):
                                 # engaged relays are re-placed for each new mission point
 
@@ -126,6 +127,7 @@ class RelayPlanner:
                  params: PlannerParams = PlannerParams(), seed: int = 0, gcs_name: str = "GCS"):
         self.grid, self.rg, self.pred, self.gcs = grid, rg, pred, tuple(gcs_xy)
         self.G = gcs_name                         # radio name: seeds the GCS's shadowing field
+        self.allowed = None                       # optional bool grid: where robots may drive
         self.p = params
         self.rng = np.random.default_rng(seed)
 
@@ -155,7 +157,7 @@ class RelayPlanner:
         along Gamma* towards its weaker neighbour by beta * |P_{r-1,r} - P_{r,r+1}|.
         `fixed` = already-placed (name, xy) kept as they are (keep_deployed mode).
         Returns (positions, hops, Gamma*)."""
-        routes = self.rg.routes(self.gcs, goal, k=1)
+        routes = self.rg.routes(self.gcs, goal, k=1, allowed=self.allowed)
         if not routes:
             return None, None, None
         G = routes[0]
@@ -206,19 +208,23 @@ class RelayPlanner:
         return {relays[i].name: int(j) for i, j in zip(ri, ci)}
 
     def _travel(self, a, b) -> float:
-        R = self.rg.routes(a, b, k=1)
+        R = self.rg.routes(a, b, k=1, allowed=self.allowed)
         return length(R[0]) if R else np.inf
 
     # ----------------------------------------- sequential MCTS (eq. 16-17)
-    def mcts(self, name: str, start, target, pred_name: str, pred_traj: np.ndarray):
+    def mcts(self, name: str, start, target, pred_name: str, pred_traj: np.ndarray, others=()):
         """Trajectory of `name` from start to target over t_f intervals that keeps
         Pr[P_{pred,name}(t) >= eta] >= theta at every t, the predecessor following
-        pred_traj (t_f+1, 2)."""
+        pred_traj (t_f+1, 2), and stays d_sep from every other robot: `others` are
+        (t_f+1, 2) trajectories (NaN rows = position unknown at that step)."""
         tf = self.p.t_f
+        others = [np.asarray(o, float) for o in others]
         if math.dist(start, target) < 0.3:
             stay = np.repeat([start], tf + 1, axis=0)
             return stay, np.zeros(tf), True
-        routes = self.rg.routes(start, target, k=self.p.n_routes)
+        avoid = {tuple(np.round(o[k], 2)) for o in others for k in (0, -1) if np.isfinite(o[k]).all()}
+        routes = self.rg.routes(start, target, k=self.p.n_routes, avoid=list(avoid), avoid_r=self.p.d_sep,
+                                allowed=self.allowed)
         if not routes:
             stay = np.repeat([start], tf + 1, axis=0)
             return stay, np.zeros(tf), False
@@ -238,7 +244,25 @@ class RelayPlanner:
         def Q(j, i, t):
             key = (j, i, t)
             if key not in qcache:
-                P = self.pred.link(pred_name, tuple(pred_traj[t]), name, pos(j, i))
+                x = pos(j, i)
+                x0 = pos(j, max(i - 1, 0))                      # where it came from (if it advanced)
+                clash = False
+                if t > 0:                                      # whole interval t-1 -> t, both moving
+                    for o in others:
+                        if not np.isfinite(o[t]).all():
+                            continue
+                        o0 = o[t - 1] if np.isfinite(o[t - 1]).all() else o[t]
+                        for f in np.linspace(0.0, 1.0, 6):
+                            a_ = (x0[0] + f * (x[0] - x0[0]), x0[1] + f * (x[1] - x0[1]))
+                            b_ = (o0[0] + f * (o[t][0] - o0[0]), o0[1] + f * (o[t][1] - o0[1]))
+                            if math.dist(a_, b_) < self.p.d_sep:
+                                clash = True; break
+                        if clash:
+                            break
+                if self.allowed is not None and t > 0 and not clash:
+                    rr, cc = self.grid.world_to_cell(*x)
+                    clash = not self.allowed[rr, cc]           # robots cannot plan through unknown space
+                P = -np.inf if clash else self.pred.link(pred_name, tuple(pred_traj[t]), name, x)
                 qcache[key] = (1.0 - remaining(j, i) / dhat) if P >= self.p.req else -1.0
             return qcache[key]
 
@@ -298,23 +322,47 @@ class RelayPlanner:
         return traj, np.diff(arc), ok
 
     # ------------------------------------------------------------- top level
+    # If MCTS cannot keep every step of a move above the requirement, retry with more
+    # candidate routes and finer steps; a move that still cannot is NOT executed.
+    LADDER = ((3, 5), (5, 5), (5, 8), (6, 12))          # (|J| routes, t_f intervals)  -- ours
+
+    def _tries(self):
+        keep = (self.p.n_routes, self.p.t_f)
+        try:
+            for nr, tf in self.LADDER:
+                self.p.n_routes, self.p.t_f = nr, tf
+                yield tf
+        finally:
+            self.p.n_routes, self.p.t_f = keep
+
     def plan(self, goal, client: Robot, relays: list[Robot], engaged: list[str]) -> Plan:
         """engaged: relay names currently in the chain, GCS outwards."""
         goal = tuple(goal)
         byname = {r.name: r for r in relays}
         chain_xy = [(self.G, self.gcs)] + [(n, byname[n].xy) for n in engaged]
-        tf = self.p.t_f
+        why = "no feasible chain with %d relays" % len(relays)
 
-        if self.in_region(chain_xy, client.name, goal):
+        d = self.p.d_sep
+        blocked = [r.name for r in relays if math.dist(r.xy, goal) < d]
+        if blocked:
+            why = f"goal within {d} m of {', '.join(blocked)}"
+        if self.in_region(chain_xy, client.name, goal) and not blocked:
             tail, txy = chain_xy[-1]
-            traj, seg, ok = self.mcts(client.name, client.xy, goal, tail, np.repeat([txy], tf + 1, axis=0))
-            plan = Plan("client_only", goal, [self.G] + engaged + [client.name], {client.name: goal})
-            plan.traj[client.name], plan.seg[client.name] = traj, seg
-            for r in relays:
-                plan.traj[r.name] = np.repeat([r.xy], tf + 1, axis=0); plan.seg[r.name] = np.zeros(tf)
-            plan.note = "goal inside the bounded region" + ("" if ok else " (MCTS could not keep every step)")
-            self._fill_hops(plan, client.name)
-            return plan
+            for tf in self._tries():
+                parked = [np.repeat([r.xy], tf + 1, axis=0) for r in relays]
+                traj, seg, ok = self.mcts(client.name, client.xy, goal, tail, np.repeat([txy], tf + 1, axis=0),
+                                          others=parked)
+                if not ok:
+                    continue
+                plan = Plan("client_only", goal, [self.G] + engaged + [client.name], {client.name: goal})
+                plan.traj[client.name], plan.seg[client.name] = traj, seg
+                for r in relays:
+                    plan.traj[r.name] = np.repeat([r.xy], tf + 1, axis=0); plan.seg[r.name] = np.zeros(tf)
+                plan.note = f"goal inside the bounded region (t_f {tf})"
+                self._fill_hops(plan, client.name)
+                return plan
+            why = "goal inside the region but no client trajectory keeps every step"
+            # fall through: a relay may be able to cover the way there
 
         R = len(relays)
         # one more relay than now; with every relay already out, the paper re-places them
@@ -343,32 +391,51 @@ class RelayPlanner:
             h = [self.pred.link(names[i], pts[i], names[i + 1], pts[i + 1]) for i in range(len(pts) - 1)]
             if min(h) < self.p.req:
                 continue
-            plan = Plan("deploy", goal, names[:-1] + [client.name])
-            prev_name, prev_traj = self.G, np.repeat([self.gcs], tf + 1, axis=0)
-            all_ok = True
-            for n in order:                                     # sequential, GCS outwards
-                tgt = spots[ass[n]]
-                traj, seg, ok = self.mcts(n, byname[n].xy, tgt, prev_name, prev_traj)
-                plan.targets[n], plan.traj[n], plan.seg[n] = tgt, traj, seg
-                prev_name, prev_traj = n, traj
-                all_ok &= ok
-            traj, seg, ok = self.mcts(client.name, client.xy, goal, prev_name, prev_traj)
-            plan.targets[client.name], plan.traj[client.name], plan.seg[client.name] = goal, traj, seg
-            all_ok &= ok
-            for r in relays:
-                if r.name not in plan.traj:                     # idle relays stay put
-                    plan.traj[r.name] = np.repeat([r.xy], tf + 1, axis=0); plan.seg[r.name] = np.zeros(tf)
-            plan.note = (f"{k} relay(s) engaged; final hops " +
-                         ", ".join(f"{v:.1f}" for v in h) +
-                         ("" if all_ok else " | MCTS could not keep every intermediate step"))
-            self._fill_hops(plan, client.name)
-            return plan
+            idle = [r for r in relays if r.name not in order]
+            fixed_pts = [spots[ass[n]] for n in order] + [goal] + [r.xy for r in idle]
+            if any(math.dist(p_, q_) < d for i_, p_ in enumerate(fixed_pts) for q_ in fixed_pts[i_ + 1:]):
+                why = f"{k} relay(s): relay spots / goal / parked relays closer than {d} m"
+                continue
+            for tf in self._tries():
+                def until1(xy):                                 # a robot that will move later:
+                    o = np.full((tf + 1, 2), np.nan)            # only known for the first step
+                    o[:2] = xy
+                    return o
+                planned = [np.repeat([r.xy], tf + 1, axis=0) for r in idle]
+                plan = Plan("deploy", goal, names[:-1] + [client.name])
+                prev_name, prev_traj = self.G, np.repeat([self.gcs], tf + 1, axis=0)
+                all_ok = True
+                for n in order:                                 # sequential, GCS outwards
+                    tgt = spots[ass[n]]
+                    later = [until1(byname[m].xy) for m in order if m != n and not any(
+                        m == q for q in plan.traj)] + [until1(client.xy)]
+                    traj, seg, ok = self.mcts(n, byname[n].xy, tgt, prev_name, prev_traj,
+                                              others=planned + later)
+                    planned.append(traj)
+                    plan.targets[n], plan.traj[n], plan.seg[n] = tgt, traj, seg
+                    prev_name, prev_traj = n, traj
+                    all_ok &= ok
+                    if not all_ok:
+                        break
+                if not all_ok:
+                    continue
+                traj, seg, ok = self.mcts(client.name, client.xy, goal, prev_name, prev_traj, others=planned)
+                if not ok:
+                    continue
+                plan.targets[client.name], plan.traj[client.name], plan.seg[client.name] = goal, traj, seg
+                for r in relays:
+                    if r.name not in plan.traj:                 # idle relays stay put
+                        plan.traj[r.name] = np.repeat([r.xy], tf + 1, axis=0); plan.seg[r.name] = np.zeros(tf)
+                plan.note = (f"{k} relay(s) engaged (t_f {tf}); final hops " +
+                             ", ".join(f"{v:.1f}" for v in h))
+                self._fill_hops(plan, client.name)
+                return plan
+            why = f"{k} relay(s) could be placed but no trajectories keep every step"
 
-        return Plan("skip", goal, [self.G] + engaged + [client.name],
-                    note=f"no feasible chain with {len(relays)} relays")
+        return Plan("skip", goal, [self.G] + engaged + [client.name], note=why)
 
     def _fill_hops(self, plan: Plan, client: str):
-        for t in range(self.p.t_f + 1):
+        for t in range(len(next(iter(plan.traj.values())))):
             row = []
             for a, b in zip(plan.chain[:-1], plan.chain[1:]):
                 ax = self.gcs if a == self.G else tuple(plan.traj[a][t])

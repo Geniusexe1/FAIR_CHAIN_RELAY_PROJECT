@@ -37,10 +37,10 @@
         </geometry>
       </visual>
       <collision name="saye/BaseCollision">
-        <pose>0 0 .06 0 0 0</pose>
+        <pose>0 0 .10 0 0 0</pose>
         <geometry>
           <box>
-            <size>.3 .09 .12</size>
+            <size>.32 .23 .18</size>
           </box>
         </geometry>
       </collision>
@@ -179,7 +179,7 @@
           <visibility_mask>0xffffffff</visibility_mask>
         </ray>
         <topic>${NS}/scan</topic>
-        <visualize>true</visualize>
+        <visualize>false</visualize>
         <update_rate>10</update_rate>
         <plugin name="${NS}_lidar" filename="libgazebo_ros_ray_sensor.so">
           <ros><namespace>/${NS}</namespace><remapping>~/out:=scan</remapping></ros>

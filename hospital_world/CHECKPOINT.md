@@ -561,3 +561,51 @@ Floor and ceiling are excluded via `--skip` (either would fill the whole grid).
 NOTE: `trimesh` and `pycollada` were pip-installed into the running `safe_robot` container
 and are **lost if it is recreated**. Reinstall with
 `pip install trimesh pycollada` before re-running.
+
+---
+
+# 2026-10-27/28 — live exploration fixes (sim side)
+
+**Relay lidar ray fan made the GUI lag.** `<visualize>true</visualize>` on the relay lidar had
+gzclient draw every ray. `port_saye.py` now sets it false (sensor unaffected).
+
+**RTF.** Measured: gzserver physics thread ~67 %, sensor thread ~40 % (chain_robot's MID-360
+casting 12 000 rays per scan against the hospital meshes). The MID-360's `<downsample>` was
+raised 2 -> 4 **inside the safe_robot container**
+(`/root/.gazebo/models/chain_robot/model.sdf`, original kept as `model.sdf.orig`; lost if the
+container is recreated). Sensor thread -> ~7 %. RTF 0.36 without the relays, ~0.2 with them;
+the rest is physics (100 ODE iterations, 1 ms step, 24 track wheels in contact) -- solver
+iterations 100 -> 50 would be the next lever, not applied.
+
+**chain_robot drove into the relays.** Gazebo lidars hit COLLISION shapes only, and the saye
+model (upstream too) has a 0.30 x 0.09 x 0.12 m spine box as its body collision, so the relays
+were nearly invisible to chain_robot's lidar. `port_saye.py` now gives the body a
+0.32 x 0.23 x 0.18 m box (bottom at the axle; wheels still carry the floor contact). Relays
+now park off the road graph, west of the GCS (`rssi/ros/nodes.yaml` `park`), and the planner
+keeps robots 0.8 m apart. Live run 3: closest approach 0.82 m (before: relay1 pushed ~4 m).
+
+**/map silently stopped arriving.** occ_grid_mapping's default grid is 1200 x 1300 cells =
+1.5 MB per message. That does not fit FastDDS's 512 KB shared-memory segment, and over UDP the
+host's default socket buffers (`net.core.rmem_max` 212992, changing it needs sudo) drop the
+fragments: the frontier detector, the explorer ("No map received yet" -> "No frontiers" -> its
+`is_goal_occupied()` crashes on a None map) and the coordinator never got it. Fix:
+`hospital_mapping.launch.xml` (copy of the package launch) + `occ_grid_hospital.yaml`, a
+32 x 63 m grid sized to the hospital = 197 KB. `run_chain_stack.sh` uses it.
+(An 8 MB SHM segment profile for the mapper worked briefly but not reliably: some participants
+log `RTPS_TRANSPORT_SHM ... open_and_lock_file failed` and fall back to UDP.)
+
+**Nav2 shuts itself down at low RTF.** A node that misses the lifecycle manager's 4 s bond
+heartbeat (e.g. during a CPU spike) makes it declare CRITICAL FAILURE and deactivate the whole
+stack; once its manager hung mid-reset for 30+ min and only relaunching the Nav2 stage helped.
+`rssi/ros/run_full_live.sh` checks every Nav2 is ACTIVE after start-up (STARTUP, then
+RESET + STARTUP), and the exploration coordinator does the same whenever a goal is rejected.
+
+**Partial restarts leave a mess.** Relaunching only the mapper left its child
+`pointcloud_to_laserscan` running -> two same-named nodes and a silent `/scan`; killed nodes
+pile up as zombies and FastDDS SHM files. When things get strange: `stop_all.sh`,
+`docker restart safe_robot nuc1`, `fastdds shm clean`, then `run_full_live.sh`.
+Also: `pkill -f <pattern>` inside `bash -c` matches its own shell -- use `[p]attern`.
+
+**chain_robot wedges against walls.** Its own controller brought it to 0.10 m from a wall in the
+north-east room; with Nav2's 0.5 m global inflation the start pose is in an obstacle, so no plan
+and no backup succeed. Still open (its stack, unmodified).

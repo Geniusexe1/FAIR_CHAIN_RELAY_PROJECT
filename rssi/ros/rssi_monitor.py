@@ -26,8 +26,8 @@ every cell, association FIXED (client -> --attach, default the node before it in
 nodes.yaml), margin(x) = min(client@x <-> attach, weakest hop attach -> GCS) - eta,
 weaker direction of every link. Zero contour = connected boundary, dashed contour
 = --strong (end-to-end RSSI, dBm). Hop values are the EMA-filtered link estimates. The map is re-rendered
-when a node moves to another cell, a hop estimate moves by > --est-change dB, or
-the topology (node set / client / attach) changes -- at most every --map-period s.
+when a node moves more than --move-tol (0.5 m), a hop estimate moves by > --est-change dB, or
+the topology (node set / client / attach) changes -- at most every --map-period (5) s.
 
 Noise (when enabled): static spatially-correlated shadowing per transmitter plus
 fresh N(0, sigma_n) per publication -- the "measurement" a radio would report.
@@ -222,12 +222,14 @@ class RssiMonitor(RosNode):
         if not all(n in have for n in self.chain):
             return                                              # chain incomplete: nothing to map
         cells = {n.name: self.grid.world_to_cell(*n.xy) for n in nodes if n.name in self.chain}
+        where = {n.name: n.xy for n in nodes if n.name in self.chain}
         hops = {key: v for key, v in self.est.items() if key[0] in self.chain and key[1] in self.chain}
-        state = (tuple(self.chain), cells, hops)
+        state = (tuple(self.chain), where, hops)
         now = time.time()
         if self.drawn is not None:
-            topo, cells0, hops0 = self.drawn
-            same = (topo == state[0] and cells0 == cells and
+            topo, where0, hops0 = self.drawn
+            moved = any(n not in where0 or math.dist(where[n], where0[n]) > self.a.move_tol for n in where)
+            same = (topo == state[0] and not moved and
                     all(abs(hops[h] - hops0.get(h, np.inf)) <= self.a.est_change
                         or (not np.isfinite(hops[h]) and not np.isfinite(hops0.get(h, 0.0)))
                         for h in hops))
@@ -325,7 +327,9 @@ def main():
     ap.add_argument("--chain-topic", default="/coord/chain",
                     help="follow this JSON chain (GCS ... client) for the margin map; '' = fixed")
     ap.add_argument("--map-dir", default="/live", help="where margin_latest.png is written")
-    ap.add_argument("--map-period", type=float, default=2.0, help="min s between map renders")
+    ap.add_argument("--map-period", type=float, default=5.0, help="min s between map renders")
+    ap.add_argument("--move-tol", type=float, default=0.5,
+                    help="re-render when a node has moved more than this (m) since the last render")
     ap.add_argument("--est-change", type=float, default=2.0,
                     help="re-render when a hop estimate moves by more than this (dB)")
     ap.add_argument("--est-alpha", type=float, default=0.1, help="EMA weight of a new link reading")

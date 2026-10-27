@@ -18,7 +18,7 @@ from dataclasses import dataclass
 
 import numpy as np
 from scipy.ndimage import distance_transform_edt, convolve, label
-from scipy.sparse import coo_matrix
+from scipy.sparse import coo_matrix, diags
 from scipy.sparse.csgraph import dijkstra
 from scipy.spatial import cKDTree
 from skimage.morphology import skeletonize
@@ -122,16 +122,38 @@ class RoadGraph:
         return p[::-1], d[j]
 
     def routes(self, a_xy, b_xy, k: int = 3, max_ratio: float = 1.6,
-               max_overlap: float = 0.7) -> list[np.ndarray]:
+               max_overlap: float = 0.7, avoid=(), avoid_r: float = 0.8, allowed=None) -> list[np.ndarray]:
         """Shortest road-graph route a -> b, plus up to k-1 genuinely different
         alternatives (edge-penalty method). Each route is an (n, 2) WORLD polyline
-        starting exactly at a and ending exactly at b."""
+        starting exactly at a and ending exactly at b.
+
+        avoid: points (other robots) to keep `avoid_r` away from. Road-graph nodes
+        that close cost 10x per end of an edge (soft: the graph stays connected), and
+        the straight shortcut is only taken if it clears them.
+        allowed: optional bool grid (GT shape) of cells the robots may drive through, e.g. the
+        space their own SLAM map already knows is free -- Nav2 cannot plan through unknown
+        space, so a waypoint there is unreachable however open the corridor really is."""
         i, j = self.attach(a_xy), self.attach(b_xy)
-        Wm = self.W.copy().tolil()
+        W0 = self.W
+        avoid = [tuple(p) for p in avoid if np.hypot(p[0] - a_xy[0], p[1] - a_xy[1]) > 1e-3]
+        f = np.ones(len(self.rc))
+        if avoid:
+            node_xy = np.array(self.grid.cell_to_world(self.rc[:, 0], self.rc[:, 1])).T
+            near = np.zeros(len(self.rc), bool)
+            for p in avoid:
+                near |= np.hypot(node_xy[:, 0] - p[0], node_xy[:, 1] - p[1]) < avoid_r
+            f *= np.where(near, 10.0, 1.0)
+        if allowed is not None:
+            f *= np.where(allowed[self.rc[:, 0], self.rc[:, 1]], 1.0, 1e3)   # unknown: last resort
+        if (f != 1).any():
+            W0 = (diags(f) @ self.W @ diags(f)).tocsr()
+        Wm = W0.copy().tolil()
         out, used = [], []
         best = None
         ra, rb = self.grid.world_to_cell(*a_xy), self.grid.world_to_cell(*b_xy)
-        if _clear_line(self._tight, ra, rb):           # straight line with room to spare
+        blocked = self._tight if allowed is None else (self._tight | ~allowed)
+        if _clear_line(blocked, ra, rb) and all(
+                seg_dist(p, a_xy, b_xy) >= avoid_r for p in avoid):   # straight, roomy, clear of robots
             out.append(np.array([a_xy, b_xy], float))
             best = length(out[0])
             if k == 1:
@@ -156,6 +178,14 @@ class RoadGraph:
                 Wm[p[q], p[q + 1]] = Wm[p[q], p[q + 1]] * 4.0
                 Wm[p[q + 1], p[q]] = Wm[p[q + 1], p[q]] * 4.0
         return out
+
+
+def seg_dist(p, a, b) -> float:
+    """Distance from point p to segment a-b."""
+    p, a, b = (np.asarray(v, float) for v in (p, a, b))
+    ab = b - a
+    t = 0.0 if not ab.any() else float(np.clip(np.dot(p - a, ab) / np.dot(ab, ab), 0, 1))
+    return float(np.hypot(*(a + t * ab - p)))
 
 
 def length(poly: np.ndarray) -> float:

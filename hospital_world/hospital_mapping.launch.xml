@@ -1,0 +1,26 @@
+<launch>
+  <!-- Copy of occ_grid_mapping/launch/mapping.launch.xml (unmodified package) with ONE
+       change: the mapper loads /hw/occ_grid_hospital.yaml, a map sized to the hospital
+       (197 KB per /map instead of 1.5 MB - see that file for why). -->
+
+  <node pkg="pointcloud_to_laserscan" exec="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" output="screen">
+    <remap from="cloud_in" to="/cloud_registered_body"/>
+    <remap from="scan" to="/scan"/>
+    <param name="target_frame" value="base_link_1"/>
+    <param name="transform_tolerance" value="0.02"/>
+    <param name="min_height" value="-0.01"/>
+    <param name="max_height" value="0.55"/>
+    <param name="angle_min" value="-3.145"/>
+    <param name="angle_max" value="3.145"/>
+    <param name="angle_increment" value="0.0087"/>
+    <param name="range_min" value="0.45"/>
+    <param name="range_max" value="75.0"/>
+    <param name="use_inf" value="False"/>
+    <param name="inf_epsilon" value="1.0"/>
+  </node>
+
+  <node pkg="occ_grid_mapping" exec="mapping" name="mapping" output="screen">
+    <param name="use_sim_time" value="True"/>
+    <param from="/hw/occ_grid_hospital.yaml"/>
+  </node>
+</launch>

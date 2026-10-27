@@ -93,17 +93,29 @@ docker build -t mesh_sim:humble mesh_sim_ws/   # then docker save | ssh | docker
 
 ## Running
 
+Communication-aware exploration, everything in one command (details: `rssi/README.md`):
+
+```bash
+rssi/ros/run_full_live.sh run4 --P0 -30
+```
+
+Or by hand:
+
 ```bash
 cd hospital_world
-./run_chain_stack.sh               # gazebo + hospital + chain_robot stack (exploration opt-in: --explore)
-./spawn_saye.sh relay1 2.5 12.0    # relays 1 m apart, clear of chain_robot
-./spawn_saye.sh relay2 3.5 12.0
+./run_chain_stack.sh                                  # gazebo + hospital + chain_robot stack
+./spawn_saye.sh relay1 -1.75 14.0 0.10 -1.5708        # parking spots (rssi/ros/nodes.yaml `park`):
+./spawn_saye.sh relay2 -1.75 13.0 0.10 -1.5708        # off the corridor, west of the GCS
 ./run_relay1_nuc1.sh relay1        # only AFTER the relay is spawned
 ./run_relay2_nuc2.sh relay2        # NUC2, last
 
 ./waypoint.sh relay1 4.0 -1.5      # map frame
 ./stop_all.sh
 ```
+
+If a Nav2 stack is left `inactive`/`unconfigured` (common at RTF ~0.2):
+`ros2 service call <ns>/lifecycle_manager_navigation/manage_nodes nav2_msgs/srv/ManageLifecycleNodes "{command: 0}"`
+(`3` = RESET first). `run_full_live.sh` and the exploration coordinator do this themselves.
 
 Gazebo's window opens **behind other windows** — Alt+Tab to it.
 
@@ -125,11 +137,18 @@ Gazebo's window opens **behind other windows** — Alt+Tab to it.
 - Ground-truth occupancy grid: `hospital_world/gt/hospital_gt.npy`
   (uint8, 1 = occupied, 0.05 m/cell, 27.2 × 59.1 m).
 
+- Communication-aware exploration with relay deployment (the paper's Sec. IV-B): offline on
+  the GT map 99–100% coverage, channel reliability ~99%; live, the coordinator gates every
+  explorer goal and drives all three robots (`rssi/README.md`).
+
 **Known issues**
-- **chain_robot cannot drive** — spins in place in its own shipped world, tumbles in the
-  hospital. Bug is in its Gazebo plugin (not ours; left unmodified).
+- **chain_robot's own navigation** wedges it against walls: 0.10 m from a wall its start is
+  inside Nav2's 0.5 m inflation, so no plan or backup recovery succeeds. This is what stops a
+  full live exploration now (chain_robot's stack, left unmodified).
+- Relays creep ~5 mm/s when idle (drive plugin); the exploration coordinator compensates
+  (station keeping).
 - The Harmonic `robot1`/`robot2` sim has not been re-tested since the shared Nav2 tuning changed.
-- Sim real-time factor is ~0.27 with the full stack loaded.
+- Sim real-time factor ~0.2–0.25 with the full stack (0.36 without the relays).
 
 ---
 
