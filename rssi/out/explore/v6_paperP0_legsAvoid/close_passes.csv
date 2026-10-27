@@ -1,0 +1,6 @@
+decision,decision_type,interval,sim_time_s,robot_a,robot_b,a_x,a_y,b_x,b_y,sep_m,a_moving,b_moving
+77,client_only,2,1078.1,relay2,head,-8.3,-21.5,-8.3,-21.08,0.42,False,True
+77,client_only,2,1078.8,relay2,head,-8.3,-21.5,-8.3,-21.56,0.06,False,True
+82,client_only,5,1278.2,relay2,head,-5.05,-9.29,-5.19,-9.05,0.28,False,True
+89,client_only,2,1359.2,relay2,head,-5.05,-9.29,-5.42,-9.05,0.44,False,True
+89,client_only,2,1359.9,relay2,head,-5.05,-9.29,-5.05,-8.91,0.38,False,True

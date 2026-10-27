@@ -1,0 +1,67 @@
+[INFO] [1793120837.113670607] [exploration_coordinator]: P0 -45.0 | req -81.68 dBm (Pr[link >= -85.0] >= 0.75) | client head, relays ['relay1', 'relay2'] | t_f 5 | re-place engaged relays (paper)
+[INFO] [1793120892.509957683] [exploration_coordinator]: goal world (6.80, 10.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.8 s) | targets head (6.80, 10.40)
+[WARN] [1793120898.935030713] [exploration_coordinator]: interval 1: ['head'] did not reach their waypoint
+[INFO] [1793120899.397754320] [exploration_coordinator]: goal world (6.80, 10.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.1 s) | targets head (6.80, 10.40)
+[INFO] [1793121034.304835647] [exploration_coordinator]: goal world (6.60, 14.90): DEPLOY [gcs > relay2 > head] 1 relay(s) engaged (t_f 5); final hops -63.9, -62.1 (4.0 s) | targets relay2 (4.82, 10.40), head (6.60, 14.90)
+[INFO] [1793121070.783554867] [exploration_coordinator]: relay1 drifted 0.41 m from its spot - sending it back
+[WARN] [1793121202.201594494] [exploration_coordinator]: interval 1 timed out, moving on
+[WARN] [1793121217.332077676] [exploration_coordinator]: interval 2: ['relay2'] did not reach their waypoint
+[WARN] [1793121234.464100490] [exploration_coordinator]: interval 3: ['relay2'] did not reach their waypoint
+[WARN] [1793121248.590705056] [exploration_coordinator]: interval 4: ['relay2'] did not reach their waypoint
+[WARN] [1793121271.735520746] [exploration_coordinator]: interval 5: ['relay2'] did not reach their waypoint
+[INFO] [1793121290.687688280] [exploration_coordinator]: goal world (0.20, 18.90): SKIP [gcs > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (18.4 s)
+[INFO] [1793121304.931484085] [exploration_coordinator]: goal world (-6.90, 10.60): DEPLOY [gcs > relay1 > relay2 > head] 2 relay(s) engaged (t_f 5); final hops -53.8, -54.2, -53.4 (14.2 s) | targets relay1 (-2.96, 12.54), relay2 (-4.34, 11.86), head (-6.90, 10.60)
+[WARN] [1793121537.630305734] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793121814.081421456] [exploration_coordinator]: goal world (-9.20, 11.00): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.8 s) | targets head (-9.20, 11.00)
+[INFO] [1793121893.765340893] [exploration_coordinator]: relay2 drifted 0.34 m from its spot - sending it back
+[INFO] [1793121908.243354926] [exploration_coordinator]: goal world (-9.70, 12.90): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.9 s) | targets head (-9.70, 12.90)
+[INFO] [1793121952.402229040] [exploration_coordinator]: relay1 drifted 0.34 m from its spot - sending it back
+[INFO] [1793122018.554218110] [exploration_coordinator]: relay2 drifted 0.32 m from its spot - sending it back
+[INFO] [1793122134.082038017] [exploration_coordinator]: goal world (-11.90, 14.10): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.8 s) | targets head (-11.90, 14.10)
+[INFO] [1793122136.491615226] [exploration_coordinator]: relay1 drifted 0.36 m from its spot - sending it back
+[INFO] [1793122187.510507021] [exploration_coordinator]: goal world (0.20, 18.90): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.2 s) | targets head (0.20, 18.90)
+[INFO] [1793122326.629080665] [exploration_coordinator]: relay1 drifted 0.35 m from its spot - sending it back
+[INFO] [1793122326.681063446] [exploration_coordinator]: relay2 drifted 0.33 m from its spot - sending it back
+[INFO] [1793122506.464080048] [exploration_coordinator]: relay1 drifted 0.42 m from its spot - sending it back
+[INFO] [1793122506.517542560] [exploration_coordinator]: relay2 drifted 0.42 m from its spot - sending it back
+[INFO] [1793122802.216778306] [exploration_coordinator]: goal world (-1.00, 22.50): SKIP [gcs > relay1 > relay2 > head] no feasible chain with 2 relays (10.9 s)
+[INFO] [1793122807.981679386] [exploration_coordinator]: relay2 drifted 0.34 m from its spot - sending it back
+[INFO] [1793122811.089864357] [exploration_coordinator]: goal world (-0.90, 22.10): SKIP [gcs > relay1 > relay2 > head] no feasible chain with 2 relays (8.8 s)
+Traceback (most recent call last):
+  File "/fair/rssi/ros/exploration_coordinator.py", line 485, in <module>
+    main()
+  File "/fair/rssi/ros/exploration_coordinator.py", line 476, in main
+    ex.spin()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 323, in spin
+    self.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 863, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 860, in _spin_once_impl
+    future.result()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/task.py", line 109, in result
+    raise self.exception()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/task.py", line 272, in _execute_coroutine_step
+    result = coro.send(None)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 488, in handler
+    await call_coroutine(entity, arg)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 448, in _execute_waitable
+    await waitable.execute(data)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/action/server.py", line 504, in execute
+    await self._execute_goal_request(taken_data['goal'])
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/action/server.py", line 280, in _execute_goal_request
+    response = await await_or_execute(self._goal_callback, goal_request.goal)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 110, in await_or_execute
+    return callback(*args)
+  File "/fair/rssi/ros/exploration_coordinator.py", line 178, in _on_goal
+    plan = self.planner.plan(goal, self.client, self.relays, self.engaged)
+  File "/fair/rssi/relay_planner.py", line 393, in plan
+    spots, hops, G = self.place(k, goal, client.name, [r.name for r in relays[:k]])
+  File "/fair/rssi/relay_planner.py", line 171, in place
+    routes = self.rg.routes(self.gcs, goal, k=1, allowed=self.allowed)
+  File "/fair/rssi/roadgraph.py", line 136, in routes
+    i, j = self.attach(a_xy), self.attach(b_xy)
+  File "/fair/rssi/roadgraph.py", line 111, in attach
+    if _clear_line(occ, (r, c), self.rc[i]):
+  File "/fair/rssi/roadgraph.py", line 55, in _clear_line
+    return not occ[rr, cc].any()
+IndexError: index 1191 is out of bounds for axis 0 with size 1181

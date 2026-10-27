@@ -34,24 +34,42 @@ nav_up() {       # bring a Nav2 stack to ACTIVE: wait, STARTUP, then RESET + STA
   echo "  !!  Nav2 ${ns:-/} not active (state: $s)"; return 1
 }
 
+spawn() {        # spawn_entity can hang: time out, delete the half-spawned model, retry once
+  for try in 1 2; do
+    timeout 180 "$HW/spawn_saye.sh" "$1" "$2" "$3" 0.10 -1.5708 >/dev/null 2>&1 && { echo "  ok  $1 at ($2, $3)"; return 0; }
+    docker exec safe_robot bash -c 'pkill -f "[s]pawn_entity"; true'
+    docker exec safe_robot bash -ic "timeout 30 ros2 service call /delete_entity gazebo_msgs/srv/DeleteEntity '{name: $1}'" >/dev/null 2>&1
+  done
+  echo "  !!  could not spawn $1"; return 1
+}
+FROM="${FROM:-1}"     # FROM=3 rssi/ros/run_full_live.sh ...  resumes at stage 3
+
+if [ "$FROM" -le 1 ]; then
 echo "[1/5] chain stack"
 "$HW/run_chain_stack.sh" 2>&1 | grep -E "ok|!!"
 nav_up ""
+fi
 
+if [ "$FROM" -le 2 ]; then
 echo "[2/5] relays at their parking spots"
 read -r P1X P1Y P2X P2Y < <(python3 -c "
 import yaml; c = yaml.safe_load(open('$ROOT/rssi/ros/nodes.yaml'))
 print(*c['relay1']['park'], *c['relay2']['park'])")
-"$HW/spawn_saye.sh" relay1 "$P1X" "$P1Y" 0.10 -1.5708 >/dev/null 2>&1 && echo "  ok  relay1 at ($P1X, $P1Y)"
-"$HW/spawn_saye.sh" relay2 "$P2X" "$P2Y" 0.10 -1.5708 >/dev/null 2>&1 && echo "  ok  relay2 at ($P2X, $P2Y)"
+spawn relay1 "$P1X" "$P1Y"
+spawn relay2 "$P2X" "$P2Y"
+fi
 
+if [ "$FROM" -le 3 ]; then
 echo "[3/5] relay brains"
 "$HW/run_relay1_nuc1.sh" relay1 >/dev/null 2>&1
 "$HW/run_relay2_nuc2.sh" relay2 >/dev/null 2>&1
+fi
 
+if [ "$FROM" -le 4 ]; then
 echo "[4/5] Nav2 of both relays"
 nav_up /relay1
 nav_up /relay2
+fi
 
 echo "[5/5] RSSI monitor, coordinator, explorer, logger"
 "$ROOT/rssi/ros/run_rssi_node.sh" "$@" >/dev/null

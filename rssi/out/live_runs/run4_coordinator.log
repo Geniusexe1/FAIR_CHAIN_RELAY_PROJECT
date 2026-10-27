@@ -1,0 +1,19 @@
+[INFO] [1793118500.596811884] [exploration_coordinator]: P0 -45.0 | req -81.68 dBm (Pr[link >= -85.0] >= 0.75) | client head, relays ['relay1', 'relay2'] | t_f 5 | re-place engaged relays (paper)
+[INFO] [1793118541.010709993] [exploration_coordinator]: goal world (6.80, 10.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (1.0 s)
+[INFO] [1793118654.878320107] [exploration_coordinator]: goal world (8.20, 15.30): DEPLOY [gcs > relay2 > head] 1 relay(s) engaged (t_f 5); final hops -63.7, -60.4 (4.3 s)
+[INFO] [1793118679.042855081] [exploration_coordinator]: relay1 drifted 0.37 m from its spot - sending it back
+[WARN] [1793118699.078545958] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793118700.044553191] [exploration_coordinator]: goal world (9.60, 13.10): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.5 s)
+[INFO] [1793118718.012837774] [exploration_coordinator]: relay2 drifted 6.75 m from its spot - sending it back
+[WARN] [1793118738.657057574] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793118740.344344934] [exploration_coordinator]: goal world (9.60, 13.10): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.8 s)
+[WARN] [1793118798.990178522] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793118799.556732842] [exploration_coordinator]: goal world (9.60, 13.10): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793118800.243073961] [exploration_coordinator]: goal world (4.40, 16.80): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.7 s)
+[INFO] [1793118980.089812937] [exploration_coordinator]: goal world (-0.80, 18.90): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.5 s)
+[WARN] [1793119072.786311188] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793119074.107834105] [exploration_coordinator]: goal world (9.90, 13.20): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.5 s)
+[INFO] [1793119203.943682017] [exploration_coordinator]: relay1 drifted 0.33 m from its spot - sending it back
+[INFO] [1793119284.121421953] [exploration_coordinator]: goal world (11.80, 14.30): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.6 s)
+[INFO] [1793119314.088041715] [exploration_coordinator]: relay1 drifted 0.32 m from its spot - sending it back
+[INFO] [1793119315.258881796] [exploration_coordinator]: goal world (12.10, 17.80): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.7 s)

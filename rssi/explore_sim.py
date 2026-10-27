@@ -133,7 +133,12 @@ class Explorer:
             legs = {}
             for n in plan.traj:
                 a_, b_ = tuple(plan.traj[n][t - 1]), tuple(plan.traj[n][t])
-                R = self.rg.routes(a_, b_, k=1) if np.hypot(*np.subtract(a_, b_)) > 0.05 else []
+                # the robot's own local planner steers around the others (Nav2 sees them: the
+                # relays' collision boxes are lidar-visible), so the leg avoids them too
+                others = [tuple(plan.traj[m][t]) for m in plan.traj if m != n] + \
+                         [tuple(plan.traj[m][t - 1]) for m in plan.traj if m != n]
+                R = self.rg.routes(a_, b_, k=1, avoid=others, avoid_r=self.pp.d_sep) \
+                    if np.hypot(*np.subtract(a_, b_)) > 0.05 else []
                 legs[n] = R[0] if R else np.array([a_, b_])
             nsub = max(2, int(np.ceil(max(length(L) for L in legs.values()) / 0.5)))
             for k in range(1, nsub + 1):

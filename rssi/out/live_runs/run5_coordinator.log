@@ -1,0 +1,263 @@
+[INFO] [1793119693.304200472] [exploration_coordinator]: P0 -45.0 | req -81.68 dBm (Pr[link >= -85.0] >= 0.75) | client head, relays ['relay1', 'relay2'] | t_f 5 | re-place engaged relays (paper)
+[INFO] [1793119720.282522618] [exploration_coordinator]: goal world (6.80, 10.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (1.0 s)
+[INFO] [1793119856.505613150] [exploration_coordinator]: goal world (8.00, 15.10): DEPLOY [gcs > relay2 > head] 1 relay(s) engaged (t_f 5); final hops -63.7, -60.4 (4.3 s)
+[INFO] [1793119881.280696350] [exploration_coordinator]: relay1 drifted 0.38 m from its spot - sending it back
+[WARN] [1793119899.697032951] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793119901.063947633] [exploration_coordinator]: goal world (9.80, 12.80): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.8 s)
+[INFO] [1793119918.916325703] [exploration_coordinator]: relay2 drifted 6.66 m from its spot - sending it back
+[WARN] [1793119933.673833301] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793119935.194180988] [exploration_coordinator]: goal world (9.80, 12.80): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (1.0 s)
+[INFO] [1793119995.828728236] [exploration_coordinator]: goal world (11.80, 9.20): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.6 s)
+[INFO] [1793119996.336389925] [exploration_coordinator]: relay1 drifted 0.44 m from its spot - sending it back
+[WARN] [1793120054.974650112] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793120068.418482776] [exploration_coordinator]: relay1 drifted 0.32 m from its spot - sending it back
+[INFO] [1793120068.474056079] [exploration_coordinator]: relay2 drifted 0.34 m from its spot - sending it back
+[INFO] [1793120084.755481327] [exploration_coordinator]: goal world (4.70, 17.70): DEPLOY [gcs > relay1 > relay2 > head] 2 relay(s) engaged (t_f 12); final hops -54.1, -55.2, -55.9 (29.5 s)
+[WARN] [1793120122.475317583] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793120142.907714316] [exploration_coordinator]: goal world (4.70, 17.70): SKIP [gcs > relay1 > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (19.7 s)
+[INFO] [1793120146.027015875] [exploration_coordinator]: relay1 drifted 4.65 m from its spot - sending it back
+[INFO] [1793120146.190970930] [exploration_coordinator]: relay2 drifted 2.69 m from its spot - sending it back
+[INFO] [1793120156.840129570] [exploration_coordinator]: goal world (-0.10, 18.90): DEPLOY [gcs > relay2 > relay1 > head] 2 relay(s) engaged (t_f 5); final hops -57.6, -51.7, -53.8 (13.9 s)
+[WARN] [1793120265.190372485] [exploration_coordinator]: interval 1 timed out, moving on
+[WARN] [1793120265.190648161] [exploration_coordinator]: interval 1: ['relay2'] did not reach their waypoint
+[INFO] [1793120267.761248485] [exploration_coordinator]: goal world (4.70, 17.70): CLIENT_ONLY [gcs > relay2 > relay1 > head] goal inside the bounded region (t_f 12) (1.5 s)
+[INFO] [1793120300.509828361] [exploration_coordinator]: relay1 drifted 7.62 m from its spot - sending it back
+[INFO] [1793120300.562881636] [exploration_coordinator]: relay2 drifted 6.32 m from its spot - sending it back
+[WARN] [1793120302.870754596] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793120303.220862267] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120306.558165619] [exploration_coordinator]: goal world (-0.10, 18.90): CLIENT_ONLY [gcs > relay2 > relay1 > head] goal inside the bounded region (t_f 8) (3.3 s)
+[WARN] [1793120373.244932877] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793120374.221362120] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120390.029223116] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (15.8 s)
+[INFO] [1793120392.000597252] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.9 s)
+[INFO] [1793120397.833485663] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (5.8 s)
+[INFO] [1793120401.369563140] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (3.5 s)
+[INFO] [1793120402.219673543] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120402.250759584] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120403.427501993] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.1 s)
+[INFO] [1793120404.725560370] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.3 s)
+[INFO] [1793120405.894250224] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.1 s)
+[INFO] [1793120406.221603279] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120406.253289503] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120407.479370223] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.2 s)
+[INFO] [1793120409.131434974] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.6 s)
+[INFO] [1793120410.294585831] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.1 s)
+[INFO] [1793120411.222205754] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120411.248269430] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120411.929906828] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120412.708964931] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120413.419531517] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120414.222531416] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120414.250942838] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120414.897372443] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120414.898289238] [exploration_coordinator]: relay2 drifted 0.34 m from its spot - sending it back
+[INFO] [1793120415.615646070] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120416.359277106] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120417.219033536] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120417.981838159] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120418.011012412] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120418.566145600] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.5 s)
+[INFO] [1793120419.285609354] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120420.218673863] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120421.327468545] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.1 s)
+[INFO] [1793120421.361814325] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120422.024105828] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120422.695256512] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120423.219681638] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120423.855652668] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120423.884239259] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120424.506797006] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120425.118971624] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120425.218145073] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120425.871482137] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120425.902345105] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120426.514793441] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120427.136267690] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120427.215944608] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120427.898205200] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120427.929646286] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120428.609927695] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120429.256444423] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120430.215357702] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120430.848262479] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120430.879195386] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120431.495043821] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120432.226520075] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120433.224623825] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120433.888535678] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120433.916561102] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120434.556743805] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120435.245327640] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120436.934595254] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120436.965290381] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120436.994691231] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120437.669638931] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120438.404292089] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120439.865348919] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120439.898396707] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120439.925974958] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120440.576043016] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120441.289307327] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120443.278966259] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.1 s)
+[INFO] [1793120443.310717253] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120443.339075690] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120443.983095075] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120444.665570509] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120445.862839919] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120445.887845331] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120445.915707038] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120446.568278306] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120447.248781447] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120448.834555494] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120448.860973498] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120448.885056565] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120449.497532846] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120450.130491006] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120450.827171441] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120450.856060634] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120450.888364329] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120451.564807153] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120452.246745449] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120452.999629914] [exploration_coordinator]: relay2 drifted 0.30 m from its spot - sending it back
+[INFO] [1793120453.866592758] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120453.896995527] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120453.930260593] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120454.588604083] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120455.369668649] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120456.856736597] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120456.886527403] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120456.918835947] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120457.557626808] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120458.208729495] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120459.900021318] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120459.929034728] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120459.954711533] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120460.832350557] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.8 s)
+[INFO] [1793120461.567019962] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120462.887601081] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120462.922209867] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120462.951393405] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120463.597704279] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120464.275639799] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120465.911615781] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120465.941878171] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120465.969587410] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120466.688640367] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120467.447123802] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120468.854559674] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120468.880040360] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120468.910588900] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120469.655648218] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120470.380400284] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120471.846981774] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120471.880680961] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120471.907668173] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120472.577785047] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120473.214944031] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120474.828691548] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120474.859845447] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120474.885326603] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120475.516318560] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120476.171835585] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120476.820809991] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120476.851707167] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120476.875718011] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120477.501585343] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120478.139663841] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120478.863321682] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120478.894400509] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120478.928778199] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120479.619210903] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120480.237703429] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120481.840738158] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120481.871261182] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120481.902338718] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120482.652123292] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120483.468283323] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.8 s)
+[INFO] [1793120484.765130824] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.5 s)
+[INFO] [1793120484.799671642] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120484.824307234] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120485.419644043] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120485.978411609] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.5 s)
+[INFO] [1793120486.827458310] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120486.863345076] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120486.893870663] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120487.477141986] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120488.031772396] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.5 s)
+[INFO] [1793120488.791615148] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120488.824076168] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120488.851450032] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120489.393823922] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.5 s)
+[INFO] [1793120489.925120442] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.5 s)
+[INFO] [1793120490.732279111] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.5 s)
+[INFO] [1793120490.760661160] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120490.789191569] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120491.321386792] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.5 s)
+[INFO] [1793120491.937516482] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120492.727750018] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.5 s)
+[INFO] [1793120492.755587136] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120492.785721021] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120493.248344919] [exploration_coordinator]: relay1 drifted 1.18 m from its spot - sending it back
+[INFO] [1793120493.389171979] [exploration_coordinator]: relay2 drifted 0.34 m from its spot - sending it back
+[INFO] [1793120493.428327941] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120494.189993547] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120495.843877696] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120495.879378644] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120495.909182273] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120496.636544164] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120497.385580572] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120498.895746878] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120498.922546756] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120498.949921191] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120499.642759166] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120500.358156114] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120501.834721750] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120501.862665190] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120501.886921813] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120502.568005237] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120503.314321732] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120504.858885263] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120504.893237200] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120504.923123504] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120505.599451347] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120506.206901922] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120507.931637980] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120507.962938258] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120507.987816962] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120508.679741651] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120509.297478620] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120510.959903915] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120510.988738382] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120511.020386523] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120511.749446230] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120512.463699107] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120513.874131026] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120513.903304451] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120513.938997573] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120514.613578262] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120515.356897733] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120516.948240066] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120516.983760245] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120517.013498027] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120517.679290871] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120518.367432097] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120519.921276678] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120519.950338499] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120519.982079226] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120521.283102973] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.3 s)
+[INFO] [1793120522.482346143] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (1.2 s)
+[INFO] [1793120523.853079197] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)
+[INFO] [1793120523.883079762] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120523.913127015] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120524.652692272] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120525.369092854] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120526.936410253] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120526.966020560] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120526.996272994] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120527.717767747] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120528.449272042] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120529.935634904] [exploration_coordinator]: goal world (11.80, 9.20): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120529.964947942] [exploration_coordinator]: goal world (4.70, 17.70): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120529.994332403] [exploration_coordinator]: goal world (-0.10, 18.90): REJECTED - failed 2 times, Nav2 cannot reach it
+[INFO] [1793120530.697284942] [exploration_coordinator]: goal world (11.90, 11.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.7 s)
+[INFO] [1793120531.373394367] [exploration_coordinator]: goal world (11.70, 16.40): SKIP [gcs > relay2 > relay1 > head] 2 relay(s) could be placed but no trajectories keep every step (0.6 s)

@@ -52,6 +52,9 @@ def _clear_line(occ: np.ndarray, a, b) -> bool:
     n = int(max(abs(b[0] - a[0]), abs(b[1] - a[1]))) + 1
     rr = np.linspace(a[0], b[0], n).round().astype(int)
     cc = np.linspace(a[1], b[1], n).round().astype(int)
+    inside = (rr >= 0) & (rr < occ.shape[0]) & (cc >= 0) & (cc < occ.shape[1])
+    if not inside.all():                       # leaves the map: not a clear line
+        return False
     return not occ[rr, cc].any()
 
 

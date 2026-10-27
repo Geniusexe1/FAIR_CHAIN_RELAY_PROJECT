@@ -88,9 +88,20 @@ class Predictor:
         self.net = Network(grid, prop, noise)
         self._f = OrderedDict()
         self.cache = cache
+        # a robot hugging a wall, or a frontier goal, can sit in an obstacle cell:
+        # radios there are treated as being at the nearest free cell
+        from scipy.ndimage import distance_transform_edt
+        _, self._near = distance_transform_edt(grid.occ.astype(bool), return_indices=True)
+
+    def cell(self, xy):
+        r, c = self.grid.world_to_cell(*xy)
+        r = min(max(r, 0), self.grid.shape[0] - 1); c = min(max(c, 0), self.grid.shape[1] - 1)
+        if self.grid.occ[r, c]:
+            r, c = int(self._near[0][r, c]), int(self._near[1][r, c])
+        return r, c
 
     def clean_from(self, xy) -> np.ndarray:
-        rc = self.grid.world_to_cell(*xy)
+        rc = self.cell(xy)
         if rc in self._f:
             self._f.move_to_end(rc)
             return self._f[rc]
@@ -105,7 +116,7 @@ class Predictor:
         return self.net._shadow_of(Node(name, (0, 0)))
 
     def link(self, a: str, a_xy, b: str, b_xy) -> float:
-        ra, rb = self.grid.world_to_cell(*a_xy), self.grid.world_to_cell(*b_xy)
+        ra, rb = self.cell(a_xy), self.cell(b_xy)
         clean = float(self.clean_from(a_xy)[rb])
         if not np.isfinite(clean):
             return -np.inf
@@ -115,7 +126,7 @@ class Predictor:
 
     def link_map(self, a: str, a_xy, b: str) -> np.ndarray:
         """link(a@a_xy, b@x) for every cell x -- the client's access term."""
-        ra = self.grid.world_to_cell(*a_xy)
+        ra = self.cell(a_xy)
         clean = self.clean_from(a_xy).astype(float)
         if not self.net.noise.enabled:
             return clean
@@ -234,6 +245,10 @@ class RelayPlanner:
         S = [np.linspace(0, L_, tf + 1) for L_ in Ls]           # arc length of each waypoint
 
         qcache = {}
+        # never get CLOSER than d_sep; two robots that already are (a relay pushed, a creep)
+        # may not approach further but must be allowed to move apart -- else every plan fails
+        sep_thr = [min(self.p.d_sep, 0.95 * math.dist(start, o[0])) if np.isfinite(o[0]).all() else self.p.d_sep
+                   for o in others]
 
         def pos(j, i):
             return tuple(start) if j is None else tuple(W[j][i])
@@ -245,17 +260,23 @@ class RelayPlanner:
             key = (j, i, t)
             if key not in qcache:
                 x = pos(j, i)
-                x0 = pos(j, max(i - 1, 0))                      # where it came from (if it advanced)
                 clash = False
                 if t > 0:                                      # whole interval t-1 -> t, both moving
-                    for o in others:
+                    # this robot's actual path in the interval: along its ROUTE (which bends
+                    # through doorways), not the straight line between two waypoints
+                    if j is not None and i > 0:
+                        n_s = max(6, int(math.ceil((S[j][i] - S[j][i - 1]) / 0.2)) + 1)
+                        mine = [tuple(point_at(routes[j], s)) for s in np.linspace(S[j][i - 1], S[j][i], n_s)]
+                    else:
+                        mine = [x] * 6                         # holding still
+                    fs = np.linspace(0.0, 1.0, len(mine))
+                    for o, thr in zip(others, sep_thr):
                         if not np.isfinite(o[t]).all():
                             continue
                         o0 = o[t - 1] if np.isfinite(o[t - 1]).all() else o[t]
-                        for f in np.linspace(0.0, 1.0, 6):
-                            a_ = (x0[0] + f * (x[0] - x0[0]), x0[1] + f * (x[1] - x0[1]))
+                        for f, a_ in zip(fs, mine):
                             b_ = (o0[0] + f * (o[t][0] - o0[0]), o0[1] + f * (o[t][1] - o0[1]))
-                            if math.dist(a_, b_) < self.p.d_sep:
+                            if math.dist(a_, b_) < thr:
                                 clash = True; break
                         if clash:
                             break

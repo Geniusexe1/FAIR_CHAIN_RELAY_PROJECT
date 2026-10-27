@@ -172,13 +172,25 @@ class Coordinator(RosNode):
             self.get_logger().info(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): REJECTED - failed "
                                    f"{self.failed[key]} times, Nav2 cannot reach it")
             return GoalResponse.REJECT
+        g = self.planner.grid
+        r_, c_ = g.world_to_cell(*goal)
+        if not g.in_bounds(r_, c_):                           # frontier past the building's edge
+            self.get_logger().info(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): REJECTED - outside the map")
+            return GoalResponse.REJECT
         t0 = time.time()
-        with self.lock:
-            self.planner.allowed = self._known_free()
-            plan = self.planner.plan(goal, self.client, self.relays, self.engaged)
+        try:
+            with self.lock:
+                self.planner.allowed = self._known_free()
+                plan = self.planner.plan(goal, self.client, self.relays, self.engaged)
+        except Exception as e:                                # never let one goal take the node down
+            self.get_logger().error(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): REJECTED - planner error "
+                                    f"{type(e).__name__}: {e}")
+            return GoalResponse.REJECT
         dt = time.time() - t0
         self.get_logger().info(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): {plan.decision.upper()} "
-                               f"[{' > '.join(plan.chain)}] {plan.note} ({dt:.1f} s)")
+                               f"[{' > '.join(plan.chain)}] {plan.note} ({dt:.1f} s)"
+                               + ("" if not plan.targets else " | targets " + ", ".join(
+                                   f"{n} ({xy[0]:.2f}, {xy[1]:.2f})" for n, xy in plan.targets.items())))
         self._state(event="decision", goal=goal, decision=plan.decision, chain=plan.chain, note=plan.note)
         if plan.decision == "skip":
             return GoalResponse.REJECT                        # explorer tries the next rank
@@ -194,6 +206,9 @@ class Coordinator(RosNode):
         yaw = math.atan2(nxt[1] - xy[1], nxt[0] - xy[0]) if nxt is not None else 0.0
         ps.pose.orientation.z, ps.pose.orientation.w = math.sin(yaw / 2), math.cos(yaw / 2)
         return ps
+
+    def _floor(self, name):
+        return self.a.v_min if name == self.client_name else self.a.v_floor_relay
 
     def _limit(self, name, v):
         msg = SpeedLimit(percentage=False, speed_limit=float(max(v, self.a.v_min)))
@@ -353,35 +368,57 @@ class Coordinator(RosNode):
             if not movers:
                 continue
             fb, done, handles = {}, {}, {}
+            dt = sched[t - 1]["dt"]
+            # Same arrival, different distance. Below its floor speed a robot cannot move at all
+            # (relay drive deadband: 0.10 m/s stalls, CHECKPOINT.md), so a robot whose synced
+            # speed would be under the floor drives AT the floor and starts later instead.
+            start, speed = {}, {}
             for n in movers:
+                v, fl = sched[t - 1]["v"][n], self._floor(n)
+                if 0 < v < fl:
+                    speed[n], start[n] = fl, dt - plan.seg[n][t - 1] / fl
+                else:
+                    speed[n], start[n] = v, 0.0
+
+            def launch(n):
                 if not self.nav[n].wait_for_server(timeout_sec=5.0):
                     self.get_logger().error(f"{n}: navigate_to_pose not available")
-                    gh.abort(); return NavigateToPose.Result()
-                self._limit(n, sched[t - 1]["v"][n])
+                    done[n] = GoalStatus.STATUS_ABORTED
+                    return
+                self._limit(n, speed[n])
                 nxt = plan.traj[n][t + 1] if t < tf else None
                 g = NavigateToPose.Goal(pose=self._pose(plan.traj[n][t], nxt))
                 h = self._send(n, g, fb)
                 if h is None:
                     self.get_logger().warn(f"{n}: waypoint {t} rejected by Nav2 (also after a restart)")
                     done[n] = GoalStatus.STATUS_ABORTED
-                    continue
+                    return
                 handles[n] = h
                 h.get_result_async().add_done_callback(lambda r, n=n: done.__setitem__(n, r.result().status))
-            self._state(event="interval", t=t, dt=sched[t - 1]["dt"], v=sched[t - 1]["v"], movers=movers)
+
             t_start = self.get_clock().now()                  # SIM time: plans are in sim seconds
+            waiting = sorted((n for n in movers if start[n] > 0), key=lambda n: start[n])
+            for n in movers:
+                if start[n] <= 0:
+                    launch(n)
+            self._state(event="interval", t=t, dt=dt, v=speed, start_delay=start, movers=movers)
             while len(done) < len(movers):
                 if gh.is_cancel_requested:
                     for h in handles.values():
                         h.cancel_goal_async()
                     gh.canceled(); return NavigateToPose.Result()
-                # keep the ETAs equal: v_r = remaining_r / T_remaining
+                el = (self.get_clock().now() - t_start).nanoseconds / 1e9
+                while waiting and el >= start[waiting[0]]:
+                    launch(waiting.pop(0))                    # delayed start: arrives with the rest
+                # keep the ETAs equal: v_r = remaining_r / T_remaining, never below the floor
                 rem = {n: fb[n] for n in movers if n in fb and n not in done}
                 if rem:
                     T = max(rem[n] / self.robots[n].vmax for n in rem)
                     for n in rem:
-                        self._limit(n, rem[n] / T if T > 0 else self.robots[n].vmax)
+                        self._limit(n, max(rem[n] / T if T > 0 else self.robots[n].vmax, self._floor(n)))
+                # slack: a relay needs time to plan and turn (Ackermann) before it moves at all
                 if (self.get_clock().now() - t_start).nanoseconds / 1e9 > \
-                        self.a.interval_timeout * max(sched[t - 1]["dt"], 1.0):
+                        self.a.interval_timeout * max(sched[t - 1]["dt"], 1.0) + self.a.interval_slack:
                     self.get_logger().warn(f"interval {t} timed out, moving on")
                     break
                 time.sleep(0.5)
@@ -429,8 +466,11 @@ def main():
     ap.add_argument("--sigma-n", type=float, default=3.0)
     ap.add_argument("--v-client", type=float, default=0.7)
     ap.add_argument("--v-relay", type=float, default=0.5)
-    ap.add_argument("--v-min", type=float, default=0.05, help="speed-limit floor, m/s")
+    ap.add_argument("--v-min", type=float, default=0.05, help="client speed-limit floor, m/s")
+    ap.add_argument("--v-floor-relay", type=float, default=0.18,
+                    help="relay speed floor, m/s: the drive stalls at 0.10 m/s, moves at 0.15")
     ap.add_argument("--interval-timeout", type=float, default=4.0, help="x planned interval duration")
+    ap.add_argument("--interval-slack", type=float, default=30.0, help="+ sim seconds per interval (start-up)")
     ap.add_argument("--map-offset", nargs=2, type=float, default=[0.0, 12.0], help="world = map + offset")
     ap.add_argument("--keep-deployed", action="store_true")
     ap.add_argument("--max-fail", type=int, default=2, help="reject a goal after this many failed attempts")
