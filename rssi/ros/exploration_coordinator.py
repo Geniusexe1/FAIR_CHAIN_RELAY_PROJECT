@@ -183,8 +183,9 @@ class Coordinator(RosNode):
                 self.planner.allowed = self._known_free()
                 plan = self.planner.plan(goal, self.client, self.relays, self.engaged)
         except Exception as e:                                # never let one goal take the node down
+            import traceback
             self.get_logger().error(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): REJECTED - planner error "
-                                    f"{type(e).__name__}: {e}")
+                                    f"{type(e).__name__}: {e}\n{traceback.format_exc()}")
             return GoalResponse.REJECT
         dt = time.time() - t0
         self.get_logger().info(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): {plan.decision.upper()} "

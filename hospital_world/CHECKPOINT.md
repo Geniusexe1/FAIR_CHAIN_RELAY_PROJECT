@@ -609,3 +609,14 @@ Also: `pkill -f <pattern>` inside `bash -c` matches its own shell -- use `[p]att
 **chain_robot wedges against walls.** Its own controller brought it to 0.10 m from a wall in the
 north-east room; with Nav2's 0.5 m global inflation the start pose is in an obstacle, so no plan
 and no backup succeed. Still open (its stack, unmodified).
+
+**Relays slide when idle -- odometry does not see it.** `/relayN/odom` IS the world pose (checked
+against `gz model -p`: identical), and parked relays slide up to ~0.3 m per wall-minute. Station
+keeping (exploration coordinator) drives them back; two unattended relays slid to 0.35 m apart.
+
+**FAST-LIO can lose track next to a wall** ("No Effective Points!", run 8): no /Odometry, no
+map -> base_link_1 TF, so chain_robot cannot be commanded. Possibly helped along by the halved
+MID-360 ray count (`<downsample>` 4); revert to 2 in the container's model.sdf if it recurs.
+
+**Live-run tooling:** `rssi/ros/run_full_live.sh` (whole system, `FROM=<stage>` to resume),
+`rssi/ros/live_logger.sh` (ground truth every 20 s), `rssi/plot_live_run.py` (plot a run).

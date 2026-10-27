@@ -162,10 +162,13 @@ Live runs (`out/live_runs/`; each has a ground-truth CSV, most a coordinator log
 | run3 | -30 | coordinator gates every goal; 5 goals reached, 12.6 m; closest robots 0.82 m; then chain_robot wedged 0.10 m from a wall (its start inside Nav2's 0.5 m inflation -> no plan, no recovery) |
 | run4, run5 | -45 | **first live DEPLOY decisions**; relays stalled under the drive's speed deadband (fixed: speed floor + delayed start); two relays converged and every plan then failed (fixed: separation rule) |
 | run6 | -45 | **2-relay chain executed**: GCS > relay1 > relay2 > head, relays on their targets (within ~0.2 m), client 69.5 m through both wings; the coordinator then crashed on a goal outside the map (fixed) and the unattended relays slid to 0.35 m apart |
-| run7 | -45 | all fixes: 2-relay deployment, hops ~-55 dBm, see `run7_*` |
+| **run7** | -45 | **best live run**: 4 deployments (1- and 2-relay chains, hops -54 .. -69 dBm), client 91.7 m through the NE room, west wing and middle corridor, relays 11.6 / 18.7 m, **closest robots 0.94 m**, no crash in 41 min. It also showed the client running ahead when a relay lagged (an interval timed out and the next one started anyway) -> fixed: nobody moves on until everyone reached the waypoint |
+| run8 | -45 | with that fix: 2 plans correctly stopped for a lagging robot; then FAST-LIO lost localisation ("No Effective Points!") next to the east wall, so no odometry / TF for chain_robot and every goal was (correctly) refused |
 
-Open: chain_robot wedging itself against walls (its controller / costmap, unmodified), and the
-relays' idle slide (drive plugin), which station keeping counters but cannot remove.
+Open, all below this layer: chain_robot wedging itself against walls and FAST-LIO losing track
+near walls (its stack, unmodified -- note the MID-360 ray count was halved for RTF, which may
+not help FAST-LIO); the relays' idle slide (drive plugin), which station keeping counters but
+cannot remove; relay Nav2 stacks that come up `unconfigured` and need a STARTUP.
 
 ## Result folders (kept as a record, never overwritten)
 

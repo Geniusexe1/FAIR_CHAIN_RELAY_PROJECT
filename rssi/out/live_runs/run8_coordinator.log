@@ -1,0 +1,139 @@
+[INFO] [1793132748.449308800] [exploration_coordinator]: P0 -45.0 | req -81.68 dBm (Pr[link >= -85.0] >= 0.75) | client head, relays ['relay1', 'relay2'] | t_f 5 | re-place engaged relays (paper)
+[INFO] [1793132795.402026683] [exploration_coordinator]: relay1 drifted 1.01 m from its spot - sending it back
+[INFO] [1793132795.454201656] [exploration_coordinator]: relay2 drifted 2.15 m from its spot - sending it back
+[INFO] [1793132799.867580858] [exploration_coordinator]: goal world (6.80, 10.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (1.2 s) | targets head (6.80, 10.40)
+[INFO] [1793132891.736269855] [exploration_coordinator]: relay1 drifted 0.44 m from its spot - sending it back
+[WARN] [1793132894.826253072] [exploration_coordinator]: interval 1: ['head'] did not reach their waypoint - stopping the plan
+[WARN] [1793132897.459137414] [exploration_coordinator]: relay1: Nav2 is down (bt_navigator state 2) - restarting it
+[INFO] [1793132898.632805670] [exploration_coordinator]: goal world (6.80, 10.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.2 s) | targets head (6.80, 10.40)
+[WARN] [1793132898.893699956] [exploration_coordinator]: head: Nav2 is down (bt_navigator state 2) - restarting it
+[INFO] [1793133048.843788737] [exploration_coordinator]: relay2 drifted 0.32 m from its spot - sending it back
+[ERROR] [1793133627.427235084] [exploration_coordinator]: head: could not bring Nav2 back
+[WARN] [1793133627.427920462] [exploration_coordinator]: head: waypoint 1 rejected by Nav2 (also after a restart)
+[WARN] [1793133627.429126348] [exploration_coordinator]: interval 1: ['head'] did not reach their waypoint - stopping the plan
+[ERROR] [1793133656.525970848] [exploration_coordinator]: goal world (7.80, 13.10): REJECTED - planner error IndexError: index 137869 is out of bounds for axis 0 with size 1181
+[ERROR] [1793133685.579097952] [exploration_coordinator]: goal world (7.80, 13.10): REJECTED - planner error IndexError: index 148520 is out of bounds for axis 0 with size 1181
+[ERROR] [1793133709.756139035] [exploration_coordinator]: relay1: could not bring Nav2 back
+[ERROR] [1793133716.490882402] [exploration_coordinator]: goal world (7.80, 13.10): REJECTED - planner error IndexError: index 202694 is out of bounds for axis 0 with size 1181
+[INFO] [1793133734.375316850] [exploration_coordinator]: relay1 drifted 2.65 m from its spot - sending it back
+[ERROR] [1793133752.499128687] [exploration_coordinator]: goal world (7.80, 13.10): REJECTED - planner error IndexError: index 180940 is out of bounds for axis 0 with size 1181
+[ERROR] [1793133787.578477885] [exploration_coordinator]: goal world (7.80, 13.10): REJECTED - planner error IndexError: index 248961 is out of bounds for axis 0 with size 1181
+[ERROR] [1793133825.790495982] [exploration_coordinator]: goal world (7.80, 13.10): REJECTED - planner error IndexError: index 277593 is out of bounds for axis 0 with size 1181
+[WARN] [1793133845.665929179] [exploration_coordinator]: relay1: Nav2 is down (bt_navigator state None) - restarting it
+[ERROR] [1793133860.950889375] [exploration_coordinator]: goal world (7.80, 13.10): REJECTED - planner error IndexError: index 307279 is out of bounds for axis 0 with size 1181
+[ERROR] [1793133892.298829962] [exploration_coordinator]: goal world (7.80, 13.10): REJECTED - planner error IndexError: index 333465 is out of bounds for axis 0 with size 1181
+[ERROR] [1793133936.621501811] [exploration_coordinator]: goal world (7.80, 13.10): REJECTED - planner error IndexError: index 267901 is out of bounds for axis 0 with size 1181
+[INFO] [1793133953.194255418] [exploration_coordinator]: P0 -45.0 | req -81.68 dBm (Pr[link >= -85.0] >= 0.75) | client head, relays ['relay1', 'relay2'] | t_f 5 | re-place engaged relays (paper)
+[INFO] [1793133965.865258575] [exploration_coordinator]: relay1 drifted 3.33 m from its spot - sending it back
+[WARN] [1793133978.487673932] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793133981.532656786] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793133984.581284091] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793133987.636198814] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793133990.683919097] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793133994.483399143] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793133997.525321738] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134000.580535488] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134003.637593332] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134006.684113900] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134010.471134659] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134013.528647180] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134016.571884661] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134019.620041308] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134022.682352440] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134026.469261439] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134029.519491929] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134032.563625918] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134035.609471979] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134038.666698189] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134042.462895519] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134045.520959570] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134048.580907293] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134051.641307439] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134054.695299842] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134058.456149401] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134061.512099582] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134064.563600182] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134067.615903709] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134072.428514796] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134076.465180997] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134077.127269406] [exploration_coordinator]: relay1: Nav2 is down (bt_navigator state None) - restarting it
+[WARN] [1793134079.536608538] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134082.594158858] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134087.450510100] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134090.519696296] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134094.472822857] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134097.522266138] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134104.466528080] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134111.563507413] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134120.472971176] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134125.576342323] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134128.635937359] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134131.680897578] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134134.734864668] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134137.787740815] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134141.503065455] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134144.576739469] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134147.628574406] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134150.682274323] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134153.730955542] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134160.570591627] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134164.647106044] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134171.553771056] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134174.621504936] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134179.550027575] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134184.619181909] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134187.669105454] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134191.546379367] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134197.585048289] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134200.636746030] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134204.470136459] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134207.521919400] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134210.583652456] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134213.634537836] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134216.687193654] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134220.469744364] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134223.519115733] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134226.583556158] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134232.552241666] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134235.616750773] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134239.471296547] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134243.568727558] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134248.597800840] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134253.621429124] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134261.691825417] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134269.645101395] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134274.656048386] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134278.706366327] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134281.762438542] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[INFO] [1793134284.570190851] [exploration_coordinator]: relay2 drifted 0.31 m from its spot - sending it back
+[WARN] [1793134284.808873251] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134288.483330847] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134291.535812677] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134294.590325167] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134299.651026656] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134302.721614197] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134308.590698750] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134311.655036214] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134318.609952659] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134323.612725921] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134326.669667251] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134331.603325162] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134337.696967644] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134340.760518307] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134344.582114726] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134350.636754069] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134356.712068713] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134361.786801090] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134364.838776207] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134367.886260527] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134370.935929902] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134374.477886991] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134377.532285265] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134380.582948021] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134383.635174154] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134386.686851427] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134390.465988556] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134393.525299210] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134399.468545566] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134403.526021994] [exploration_coordinator]: rejecting goal: no position yet for ['head']
+[WARN] [1793134406.586327549] [exploration_coordinator]: rejecting goal: no position yet for ['head']
