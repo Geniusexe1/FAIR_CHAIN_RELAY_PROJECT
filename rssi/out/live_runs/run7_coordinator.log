@@ -1,0 +1,35 @@
+[INFO] [1793126788.368324736] [exploration_coordinator]: P0 -45.0 | req -81.68 dBm (Pr[link >= -85.0] >= 0.75) | client head, relays ['relay1', 'relay2'] | t_f 5 | re-place engaged relays (paper)
+[INFO] [1793126824.374831180] [exploration_coordinator]: goal world (6.80, 10.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (1.0 s) | targets head (6.80, 10.40)
+[INFO] [1793126919.448951776] [exploration_coordinator]: relay1 drifted 0.35 m from its spot - sending it back
+[INFO] [1793126919.500404062] [exploration_coordinator]: relay2 drifted 0.36 m from its spot - sending it back
+[INFO] [1793126937.576921424] [exploration_coordinator]: goal world (7.30, 15.10): DEPLOY [gcs > relay2 > head] 1 relay(s) engaged (t_f 5); final hops -63.7, -60.9 (4.4 s) | targets relay2 (4.63, 10.40), head (7.30, 15.10)
+[WARN] [1793127107.051972197] [exploration_coordinator]: interval 1 timed out, moving on
+[WARN] [1793127122.678195903] [exploration_coordinator]: interval 2: ['relay2'] did not reach their waypoint
+[WARN] [1793127138.307394717] [exploration_coordinator]: interval 3: ['relay2'] did not reach their waypoint
+[INFO] [1793127203.859132959] [exploration_coordinator]: goal world (4.50, 17.20): DEPLOY [gcs > relay1 > relay2 > head] 2 relay(s) engaged (t_f 12); final hops -54.1, -54.7, -55.3 (29.7 s) | targets relay1 (2.53, 11.85), relay2 (4.23, 13.23), head (4.50, 17.20)
+[WARN] [1793127348.785955002] [exploration_coordinator]: interval 1 timed out, moving on
+[WARN] [1793127500.197633729] [exploration_coordinator]: interval 2: ['relay1', 'head'] did not reach their waypoint
+[INFO] [1793127502.562907059] [exploration_coordinator]: goal world (11.70, 14.30): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.4 s) | targets head (11.70, 14.30)
+[INFO] [1793127522.291026174] [exploration_coordinator]: relay1 drifted 4.08 m from its spot - sending it back
+[INFO] [1793127522.342354978] [exploration_coordinator]: relay2 drifted 2.31 m from its spot - sending it back
+[WARN] [1793127539.177055268] [exploration_coordinator]: interval 1: ['head'] did not reach their waypoint
+[INFO] [1793127542.916505920] [exploration_coordinator]: goal world (11.70, 14.30): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (2.7 s) | targets head (11.70, 14.30)
+[INFO] [1793127700.236786660] [exploration_coordinator]: goal world (4.50, 17.20): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.1 s) | targets head (4.50, 17.20)
+[INFO] [1793127919.206628541] [exploration_coordinator]: goal world (-6.90, 10.60): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.0 s) | targets head (-6.90, 10.60)
+[INFO] [1793128138.657400176] [exploration_coordinator]: goal world (-8.50, 5.00): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.4 s) | targets head (-8.50, 5.00)
+[INFO] [1793128286.487487951] [exploration_coordinator]: relay2 drifted 0.33 m from its spot - sending it back
+[INFO] [1793128437.047788040] [exploration_coordinator]: relay2 drifted 0.36 m from its spot - sending it back
+[INFO] [1793128455.661699941] [exploration_coordinator]: goal world (-5.60, -1.50): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.4 s) | targets head (-5.60, -1.50)
+[INFO] [1793128588.549448342] [exploration_coordinator]: relay2 drifted 0.33 m from its spot - sending it back
+[WARN] [1793128674.122152210] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793128676.343359834] [exploration_coordinator]: goal world (-5.60, -1.50): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (2.1 s) | targets head (-5.60, -1.50)
+[INFO] [1793128821.283613475] [exploration_coordinator]: goal world (-4.90, -7.40): CLIENT_ONLY [gcs > relay1 > relay2 > head] goal inside the bounded region (t_f 5) (1.1 s) | targets head (-4.90, -7.40)
+[INFO] [1793128903.302362688] [exploration_coordinator]: goal world (-5.00, -12.60): SKIP [gcs > relay1 > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (11.1 s)
+[INFO] [1793128915.882449937] [exploration_coordinator]: goal world (-0.50, -7.30): SKIP [gcs > relay1 > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (12.5 s)
+[INFO] [1793128926.603191404] [exploration_coordinator]: goal world (-0.20, -7.20): SKIP [gcs > relay1 > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (10.7 s)
+[INFO] [1793128941.434618085] [exploration_coordinator]: goal world (-1.60, -11.10): DEPLOY [gcs > relay1 > relay2 > head] 2 relay(s) engaged (t_f 12); final hops -67.4, -67.0, -68.2 (14.8 s) | targets relay1 (-3.63, 6.62), relay2 (-5.05, -3.81), head (-1.60, -11.10)
+[WARN] [1793129112.930015924] [exploration_coordinator]: interval 1 timed out, moving on
+[INFO] [1793129116.429807744] [exploration_coordinator]: relay1 drifted 7.41 m from its spot - sending it back
+[INFO] [1793129116.578320968] [exploration_coordinator]: relay2 drifted 18.23 m from its spot - sending it back
+[INFO] [1793129128.750453621] [exploration_coordinator]: goal world (-4.70, -14.00): DEPLOY [gcs > relay2 > relay1 > head] 2 relay(s) engaged (t_f 12); final hops -67.4, -65.4, -69.1 (15.5 s) | targets relay2 (-3.65, 6.57), relay1 (-5.05, -4.42), head (-4.70, -14.00)
+[WARN] [1793129298.713681835] [exploration_coordinator]: interval 1 timed out, moving on

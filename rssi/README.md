@@ -121,7 +121,9 @@ apart (bodies are ~0.3 m, so a probable contact):
 | `v3_paperP0_noAvoid_baseline` | v2 + old relay spawn in the corridor, no avoidance | 99.3% | 99.4% | 0.02 m / 1.7% |
 | `v3_paperP0_avoidRobots` | + robot separation, relays parked off the road | 99.3% | 98.8% | 0.06 m / **0.1%** |
 | `v4_paperP0_avoidContinuous` | + separation checked through each whole interval | 99.3% | 98.8% | 0.06 m / 0.2% |
-| `v5_paperP0_closePassLog` | v4 + every close pass logged (`close_passes.csv`) | see folder | | |
+| `v5_paperP0_closePassLog` | v4 + every close pass logged: all were the client passing a parked relay | 99.3% | 98.8% | 0.06 m / 0.2% |
+| `v6_paperP0_legsAvoid` | sim legs avoid robots (did not help: the relay sat in the only passage) | 99.3% | 99.0% | 0.06 m / 0.2% |
+| **`v7_paperP0_routeSeparation`** | separation sampled along each robot's ROUTE, not the straight line | **100%** | **98.7%** | **0.99 m / 0%** |
 
 At the measured 5 GHz P0, two relays cannot cover the hospital, and with every hop near the
 limit a 3-hop chain holds only ~0.75^3 of the time -- the per-hop theta is the paper's.
@@ -149,16 +151,21 @@ next-ranked frontier. What the coordinator does besides planning:
 | re-publishes `/map` cropped to the explored area on `/coord/map` for the explorer + detector | some participants on this host fall back to UDP, where a large map does not arrive |
 | plans only through known-free space | Nav2 cannot plan through unknown space |
 
-`rssi/ros/live_logger.sh` records Gazebo ground-truth poses every 20 s: `out/live_runs/*.csv`.
+`rssi/ros/live_logger.sh` records Gazebo ground-truth poses every 20 s (`out/live_runs/*.csv`);
+`rssi/plot_live_run.py <csv> [coordinator.log]` draws them on the map (`*.png`).
 
-**Live result (run3, P0 -30, 16 min wall):** the coordinator gated every explorer goal (12
-planned client moves, 417 skips, 1 Nav2 revival, 9 station-keeping corrections); chain_robot
-reached 5 goals and drove 12.6 m from its spawn into the north-east room; **closest approach
-between any two robots 0.82 m** (an earlier run, before the fixes, had chain_robot push relay1
-~4 m). It then wedged itself 0.10 m from a wall: with Nav2's 0.5 m inflation its start is in
-an obstacle, so no plan and no backup recovery succeed. That is chain_robot's own controller /
-costmap behaviour, below this layer, and is what currently stops a full live exploration.
-Logs: `out/live_runs/run3_*`.
+Live runs (`out/live_runs/`; each has a ground-truth CSV, most a coordinator log and a plot):
+
+| run | P0 | what it showed |
+|---|---|---|
+| run1, run2 | -30 | before the fixes: chain_robot pushed relay1 ~4 m; /map stopped arriving; Nav2 shut itself down |
+| run3 | -30 | coordinator gates every goal; 5 goals reached, 12.6 m; closest robots 0.82 m; then chain_robot wedged 0.10 m from a wall (its start inside Nav2's 0.5 m inflation -> no plan, no recovery) |
+| run4, run5 | -45 | **first live DEPLOY decisions**; relays stalled under the drive's speed deadband (fixed: speed floor + delayed start); two relays converged and every plan then failed (fixed: separation rule) |
+| run6 | -45 | **2-relay chain executed**: GCS > relay1 > relay2 > head, relays on their targets (within ~0.2 m), client 69.5 m through both wings; the coordinator then crashed on a goal outside the map (fixed) and the unattended relays slid to 0.35 m apart |
+| run7 | -45 | all fixes: 2-relay deployment, hops ~-55 dBm, see `run7_*` |
+
+Open: chain_robot wedging itself against walls (its controller / costmap, unmodified), and the
+relays' idle slide (drive plugin), which station keeping counters but cannot remove.
 
 ## Result folders (kept as a record, never overwritten)
 

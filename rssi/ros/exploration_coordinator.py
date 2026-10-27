@@ -341,14 +341,14 @@ class Coordinator(RosNode):
                     h.cancel_goal_async()
                 self.keeping.pop(n, None)
         try:
-            self._reached = False
+            self._reached, self._client_failed = False, False
             res = self._execute_plan(gh)
-            for n, xy in plan.targets.items():                    # where each relay now belongs
-                if n != self.client_name:
-                    self.home[n] = tuple(xy)
+            for n, xy in plan.targets.items():                    # where each relay now belongs:
+                if n != self.client_name:                         # its target if the plan finished,
+                    self.home[n] = tuple(xy) if self._reached else self.robots[n].xy   # else where it is
             if self._reached:                                     # only goals actually reached
                 self.visited.append(tuple(plan.goal))
-            else:
+            elif self._client_failed:                             # a lagging relay is not the goal's fault
                 k = (round(plan.goal[0], 1), round(plan.goal[1], 1))
                 self.failed[k] = self.failed.get(k, 0) + 1
             return res
@@ -419,19 +419,23 @@ class Coordinator(RosNode):
                 # slack: a relay needs time to plan and turn (Ackermann) before it moves at all
                 if (self.get_clock().now() - t_start).nanoseconds / 1e9 > \
                         self.a.interval_timeout * max(sched[t - 1]["dt"], 1.0) + self.a.interval_slack:
-                    self.get_logger().warn(f"interval {t} timed out, moving on")
+                    self.get_logger().warn(f"interval {t} timed out")
                     break
                 time.sleep(0.5)
             failed = [n for n, s in done.items() if s != GoalStatus.STATUS_SUCCEEDED]
-            if failed:
-                self.get_logger().warn(f"interval {t}: {failed} did not reach their waypoint")
-            if self.client_name in failed or self.client_name in [n for n in movers if n not in done]:
-                # the client could not follow the plan: report it, the explorer re-plans
+            missing = failed + [n for n in movers if n not in done]
+            if missing:
+                # Synchronised chain: nobody goes on to waypoint t+1 while someone has not
+                # reached waypoint t -- a client running ahead of lagging relays is exactly
+                # how the chain breaks. Stop everyone; the explorer asks again and the plan
+                # is rebuilt from where the robots really are.
+                self.get_logger().warn(f"interval {t}: {missing} did not reach their waypoint - stopping the plan")
                 for h in handles.values():
                     h.cancel_goal_async()
                 for n in self.robots:
                     self._limit(n, self.robots[n].vmax)
-                self._state(event="aborted", t=t, failed=failed)
+                self._client_failed = self.client_name in missing   # only that counts against the goal
+                self._state(event="aborted", t=t, failed=missing)
                 gh.abort()
                 return NavigateToPose.Result()
         for n in self.robots:
