@@ -1,0 +1,37 @@
+decision,sim_time_s,goal_x,goal_y,decision_type,chain,relays_engaged,pred_min_hop_dBm_per_step,interval_s,client_m,relay_m,CR_sim_%,coverage_%,plan_s,note
+1,13.0,-0.45,6.8,client_only,GCS>head,0,"[-67.4, -72.2, -74.7, -77.4, -78.6, -78.6]","[2.6, 2.6, 2.6, 2.6, 2.6]",9.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,17.3,0.4,goal inside the bounded region
+2,32.5,-5.6,9.05,client_only,GCS>head,0,"[-78.6, -78.1, -74.7, -73.2, -76.2, -78.9]","[3.9, 3.9, 3.9, 3.9, 3.9]",13.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,18.8,0.0,goal inside the bounded region
+3,37.9,-7.15,9.0,client_only,GCS>head,0,"[-78.9, -78.3, -78.2, -79.0, -79.6, -80.2]","[1.1, 1.1, 1.1, 1.1, 1.1]",3.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,19.3,0.0,goal inside the bounded region
+3,37.9,-8.45,8.15,skip,GCS>head,0,,,,,,19.3,7.5,no feasible chain with 2 relays
+4,50.1,-6.5,12.45,deploy,GCS>relay1>head,1,"[-85.0, -87.6, -87.8, -84.6, -79.2, -77.3]","[2.4, 2.4, 2.4, 2.4, 2.4]",3.8,"{'relay1': 6.1, 'relay2': 0.0}",33.3,19.8,3.3,"1 relay(s) engaged; final hops -76.0, -77.3 | MCTS could not keep every intermediate step"
+5,59.7,-10.1,10.2,client_only,GCS>relay1>head,1,"[-77.3, -79.1, -80.7, -79.1, -80.3, -80.3]","[1.9, 1.9, 1.9, 1.9, 1.9]",6.8,"{'relay1': 0.0, 'relay2': 0.0}",92.9,19.9,0.1,goal inside the bounded region
+6,63.7,-11.95,11.45,client_only,GCS>relay1>head,1,"[-80.3, -79.7, -79.2, -78.7, -79.4, -80.7]","[0.8, 0.8, 0.8, 0.8, 0.8]",2.8,"{'relay1': 0.0, 'relay2': 0.0}",90.0,19.9,0.1,goal inside the bounded region
+7,66.0,-12.0,9.9,client_only,GCS>relay1>head,1,"[-80.7, -79.8, -79.0, -78.0, -77.8, -78.3]","[0.4, 0.4, 0.4, 0.4, 0.4]",1.6,"{'relay1': 0.0, 'relay2': 0.0}",90.0,19.9,0.0,goal inside the bounded region
+8,100.9,-7.3,5.35,deploy,GCS>relay1>relay2>head,2,"[-93.0, -79.6, -76.0, -76.0, -76.0, -79.4]","[7.0, 7.0, 7.0, 7.0, 7.0]",24.5,"{'relay1': 0.0, 'relay2': 13.6}",84.4,22.5,7.4,"2 relay(s) engaged; final hops -76.0, -78.0, -79.4"
+9,107.6,-10.8,5.6,client_only,GCS>relay1>relay2>head,2,"[-79.4, -78.0, -78.0, -78.0, -78.0, -78.9]","[1.3, 1.3, 1.3, 1.3, 1.3]",4.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,22.8,0.1,goal inside the bounded region
+10,123.8,-4.7,1.35,client_only,GCS>relay1>relay2>head,2,"[-78.9, -78.0, -78.0, -78.0, -78.0, -78.0]","[3.2, 3.2, 3.2, 3.2, 3.2]",11.4,"{'relay1': 0.0, 'relay2': 0.0}",95.2,26.5,0.1,goal inside the bounded region
+11,128.4,-5.45,0.1,client_only,GCS>relay1>relay2>head,2,"[-78.0, -78.0, -78.0, -78.0, -78.0, -78.0]","[0.9, 0.9, 0.9, 0.9, 0.9]",3.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,27.1,0.1,goal inside the bounded region
+12,137.9,-3.0,-1.0,client_only,GCS>relay1>relay2>head,2,"[-78.0, -78.0, -78.0, -78.0, -78.0, -78.2]","[1.9, 1.9, 1.9, 1.9, 1.9]",6.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,27.9,0.1,goal inside the bounded region
+13,140.7,-1.1,-1.0,client_only,GCS>relay1>relay2>head,2,"[-78.2, -78.2, -78.4, -78.9, -80.0, -81.7]","[0.5, 0.5, 0.5, 0.5, 0.5]",1.9,"{'relay1': 0.0, 'relay2': 0.0}",70.0,27.9,0.1,goal inside the bounded region
+13,140.7,-0.5,-1.6,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-1.05,-5.65,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-2.3,-6.35,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-3.1,-2.6,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-2.0,4.35,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,2.8,-0.1,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,0.2,4.65,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-0.15,4.95,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,0.4,5.35,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,1.95,4.4,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,5.0,1.55,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,5.7,4.7,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-4.55,-8.3,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,5.95,9.1,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,7.75,10.2,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,6.65,11.9,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-4.0,17.5,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-11.95,14.2,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-10.0,16.5,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,5.2,15.2,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-6.3,18.0,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays
+13,140.7,-0.55,18.45,skip,GCS>relay1>relay2>head,2,,,,,,27.9,0.0,no feasible chain with 2 relays

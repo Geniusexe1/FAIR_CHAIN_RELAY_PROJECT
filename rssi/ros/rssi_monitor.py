@@ -108,6 +108,8 @@ class RssiMonitor(RosNode):
         self.client = a.client or order[-1]
         self.attach = a.attach or order[order.index(self.client) - 1]
         self.chain = order[:order.index(self.attach) + 1] + [self.client]
+        if a.chain_topic:                # topology from the exploration coordinator
+            self.create_subscription(String, a.chain_topic, self._chain, 10)
         self.est = {}                    # (a, b) -> EMA-filtered RSSI estimate (dBm)
         self.drawn = None                # state the current map was rendered from
         self.drawn_at = 0.0
@@ -124,6 +126,14 @@ class RssiMonitor(RosNode):
             f"strong {a.strong:g} dBm -> {a.map_dir}")
 
     # ---------------------------------------------------------------- inputs
+    def _chain(self, msg):
+        chain = json.loads(msg.data)
+        known = {n for n, *_ in self.spec}
+        if len(chain) < 2 or not set(chain) <= known or chain == self.chain:
+            return
+        self.chain, self.client, self.attach = chain, chain[-1], chain[-2]
+        self.get_logger().info(f"topology from {self.a.chain_topic}: {' > '.join(chain)}")
+
     def _odom(self, name, off, msg):
         p = msg.pose.pose.position
         self.pos[name] = (p.x + off[0], p.y + off[1])
@@ -312,6 +322,8 @@ def main():
     ap.add_argument("--client", default=None, help="client node (default: last in nodes.yaml)")
     ap.add_argument("--attach", default=None, help="client's FIXED relay (default: the node before it)")
     ap.add_argument("--strong", type=float, default=STRONG_DBM, help="dashed contour: strong end-to-end RSSI, dBm")
+    ap.add_argument("--chain-topic", default="/coord/chain",
+                    help="follow this JSON chain (GCS ... client) for the margin map; '' = fixed")
     ap.add_argument("--map-dir", default="/live", help="where margin_latest.png is written")
     ap.add_argument("--map-period", type=float, default=2.0, help="min s between map renders")
     ap.add_argument("--est-change", type=float, default=2.0,

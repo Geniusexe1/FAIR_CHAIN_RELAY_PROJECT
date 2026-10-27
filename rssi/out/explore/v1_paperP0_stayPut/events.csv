@@ -1,0 +1,109 @@
+decision,sim_time_s,goal_x,goal_y,decision_type,chain,relays_engaged,pred_min_hop_dBm_per_step,interval_s,client_m,relay_m,CR_sim_%,coverage_%,plan_s,note
+1,13.0,-0.45,6.8,client_only,GCS>head,0,"[-36.6, -41.4, -43.9, -46.6, -47.8, -47.8]","[2.6, 2.6, 2.6, 2.6, 2.6]",9.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,17.3,0.4,goal inside the bounded region
+2,32.5,-5.6,9.05,client_only,GCS>head,0,"[-47.8, -47.3, -43.9, -42.4, -45.4, -48.1]","[3.9, 3.9, 3.9, 3.9, 3.9]",13.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,18.8,0.0,goal inside the bounded region
+3,37.9,-7.15,9.0,client_only,GCS>head,0,"[-48.1, -47.5, -47.4, -48.2, -48.8, -49.4]","[1.1, 1.1, 1.1, 1.1, 1.1]",3.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,19.3,0.0,goal inside the bounded region
+4,71.0,-8.45,8.15,client_only,GCS>head,0,"[-49.4, -44.8, -43.8, -49.5, -57.2, -53.4]","[6.6, 6.6, 6.6, 6.6, 6.6]",23.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,21.9,0.0,goal inside the bounded region
+5,109.4,-10.85,10.65,client_only,GCS>head,0,"[-53.4, -54.1, -48.1, -41.3, -48.0, -52.2]","[7.7, 7.7, 7.7, 7.7, 7.7]",26.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,22.3,0.1,goal inside the bounded region
+6,125.8,-10.15,12.95,client_only,GCS>head,0,"[-52.2, -50.7, -48.5, -52.8, -59.8, -57.0]","[3.3, 3.3, 3.3, 3.3, 3.3]",11.5,"{'relay1': 0.0, 'relay2': 0.0}",100.0,22.5,0.0,goal inside the bounded region
+7,130.0,-11.95,14.35,client_only,GCS>head,0,"[-57.0, -57.4, -57.7, -59.8, -62.6, -64.5]","[0.8, 0.8, 0.8, 0.8, 0.8]",2.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,22.6,0.0,goal inside the bounded region
+8,133.8,-11.35,16.5,client_only,GCS>head,0,"[-64.5, -66.8, -68.5, -70.2, -70.2, -69.9]","[0.8, 0.8, 0.8, 0.8, 0.8]",2.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,22.6,0.0,goal inside the bounded region
+9,164.2,-4.15,17.85,client_only,GCS>head,0,"[-69.9, -66.5, -47.9, -45.1, -46.2, -65.9]","[6.1, 6.1, 6.1, 6.1, 6.1]",21.3,"{'relay1': 0.0, 'relay2': 0.0}",100.0,24.2,0.1,goal inside the bounded region
+10,192.2,-0.55,18.45,client_only,GCS>head,0,"[-65.9, -45.9, -44.2, -35.2, -42.7, -43.7]","[5.6, 5.6, 5.6, 5.6, 5.6]",19.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,24.5,0.0,goal inside the bounded region
+11,215.5,5.2,15.2,client_only,GCS>head,0,"[-43.7, -45.7, -32.8, -41.0, -42.4, -46.1]","[4.7, 4.7, 4.7, 4.7, 4.7]",16.3,"{'relay1': 0.0, 'relay2': 0.0}",100.0,26.5,0.0,goal inside the bounded region
+12,223.0,6.35,18.0,client_only,GCS>head,0,"[-46.1, -53.6, -59.7, -63.3, -60.2, -57.5]","[1.5, 1.5, 1.5, 1.5, 1.5]",5.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,27.3,0.0,goal inside the bounded region
+13,244.8,6.65,11.9,client_only,GCS>head,0,"[-57.5, -60.0, -44.9, -41.8, -48.3, -48.7]","[4.4, 4.4, 4.4, 4.4, 4.4]",15.3,"{'relay1': 0.0, 'relay2': 0.0}",100.0,29.7,0.1,goal inside the bounded region
+14,248.7,7.8,9.4,client_only,GCS>head,0,"[-48.7, -49.7, -51.6, -53.1, -53.9, -54.0]","[0.8, 0.8, 0.8, 0.8, 0.8]",2.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,29.7,0.1,goal inside the bounded region
+15,256.1,8.6,8.1,client_only,GCS>head,0,"[-54.0, -52.8, -51.9, -54.0, -53.8, -54.4]","[1.5, 1.5, 1.5, 1.5, 1.5]",5.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,29.8,0.0,goal inside the bounded region
+16,286.9,8.05,4.95,client_only,GCS>head,0,"[-54.4, -50.5, -41.0, -51.6, -50.7, -61.6]","[6.1, 6.1, 6.1, 6.1, 6.1]",21.5,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.1,0.0,goal inside the bounded region
+17,292.0,10.75,5.7,client_only,GCS>head,0,"[-61.6, -63.0, -64.0, -64.8, -67.1, -69.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",3.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.2,0.0,goal inside the bounded region
+18,293.8,12.0,5.95,client_only,GCS>head,0,"[-69.0, -69.6, -70.1, -70.6, -71.1, -71.6]","[0.4, 0.4, 0.4, 0.4, 0.4]",1.3,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.2,0.0,goal inside the bounded region
+19,297.4,9.5,5.95,client_only,GCS>head,0,"[-71.6, -71.0, -70.4, -69.9, -69.5, -69.6]","[0.7, 0.7, 0.7, 0.7, 0.7]",2.5,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.2,0.0,goal inside the bounded region
+20,334.0,10.2,10.15,client_only,GCS>head,0,"[-69.6, -52.6, -51.8, -40.4, -50.7, -57.9]","[7.3, 7.3, 7.3, 7.3, 7.3]",25.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.5,0.0,goal inside the bounded region
+21,339.8,9.4,8.75,client_only,GCS>head,0,"[-57.9, -57.2, -56.3, -58.2, -62.4, -64.0]","[1.2, 1.2, 1.2, 1.2, 1.2]",4.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.5,0.0,goal inside the bounded region
+22,347.9,12.0,10.0,client_only,GCS>head,0,"[-64.0, -60.9, -56.3, -57.4, -57.4, -57.1]","[1.6, 1.6, 1.6, 1.6, 1.6]",5.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.5,0.0,goal inside the bounded region
+23,366.8,10.2,12.85,client_only,GCS>head,0,"[-57.1, -57.1, -52.2, -49.4, -61.1, -58.0]","[3.8, 3.8, 3.8, 3.8, 3.8]",13.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.7,0.1,goal inside the bounded region
+24,370.8,11.95,14.25,client_only,GCS>head,0,"[-58.0, -58.9, -59.2, -60.2, -61.8, -63.9]","[0.8, 0.8, 0.8, 0.8, 0.8]",2.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.7,0.0,goal inside the bounded region
+25,386.4,11.9,16.15,client_only,GCS>head,0,"[-63.9, -58.9, -59.5, -68.2, -69.4, -71.2]","[3.1, 3.1, 3.1, 3.1, 3.1]",10.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.7,0.2,goal inside the bounded region
+26,430.3,1.4,1.75,client_only,GCS>head,0,"[-71.2, -60.8, -46.3, -50.9, -51.7, -70.1]","[8.8, 8.8, 8.8, 8.8, 8.8]",30.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,36.9,0.3,goal inside the bounded region
+27,434.1,1.95,4.4,client_only,GCS>head,0,"[-70.1, -69.6, -70.7, -72.4, -74.3, -76.5]","[0.8, 0.8, 0.8, 0.8, 0.8]",2.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,36.9,0.0,goal inside the bounded region
+28,453.0,0.25,5.2,deploy,GCS>relay2>head,1,"[-76.0, -66.4, -61.2, -61.7, -58.6, -54.7]","[3.8, 3.8, 3.8, 3.8, 3.8]",5.7,"{'relay1': 0.0, 'relay2': 9.4}",100.0,36.9,3.4,"1 relay(s) engaged; final hops -54.7, -54.3"
+29,465.0,-2.0,4.35,client_only,GCS>relay2>head,1,"[-54.7, -54.7, -54.7, -54.7, -54.7, -54.7]","[2.4, 2.4, 2.4, 2.4, 2.4]",8.4,"{'relay1': 0.0, 'relay2': 0.0}",100.0,37.0,0.0,goal inside the bounded region
+30,475.4,-4.7,1.35,client_only,GCS>relay2>head,1,"[-54.7, -54.7, -54.7, -54.7, -54.7, -54.7]","[2.1, 2.1, 2.1, 2.1, 2.1]",7.3,"{'relay1': 0.0, 'relay2': 0.0}",100.0,38.6,0.1,goal inside the bounded region
+31,484.7,-1.2,-1.0,client_only,GCS>relay2>head,1,"[-54.7, -54.7, -54.7, -54.7, -58.9, -65.9]","[1.9, 1.9, 1.9, 1.9, 1.9]",6.5,"{'relay1': 0.0, 'relay2': 0.0}",100.0,38.7,0.0,goal inside the bounded region
+32,487.3,-0.5,-1.6,client_only,GCS>relay2>head,1,"[-65.9, -64.6, -64.9, -67.0, -69.3, -71.0]","[0.5, 0.5, 0.5, 0.5, 0.5]",1.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,38.7,0.0,goal inside the bounded region
+33,492.4,-2.0,-4.85,client_only,GCS>relay2>head,1,"[-71.0, -70.8, -70.8, -70.4, -69.6, -69.7]","[1.0, 1.0, 1.0, 1.0, 1.0]",3.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,38.7,0.0,goal inside the bounded region
+34,515.4,-3.15,-3.5,client_only,GCS>relay2>head,1,"[-69.7, -69.0, -54.7, -54.7, -59.0, -69.5]","[4.6, 4.6, 4.6, 4.6, 4.6]",16.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,40.3,0.0,goal inside the bounded region
+35,516.9,-3.05,-4.55,client_only,GCS>relay2>head,1,"[-69.5, -69.9, -70.5, -71.0, -71.5, -71.8]","[0.3, 0.3, 0.3, 0.3, 0.3]",1.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,40.3,0.0,goal inside the bounded region
+36,529.5,-3.1,-9.0,client_only,GCS>relay2>head,1,"[-71.8, -66.8, -69.6, -72.8, -75.6, -73.3]","[2.5, 2.5, 2.5, 2.5, 2.5]",8.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,45.1,0.0,goal inside the bounded region
+37,532.3,-3.0,-10.55,client_only,GCS>relay2>head,1,"[-73.3, -72.5, -71.8, -71.2, -70.7, -70.8]","[0.6, 0.6, 0.6, 0.6, 0.6]",1.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,45.6,0.1,goal inside the bounded region
+38,536.8,-2.25,-12.45,client_only,GCS>relay2>head,1,"[-70.8, -70.8, -73.6, -75.1, -74.5, -73.0]","[0.9, 0.9, 0.9, 0.9, 0.9]",3.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,45.6,0.0,goal inside the bounded region
+39,552.8,1.95,-8.5,client_only,GCS>relay2>head,1,"[-73.0, -71.4, -72.7, -69.6, -65.7, -57.7]","[3.2, 3.2, 3.2, 3.2, 3.2]",11.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,47.5,0.1,goal inside the bounded region
+40,558.6,2.35,-11.15,client_only,GCS>relay2>head,1,"[-57.7, -54.7, -54.7, -54.7, -54.7, -54.7]","[1.2, 1.2, 1.2, 1.2, 1.2]",4.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,48.3,0.0,goal inside the bounded region
+41,562.4,2.25,-12.5,client_only,GCS>relay2>head,1,"[-54.7, -54.7, -55.9, -55.6, -55.2, -54.7]","[0.8, 0.8, 0.8, 0.8, 0.8]",2.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,48.3,0.1,goal inside the bounded region
+42,572.6,1.05,-9.4,client_only,GCS>relay2>head,1,"[-54.7, -55.7, -54.7, -54.7, -55.2, -59.9]","[2.0, 2.0, 2.0, 2.0, 2.0]",7.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,48.3,0.0,goal inside the bounded region
+43,584.1,5.0,-12.25,client_only,GCS>relay2>head,1,"[-59.9, -54.7, -54.7, -56.1, -58.9, -57.4]","[2.3, 2.3, 2.3, 2.3, 2.3]",8.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,52.9,0.0,goal inside the bounded region
+44,592.6,1.25,-14.55,client_only,GCS>relay2>head,1,"[-57.4, -57.0, -56.1, -55.2, -59.1, -65.9]","[1.7, 1.7, 1.7, 1.7, 1.7]",6.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,55.0,0.0,goal inside the bounded region
+45,600.1,1.65,-16.55,client_only,GCS>relay2>head,1,"[-65.9, -60.0, -56.9, -57.0, -61.0, -62.5]","[1.5, 1.5, 1.5, 1.5, 1.5]",5.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,55.0,0.0,goal inside the bounded region
+46,604.4,0.5,-18.05,client_only,GCS>relay2>head,1,"[-62.5, -61.1, -62.1, -63.8, -65.1, -66.0]","[0.9, 0.9, 0.9, 0.9, 0.9]",3.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,55.0,0.0,goal inside the bounded region
+47,626.9,0.2,-17.0,client_only,GCS>relay2>head,1,"[-66.0, -57.2, -65.6, -76.8, -76.0, -69.4]","[4.5, 4.5, 4.5, 4.5, 4.5]",15.7,"{'relay1': 0.0, 'relay2': 0.0}",97.1,55.8,0.2,goal inside the bounded region
+48,655.4,0.55,-21.2,client_only,GCS>relay2>head,1,"[-69.4, -76.8, -72.0, -56.8, -63.9, -63.7]","[5.7, 5.7, 5.7, 5.7, 5.7]",20.0,"{'relay1': 0.0, 'relay2': 0.0}",97.6,56.0,0.2,goal inside the bounded region
+49,658.4,1.15,-22.7,client_only,GCS>relay2>head,1,"[-63.7, -62.7, -61.3, -60.8, -60.6, -60.7]","[0.6, 0.6, 0.6, 0.6, 0.6]",2.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,56.0,0.0,goal inside the bounded region
+50,687.2,5.0,-22.5,client_only,GCS>relay2>head,1,"[-60.7, -62.5, -57.8, -56.3, -60.4, -58.5]","[5.8, 5.8, 5.8, 5.8, 5.8]",20.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,59.7,0.1,goal inside the bounded region
+51,693.5,8.4,-22.1,client_only,GCS>relay2>head,1,"[-58.5, -58.7, -58.7, -61.9, -69.2, -75.6]","[1.3, 1.3, 1.3, 1.3, 1.3]",4.4,"{'relay1': 0.0, 'relay2': 0.0}",100.0,64.2,0.0,goal inside the bounded region
+52,762.9,10.85,-20.2,deploy,GCS>relay2>relay1>head,2,"[-79.1, -84.0, -84.9, -84.8, -79.9, -62.9]","[13.9, 13.9, 13.9, 13.9, 13.9]",4.8,"{'relay1': 34.7, 'relay2': 0.0}",51.5,64.8,4.6,"2 relay(s) engaged; final hops -54.7, -61.6, -62.9 | MCTS could not keep every intermediate step"
+53,777.3,9.75,-17.45,client_only,GCS>relay2>relay1>head,2,"[-62.9, -62.1, -61.6, -64.2, -66.2, -65.0]","[2.9, 2.9, 2.9, 2.9, 2.9]",10.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,65.4,0.1,goal inside the bounded region
+54,782.8,12.0,-16.6,client_only,GCS>relay2>relay1>head,2,"[-65.0, -65.9, -66.9, -67.8, -69.6, -69.8]","[1.1, 1.1, 1.1, 1.1, 1.1]",3.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,65.5,0.0,goal inside the bounded region
+55,784.2,12.0,-15.65,client_only,GCS>relay2>relay1>head,2,"[-69.8, -70.6, -71.4, -72.1, -72.9, -73.7]","[0.3, 0.3, 0.3, 0.3, 0.3]",0.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,65.5,0.1,goal inside the bounded region
+56,795.8,9.75,-13.7,client_only,GCS>relay2>relay1>head,2,"[-73.7, -67.7, -66.4, -67.3, -70.0, -70.6]","[2.3, 2.3, 2.3, 2.3, 2.3]",8.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,65.8,0.0,goal inside the bounded region
+57,802.8,11.4,-12.65,client_only,GCS>relay2>relay1>head,2,"[-70.6, -71.5, -71.9, -71.2, -71.6, -74.4]","[1.4, 1.4, 1.4, 1.4, 1.4]",4.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,65.9,0.0,goal inside the bounded region
+58,811.3,7.0,-11.5,client_only,GCS>relay2>relay1>head,2,"[-74.4, -71.3, -71.5, -72.2, -73.1, -75.0]","[1.7, 1.7, 1.7, 1.7, 1.7]",5.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,65.9,0.0,goal inside the bounded region
+59,827.2,7.45,-13.65,client_only,GCS>relay2>relay1>head,2,"[-75.0, -72.4, -71.6, -68.2, -68.1, -70.2]","[3.2, 3.2, 3.2, 3.2, 3.2]",11.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,65.9,0.0,goal inside the bounded region
+60,858.8,3.55,-28.65,client_only,GCS>relay2>relay1>head,2,"[-70.2, -64.9, -61.6, -61.6, -61.6, -61.6]","[6.3, 6.3, 6.3, 6.3, 6.3]",22.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,72.9,0.0,goal inside the bounded region
+61,871.6,-0.6,-29.2,client_only,GCS>relay2>relay1>head,2,"[-61.6, -61.6, -61.6, -65.9, -66.5, -62.6]","[2.6, 2.6, 2.6, 2.6, 2.6]",9.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,73.7,0.0,goal inside the bounded region
+62,881.1,-1.8,-33.55,client_only,GCS>relay2>relay1>head,2,"[-62.6, -65.9, -67.1, -70.3, -70.1, -71.0]","[1.9, 1.9, 1.9, 1.9, 1.9]",6.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,78.1,0.0,goal inside the bounded region
+63,889.2,-5.05,-31.0,client_only,GCS>relay2>relay1>head,2,"[-71.0, -69.1, -69.3, -71.1, -73.1, -70.3]","[1.6, 1.6, 1.6, 1.6, 1.6]",5.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,81.2,0.0,goal inside the bounded region
+64,900.9,-8.15,-31.1,client_only,GCS>relay2>relay1>head,2,"[-70.3, -73.0, -72.3, -70.2, -72.4, -72.8]","[2.3, 2.3, 2.3, 2.3, 2.3]",8.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,83.5,0.1,goal inside the bounded region
+65,903.8,-9.15,-29.35,client_only,GCS>relay2>relay1>head,2,"[-72.8, -71.0, -69.3, -67.6, -66.4, -65.3]","[0.6, 0.6, 0.6, 0.6, 0.6]",2.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,83.6,0.0,goal inside the bounded region
+66,913.1,-9.6,-27.85,client_only,GCS>relay2>relay1>head,2,"[-65.3, -67.0, -63.7, -61.6, -61.6, -62.2]","[1.8, 1.8, 1.8, 1.8, 1.8]",6.5,"{'relay1': 0.0, 'relay2': 0.0}",100.0,84.5,0.1,goal inside the bounded region
+67,914.1,-10.3,-27.9,client_only,GCS>relay2>relay1>head,2,"[-62.2, -62.1, -62.1, -62.2, -62.2, -62.2]","[0.2, 0.2, 0.2, 0.2, 0.2]",0.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,84.5,0.0,goal inside the bounded region
+68,918.3,-11.6,-28.7,client_only,GCS>relay2>relay1>head,2,"[-62.2, -62.1, -62.3, -62.6, -62.9, -63.2]","[0.9, 0.9, 0.9, 0.9, 0.9]",3.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,84.5,0.1,goal inside the bounded region
+69,942.0,-10.65,-32.55,client_only,GCS>relay2>relay1>head,2,"[-63.2, -61.8, -64.2, -74.3, -68.0, -70.8]","[4.7, 4.7, 4.7, 4.7, 4.7]",16.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,84.5,0.0,goal inside the bounded region
+70,943.6,-11.75,-32.55,client_only,GCS>relay2>relay1>head,2,"[-70.8, -71.1, -71.4, -71.7, -72.0, -72.2]","[0.3, 0.3, 0.3, 0.3, 0.3]",1.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,84.5,0.1,goal inside the bounded region
+71,969.8,-3.4,-25.2,client_only,GCS>relay2>relay1>head,2,"[-72.2, -67.4, -71.0, -63.2, -61.6, -61.6]","[5.3, 5.3, 5.3, 5.3, 5.3]",18.4,"{'relay1': 0.0, 'relay2': 0.0}",100.0,86.7,0.0,goal inside the bounded region
+72,981.1,-8.6,-22.75,client_only,GCS>relay2>relay1>head,2,"[-61.6, -61.6, -61.6, -62.2, -63.7, -64.6]","[2.3, 2.3, 2.3, 2.3, 2.3]",7.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,89.3,0.0,goal inside the bounded region
+73,986.0,-11.45,-23.0,client_only,GCS>relay2>relay1>head,2,"[-64.6, -64.7, -64.8, -66.3, -69.0, -72.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",3.4,"{'relay1': 0.0, 'relay2': 0.0}",100.0,89.3,0.0,goal inside the bounded region
+74,1000.6,-11.25,-19.8,client_only,GCS>relay2>relay1>head,2,"[-72.0, -64.8, -65.7, -74.8, -76.4, -76.0]","[2.9, 2.9, 2.9, 2.9, 2.9]",10.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,89.8,0.0,goal inside the bounded region
+75,1013.1,-10.55,-15.65,client_only,GCS>relay2>relay1>head,2,"[-76.0, -76.1, -77.3, -78.1, -80.6, -81.2]","[2.5, 2.5, 2.5, 2.5, 2.5]",8.8,"{'relay1': 0.0, 'relay2': 0.0}",94.7,90.2,0.0,goal inside the bounded region
+75,1013.1,-7.5,-13.4,skip,GCS>relay2>relay1>head,2,,,,,,90.2,0.0,no feasible chain with 2 relays
+75,1013.1,-9.55,-11.6,skip,GCS>relay2>relay1>head,2,,,,,,90.2,0.0,no feasible chain with 2 relays
+75,1013.1,-7.5,-11.0,skip,GCS>relay2>relay1>head,2,,,,,,90.2,0.0,no feasible chain with 2 relays
+75,1013.1,-7.55,-10.6,skip,GCS>relay2>relay1>head,2,,,,,,90.2,0.0,no feasible chain with 2 relays
+76,1053.9,-1.15,-18.8,client_only,GCS>relay2>relay1>head,2,"[-81.2, -76.6, -61.9, -72.8, -64.7, -76.4]","[8.1, 8.1, 8.1, 8.1, 8.1]",28.5,"{'relay1': 0.0, 'relay2': 0.0}",98.3,90.2,0.0,goal inside the bounded region
+77,1059.9,-0.55,-18.2,client_only,GCS>relay2>relay1>head,2,"[-76.4, -74.6, -72.6, -73.1, -74.7, -76.5]","[1.2, 1.2, 1.2, 1.2, 1.2]",4.2,"{'relay1': 0.0, 'relay2': 0.0}",94.7,90.2,0.2,goal inside the bounded region
+78,1091.4,-0.75,-20.15,client_only,GCS>relay2>relay1>head,2,"[-76.5, -65.0, -61.6, -61.8, -72.2, -78.9]","[6.3, 6.3, 6.3, 6.3, 6.3]",22.1,"{'relay1': 0.0, 'relay2': 0.0}",95.6,90.2,0.3,goal inside the bounded region
+78,1091.4,-0.8,-22.25,skip,GCS>relay2>relay1>head,2,,,,,,90.2,0.0,no feasible chain with 2 relays
+79,1124.8,-2.35,-21.3,client_only,GCS>relay2>relay1>head,2,"[-78.9, -71.8, -61.6, -61.6, -68.4, -79.5]","[6.7, 6.7, 6.7, 6.7, 6.7]",23.3,"{'relay1': 0.0, 'relay2': 0.0}",98.0,90.3,0.2,goal inside the bounded region
+80,1160.0,-1.6,-22.5,client_only,GCS>relay2>relay1>head,2,"[-79.5, -68.0, -65.7, -73.2, -61.6, -81.6]","[7.0, 7.0, 7.0, 7.0, 7.0]",24.6,"{'relay1': 0.0, 'relay2': 0.0}",98.0,90.3,0.2,goal inside the bounded region
+81,1196.5,-7.6,-7.6,client_only,GCS>relay2>relay1>head,2,"[-81.6, -61.6, -74.1, -65.6, -66.9, -68.1]","[7.3, 7.3, 7.3, 7.3, 7.3]",25.6,"{'relay1': 0.0, 'relay2': 0.0}",98.1,93.2,0.2,goal inside the bounded region
+82,1206.5,-10.5,-5.3,client_only,GCS>relay2>relay1>head,2,"[-68.1, -70.1, -73.6, -75.2, -72.6, -69.4]","[2.0, 2.0, 2.0, 2.0, 2.0]",7.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,93.8,0.0,goal inside the bounded region
+83,1217.7,-11.5,-1.7,client_only,GCS>relay2>relay1>head,2,"[-69.4, -73.0, -75.7, -75.9, -72.6, -73.6]","[2.3, 2.3, 2.3, 2.3, 2.3]",7.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,93.9,0.1,goal inside the bounded region
+84,1229.3,-10.25,2.4,client_only,GCS>relay2>relay1>head,2,"[-73.6, -72.6, -74.4, -74.4, -76.8, -73.3]","[2.3, 2.3, 2.3, 2.3, 2.3]",8.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,94.3,0.0,goal inside the bounded region
+85,1232.8,-11.0,3.45,client_only,GCS>relay2>relay1>head,2,"[-73.3, -73.4, -73.9, -74.1, -73.7, -74.8]","[0.7, 0.7, 0.7, 0.7, 0.7]",2.4,"{'relay1': 0.0, 'relay2': 0.0}",100.0,94.3,0.1,goal inside the bounded region
+86,1235.4,-12.0,2.1,client_only,GCS>relay2>relay1>head,2,"[-74.8, -73.6, -74.0, -74.2, -74.6, -75.1]","[0.5, 0.5, 0.5, 0.5, 0.5]",1.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,94.3,0.0,goal inside the bounded region
+87,1252.7,-7.5,0.7,client_only,GCS>relay2>relay1>head,2,"[-75.1, -75.3, -74.7, -74.7, -79.4, -81.1]","[3.5, 3.5, 3.5, 3.5, 3.5]",12.1,"{'relay1': 0.0, 'relay2': 0.0}",95.7,94.3,0.0,goal inside the bounded region
+88,1297.3,3.0,-3.35,client_only,GCS>relay2>relay1>head,2,"[-81.1, -74.3, -66.8, -69.5, -61.6, -61.6]","[8.9, 8.9, 8.9, 8.9, 8.9]",31.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,94.3,0.0,goal inside the bounded region
+89,1315.3,1.75,-0.5,client_only,GCS>relay2>relay1>head,2,"[-61.6, -61.6, -61.6, -61.6, -61.8, -74.4]","[3.6, 3.6, 3.6, 3.6, 3.6]",12.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,94.3,0.0,goal inside the bounded region
+90,1318.6,0.8,-1.25,client_only,GCS>relay2>relay1>head,2,"[-74.4, -75.9, -78.0, -79.4, -79.2, -79.1]","[0.7, 0.7, 0.7, 0.7, 0.7]",2.3,"{'relay1': 0.0, 'relay2': 0.0}",91.7,94.3,0.0,goal inside the bounded region
+90,1318.6,1.0,-5.6,skip,GCS>relay2>relay1>head,2,,,,,,94.3,0.0,no feasible chain with 2 relays
+90,1318.6,2.5,-5.75,skip,GCS>relay2>relay1>head,2,,,,,,94.3,0.0,no feasible chain with 2 relays
+91,1353.4,7.7,-5.5,client_only,GCS>relay2>relay1>head,2,"[-79.1, -61.6, -61.6, -61.6, -61.6, -63.4]","[7.0, 7.0, 7.0, 7.0, 7.0]",24.3,"{'relay1': 0.0, 'relay2': 0.0}",100.0,97.1,0.0,goal inside the bounded region
+92,1363.5,10.0,-3.85,client_only,GCS>relay2>relay1>head,2,"[-63.4, -63.0, -61.6, -63.6, -64.9, -65.1]","[2.0, 2.0, 2.0, 2.0, 2.0]",7.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,97.8,0.1,goal inside the bounded region
+93,1373.6,7.45,0.35,client_only,GCS>relay2>relay1>head,2,"[-65.1, -64.9, -63.7, -61.6, -61.6, -61.6]","[2.0, 2.0, 2.0, 2.0, 2.0]",7.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,97.8,0.0,goal inside the bounded region
+94,1387.2,7.7,2.95,client_only,GCS>relay2>relay1>head,2,"[-61.6, -61.6, -62.4, -61.6, -61.6, -61.6]","[2.7, 2.7, 2.7, 2.7, 2.7]",9.5,"{'relay1': 0.0, 'relay2': 0.0}",100.0,97.9,0.1,goal inside the bounded region
+95,1395.2,10.25,3.45,client_only,GCS>relay2>relay1>head,2,"[-61.6, -61.6, -61.6, -61.6, -61.6, -61.6]","[1.6, 1.6, 1.6, 1.6, 1.6]",5.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,97.9,0.0,goal inside the bounded region
+96,1454.8,7.0,-25.8,client_only,GCS>relay2>relay1>head,2,"[-61.6, -61.6, -61.6, -61.6, -61.6, -61.6]","[11.9, 11.9, 11.9, 11.9, 11.9]",41.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,97.9,0.1,goal inside the bounded region
+97,1461.9,8.55,-24.6,client_only,GCS>relay2>relay1>head,2,"[-61.6, -61.6, -61.6, -61.6, -62.6, -65.6]","[1.4, 1.4, 1.4, 1.4, 1.4]",5.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,97.9,0.0,goal inside the bounded region
+98,1473.5,7.3,-24.55,client_only,GCS>relay2>relay1>head,2,"[-65.6, -61.6, -61.6, -61.6, -61.6, -63.5]","[2.3, 2.3, 2.3, 2.3, 2.3]",8.1,"{'relay1': 0.0, 'relay2': 0.0}",100.0,97.9,0.0,goal inside the bounded region
+98,1473.5,6.15,-33.5,skip,GCS>relay2>relay1>head,2,,,,,,97.9,0.0,no feasible chain with 2 relays
+98,1473.5,-10.75,5.7,skip,GCS>relay2>relay1>head,2,,,,,,97.9,0.0,no feasible chain with 2 relays
+98,1473.5,-12.0,4.75,skip,GCS>relay2>relay1>head,2,,,,,,97.9,0.0,no feasible chain with 2 relays

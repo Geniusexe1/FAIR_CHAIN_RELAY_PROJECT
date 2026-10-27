@@ -63,6 +63,66 @@ node before it (or `--attach NAME`):
 Positions are **world** coordinates (Gazebo frame). Model parameters: `--P0 --n --alpha`.
 Noise: `--sigma-shadow --corr --sigma-fast`. Link threshold: `--threshold`.
 
+## Communication-aware exploration (relay deployment)
+
+chain_robot (the client) explores frontier by frontier until the map is covered; relays
+are deployed so it keeps a link to the GCS. Method: Seo et al., RA-L 2025, Sec. IV-B.
+
+For each next frontier (nearest first, as the explorer ranks them):
+
+| situation | action |
+|---|---|
+| goal inside the client's **bounded region** for the current chain | client goes alone |
+| outside | engage one more relay: **road graph** (Zhang-Suen skeleton), shortest path GCS -> goal split evenly, **virtual-force** refinement (eq. 12, beta 2, nu 1.5 dB, B_v 1000), **Hungarian** assignment (eq. 13-14), then **sequential MCTS** trajectories GCS-outwards, client last (eq. 16-17, t_f 5, C_p 1, 300 iterations) |
+| outside even with every relay engaged and re-placed | **skip** it (the explorer moves to its next frontier) |
+
+- **Bounded region** = where Pr[every hop >= eta] >= theta with the client's association
+  fixed. Our links take the weaker of two noisy directions, so per direction the predicted
+  RSSI must reach eta + sigma_n PHI^-1(sqrt(theta)) = **-81.7 dBm** (eta -85, sigma_n 3, theta 0.75).
+- **Synchronised arrival**: every trajectory has t_f waypoints; in interval t each robot covers
+  its own segment, the interval lasts as long as the slowest needs at full speed, the others
+  slow down, and everyone reaches waypoint t together (`relay_planner.schedule`). On the
+  robots the speeds go out as Nav2 speed limits and are re-balanced every 0.5 s from each
+  robot's remaining distance.
+- Engaged relays are **re-placed** for each new mission point (the paper). `--keep-deployed`
+  instead never moves a relay once placed (cuts coverage; see results).
+- Predictions use the GT map and the model's expectation with sigma = sigma_n; the paper's
+  KF-GPR needs real RSSI readings to train, which the sim does not have.
+
+Offline (the whole run on the GT map, frames + summary + events.csv per run):
+
+```bash
+.venv/bin/python rssi/explore_sim.py --P0 -30 --tag v1_paperP0_replace
+.venv/bin/python rssi/explore_sim.py --P0 -30 --keep-deployed --tag v1_paperP0_stayPut
+```
+
+Results (`out/explore/`, 2 relays, client 0.7 m/s, relays 0.5 m/s, 8 m mapping range):
+
+| run | coverage | CR (sim readings >= -85) | sim time |
+|---|---|---|---|
+| `v1_paperP0_replace` (P0 -30, paper method) | **100%** | 97.1% | 1840 s |
+| `v1_paperP0_stayPut` (P0 -30, relays never re-placed) | 97.9% | 98.0% | 1473 s |
+| `v1_measuredP0_replace` (P0 -60.8) | 48.0% | 80.1% | 682 s |
+| `v1_measuredP0_stayPut` (P0 -60.8) | 27.9% | 88.8% | 141 s |
+| `v0_*` | first attempt, kept as a record: relays never re-placed and the per-direction requirement was -83.0 dBm | | |
+
+At the measured 5 GHz P0, two relays cannot cover the hospital, and with every hop near the
+limit a 3-hop chain holds only ~0.75^3 of the time -- the per-hop theta is the paper's.
+CR dips happen between waypoints: like the paper, the constraint is enforced at the discrete
+steps only.
+
+Live (needs the chain stack without `--explore` and both relays' Nav2 up):
+
+```bash
+rssi/ros/run_exploration.sh          # coordinator container + explorer (remapped) in safe_robot
+docker logs -f fair_coord            # every decision: CLIENT_ONLY / DEPLOY / SKIP
+```
+
+The explorer's `navigate_to_pose` is remapped to `/coord/navigate_to_pose`; a skipped goal
+is rejected, which makes the explorer try its next-ranked frontier. The coordinator publishes
+`/coord/chain`, which `rssi_monitor.py` follows (`--chain-topic`) so the live margin map tracks
+the current topology. Not yet run end-to-end on the live sim.
+
 ## Result folders (kept as a record, never overwritten)
 
 | folder | what the phase-2 frames show |
@@ -82,6 +142,10 @@ Each holds `phase2_measuredP0/` (P0 -60.8) and `phase2_paperP0/` (P0 -30). New r
 | `network.py` | nodes, noise (shadowing + fast fading), links, connectivity |
 | `phase1_heatmap.py` | Phase 1 heatmap + checks |
 | `margin.py` | client-to-GCS connectivity margin map + its checks |
+| `roadgraph.py` | road graph: Zhang-Suen skeleton of the free space, routes + alternatives |
+| `relay_planner.py` | the paper's hierarchical relay planner + synchronised schedule |
+| `explore_sim.py` | offline communication-aware exploration on the GT map |
+| `ros/exploration_coordinator.py` | live: between the explorer and Nav2 (all robots) |
 | `heatmap.py` | place your own nodes, render the margin map |
 | `phase2_topology.py` | Phase 2 dynamic topology: every frame is a margin map (head on relay1) |
 | `out/` | rendered results |

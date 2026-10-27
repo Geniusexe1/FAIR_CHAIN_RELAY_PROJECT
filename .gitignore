@@ -31,3 +31,6 @@ rssi/out/*.npy
 
 # --- live node output (root-owned, rewritten continuously) ---------------
 rssi/out/live/
+
+# --- road-graph cache (rebuilt automatically) ---------------------------
+rssi/cache/
