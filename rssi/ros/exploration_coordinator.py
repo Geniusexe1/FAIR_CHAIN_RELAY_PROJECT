@@ -65,7 +65,7 @@ class Coordinator(RosNode):
         self.a = a
         cb = ReentrantCallbackGroup()
         root = os.path.dirname(RSSI_DIR)
-        gt = os.path.join(root, "hospital_world", "gt", "hospital_gt")
+        gt = a.gt if os.path.isabs(a.gt) else os.path.join(root, a.gt)
         grid = GridMap.load(gt + ".npy", gt + ".json")
         rg = RoadGraph.build(grid, cache_dir=a.cache_dir)
         pred = Predictor(grid, PropagationParams(P0=a.P0, n=a.n, alpha=a.alpha), NoiseParams(sigma_fast=a.sigma_n))
@@ -417,6 +417,20 @@ class Coordinator(RosNode):
                     T = max(rem[n] / self.robots[n].vmax for n in rem)
                     for n in rem:
                         self._limit(n, max(rem[n] / T if T > 0 else self.robots[n].vmax, self._floor(n)))
+                # runtime guard: the plan assumes every robot starts when told; a relay that has
+                # not (slow Ackermann start-up) can sit on the client's path (UNIST run 2: 0.27 m)
+                cxy = self.client.xy
+                close = [r.name for r in self.relays
+                         if cxy and r.xy and math.dist(cxy, r.xy) < self.a.guard]
+                if close:
+                    self.get_logger().warn(f"interval {t}: client within {self.a.guard} m of {close} - stopping the plan")
+                    for h in handles.values():
+                        h.cancel_goal_async()
+                    for n in self.robots:
+                        self._limit(n, self.robots[n].vmax)
+                    self._state(event="aborted", t=t, reason="proximity", robots=close)
+                    gh.abort()
+                    return NavigateToPose.Result()
                 # slack: a relay needs time to plan and turn (Ackermann) before it moves at all
                 if (self.get_clock().now() - t_start).nanoseconds / 1e9 > \
                         self.a.interval_timeout * max(sched[t - 1]["dt"], 1.0) + self.a.interval_slack:
@@ -463,6 +477,7 @@ class Coordinator(RosNode):
 def main():
     ap = argparse.ArgumentParser()
     here = os.path.dirname(os.path.abspath(__file__))
+    ap.add_argument("--gt", default="hospital_world/gt/hospital_gt", help="ground-truth grid, repo-relative")
     ap.add_argument("--config", default=os.path.join(here, "nodes.yaml"))
     ap.add_argument("--cache-dir", default="/tmp/fair_cache")
     ap.add_argument("--P0", type=float, default=-30.0)
@@ -478,6 +493,8 @@ def main():
     ap.add_argument("--interval-slack", type=float, default=30.0, help="+ sim seconds per interval (start-up)")
     ap.add_argument("--map-offset", nargs=2, type=float, default=[0.0, 12.0], help="world = map + offset")
     ap.add_argument("--keep-deployed", action="store_true")
+    ap.add_argument("--guard", type=float, default=0.6,
+                    help="stop the plan if the client comes this close to a relay (m); below d_sep 0.8")
     ap.add_argument("--max-fail", type=int, default=2, help="reject a goal after this many failed attempts")
     ap.add_argument("--visited-r", type=float, default=0.6, help="reject goals this close to a reached one (m)")
     ap.add_argument("--keep-tol", type=float, default=0.3, help="station keeping: drift (m) that triggers a return")

@@ -1,6 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <sdf version="1.7">
     <world name="world">
+        <!-- Start-up view for recordings: straight down over the whole floor, +y up on screen.
+             36 m up with the default 60 deg field of view shows ~42 x 62 m in a tall window. -->
+        <gui fullscreen="0">
+            <camera name="user_camera">
+                <pose>0 -6.5 36 0 1.5707 1.5707</pose>
+                <view_controller>orbit</view_controller>
+            </camera>
+        </gui>
         <gravity>0 0 -9.8</gravity>
         <physics default="1" name="default_physics" type="ode">
             <max_step_size>0.001</max_step_size>

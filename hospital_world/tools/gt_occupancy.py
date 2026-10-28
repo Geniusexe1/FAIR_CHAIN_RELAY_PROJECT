@@ -93,15 +93,28 @@ def geom_to_mesh(geom, models_dir):
 def collect(world_path, models_dir, skip_substrings):
     """Yield world-frame collision meshes."""
     world = ET.parse(world_path).getroot().find('world')
-    entries = []
+    entries, inline = [], []
     for mdl in world.findall('model'):
+        T = pose_to_T(mdl.find('pose').text if mdl.find('pose') is not None else None)
         inc = mdl.find('include/uri')
-        if inc is None:
-            continue
-        entries.append((mdl.get('name'), inc.text.strip(), pose_to_T(
-            mdl.find('pose').text if mdl.find('pose') is not None else None)))
+        if inc is not None:                       # hospital style: <model><include>model://..</include>
+            entries.append((mdl.get('name'), inc.text.strip(), T))
+        elif mdl.find('link') is not None:        # inline geometry (UNIST style, building-editor walls)
+            inline.append((mdl.get('name'), mdl, T))
 
     out, skipped = [], []
+    for name, mdl, T_m in inline:
+        if any(s in (name or '') for s in skip_substrings):
+            skipped.append(name); continue
+        for link in mdl.findall('link'):
+            T_l = T_m @ pose_to_T(link.find('pose').text if link.find('pose') is not None else None)
+            for col in link.findall('collision'):
+                T_c = T_l @ pose_to_T(col.find('pose').text if col.find('pose') is not None else None)
+                g = col.find('geometry')
+                mesh = geom_to_mesh(g, models_dir) if g is not None else None
+                if mesh is not None:
+                    mesh = mesh.copy(); mesh.apply_transform(T_c)
+                    out.append(mesh)
     for name, uri, T_world in entries:
         if any(s in uri or s in (name or '') for s in skip_substrings):
             skipped.append(name); continue

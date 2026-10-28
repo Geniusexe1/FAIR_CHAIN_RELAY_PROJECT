@@ -44,7 +44,8 @@ STYLE = {"GCS": ("*", 15, "white"), "relay": ("o", 9, "#1f77b4"), "client": ("D"
 class Explorer:
     def __init__(self, a):
         self.a = a
-        self.g = GridMap.load(GT + ".npy", GT + ".json")
+        gt = a.gt if os.path.isabs(a.gt) else os.path.join(os.path.dirname(HERE), a.gt)
+        self.g = GridMap.load(gt + ".npy", gt + ".json")
         self.rg = RoadGraph.build(self.g, cache_dir=os.path.join(HERE, "cache"))
         self.pred = Predictor(self.g, PropagationParams(P0=a.P0, n=a.n, alpha=a.alpha),
                               NoiseParams(sigma_fast=a.sigma_n))
@@ -317,6 +318,7 @@ class Explorer:
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--tag", default="run")
+    ap.add_argument("--gt", default="hospital_world/gt/hospital_gt", help="ground-truth grid (no extension), repo-relative")
     ap.add_argument("--P0", type=float, default=-30.0)
     ap.add_argument("--n", type=float, default=PropagationParams.n)
     ap.add_argument("--alpha", type=float, default=PropagationParams.alpha)

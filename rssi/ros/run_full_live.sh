@@ -9,6 +9,13 @@
 #   rssi/ros/run_full_live.sh [run_name] [coordinator args...]
 #   rssi/ros/run_full_live.sh run2 --P0 -30
 #
+# Another world (UNIST): the world/mapping/offset env vars go to the hospital_world scripts,
+# NODES picks the parking spots, and the args go to the coordinator and the RSSI monitor:
+#   WORLD_FILE=/hw/unist/unist_indoor.world MAPPING_LAUNCH=/hw/unist/unist_mapping.launch.xml \
+#   MAP_ODOM_X=0.5 MAP_ODOM_Y=6.0 NODES=rssi/ros/nodes_unist.yaml PARK_YAW=1.5708 rssi/ros/run_full_live.sh unist1 \
+#     --P0 -45 --config /fair/rssi/ros/nodes_unist.yaml --gt hospital_world/unist/gt/unist_gt \
+#     --map-offset -0.5 -6 --marker-offset 0.5 6
+#
 # Stop everything: hospital_world/stop_all.sh; docker rm -f fair_coord fair_rssi;
 #                  pkill -f live_logger.sh
 set -uo pipefail
@@ -36,7 +43,7 @@ nav_up() {       # bring a Nav2 stack to ACTIVE: wait, STARTUP, then RESET + STA
 
 spawn() {        # spawn_entity can hang: time out, delete the half-spawned model, retry once
   for try in 1 2; do
-    timeout 180 "$HW/spawn_saye.sh" "$1" "$2" "$3" 0.10 -1.5708 >/dev/null 2>&1 && { echo "  ok  $1 at ($2, $3)"; return 0; }
+    timeout 180 "$HW/spawn_saye.sh" "$1" "$2" "$3" 0.10 "${PARK_YAW:--1.5708}" >/dev/null 2>&1 && { echo "  ok  $1 at ($2, $3)"; return 0; }
     docker exec safe_robot bash -c 'pkill -f "[s]pawn_entity"; true'
     docker exec safe_robot bash -ic "timeout 30 ros2 service call /delete_entity gazebo_msgs/srv/DeleteEntity '{name: $1}'" >/dev/null 2>&1
   done
@@ -53,7 +60,7 @@ fi
 if [ "$FROM" -le 2 ]; then
 echo "[2/5] relays at their parking spots"
 read -r P1X P1Y P2X P2Y < <(python3 -c "
-import yaml; c = yaml.safe_load(open('$ROOT/rssi/ros/nodes.yaml'))
+import yaml; c = yaml.safe_load(open('${NODES:-$ROOT/rssi/ros/nodes.yaml}'))
 print(*c['relay1']['park'], *c['relay2']['park'])")
 spawn relay1 "$P1X" "$P1Y"
 spawn relay2 "$P2X" "$P2Y"
@@ -75,5 +82,5 @@ echo "[5/5] RSSI monitor, coordinator, explorer, logger"
 "$ROOT/rssi/ros/run_rssi_node.sh" "$@" >/dev/null
 "$ROOT/rssi/ros/run_exploration.sh" "$@" | tail -n 1
 pkill -f "[l]ive_logger.sh" 2>/dev/null
-setsid nohup "$ROOT/rssi/ros/live_logger.sh" "$LOGCSV" 20 >/dev/null 2>&1 < /dev/null &   # survives this shell
+setsid nohup "$ROOT/rssi/ros/live_logger.sh" "$LOGCSV" "${LOG_PERIOD:-20}" >/dev/null 2>&1 < /dev/null &   # survives this shell
 echo "logging ground truth to ${LOGCSV#$ROOT/}"

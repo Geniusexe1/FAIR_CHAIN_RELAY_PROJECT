@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""Replay a recorded live run as a video: robots on the map, the current chain, its links.
+
+    .venv/bin/python rssi/replay_live_run.py rssi/out/live_runs/<run>.csv <run>_coordinator.log \\
+        --gt hospital_world/gt/hospital_gt --gcs 0 14 --P0 -45 [--fps 8]
+
+Positions are Gazebo ground truth (rssi/ros/live_logger.sh). The chain at each moment is the one
+the exploration coordinator last decided (its log). Each link is coloured by the model's predicted
+RSSI (weaker direction): green > -65, yellow -65..-85, red < -85 dBm (paper Fig. 9). The current
+decision is printed at the top. Writes <run>_replay.mp4 next to the CSV.
+"""
+import argparse, csv, os, re, sys, time
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib import animation
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from propagation import GridMap, PropagationParams          # noqa: E402
+from network import NoiseParams                              # noqa: E402
+from relay_planner import Predictor                          # noqa: E402
+from phase1_heatmap import walls_overlay                     # noqa: E402
+
+COL = {"head": "#d62728", "relay1": "#1f77b4", "relay2": "#2ca02c"}
+CSV_KEY = {"head": "head", "relay1": "relay1", "relay2": "relay2"}
+
+
+def tod(s):                         # "HH:MM:SS" -> seconds of the day
+    h, m, x = (int(v) for v in s.split(":"))
+    return h * 3600 + m * 60 + x
+
+
+def decisions(log):
+    """[(seconds of day, chain list, text)] from the coordinator's decision lines."""
+    out = []
+    for line in open(log):
+        m = re.search(r"\[(\d{10})\.\d+\].*?goal world \(([-\d.]+), ([-\d.]+)\): (\w+)(?: \[([^\]]+)\])?", line)
+        if not m:
+            continue
+        t = time.localtime(int(m.group(1)))
+        chain = [c.strip() for c in m.group(5).split(">")] if m.group(5) else None
+        out.append((t.tm_hour * 3600 + t.tm_min * 60 + t.tm_sec, chain,
+                    f"{m.group(4)} goal ({float(m.group(2)):.1f}, {float(m.group(3)):.1f})"))
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("csv"); ap.add_argument("log")
+    ap.add_argument("--gt", default="hospital_world/gt/hospital_gt")
+    ap.add_argument("--gcs", nargs=2, type=float, default=[0.0, 14.0])
+    ap.add_argument("--P0", type=float, default=-45.0)
+    ap.add_argument("--fps", type=int, default=8)
+    a = ap.parse_args()
+    root = os.path.dirname(HERE)
+    gt = a.gt if os.path.isabs(a.gt) else os.path.join(root, a.gt)
+    g = GridMap.load(gt + ".npy", gt + ".json")
+    pred = Predictor(g, PropagationParams(P0=a.P0), NoiseParams())
+    rows = [r for r in csv.DictReader(open(a.csv)) if r.get("head_x")]
+    dec = decisions(a.log)
+    gcs = tuple(a.gcs)
+
+    e = g.extent()
+    wide = (e[1] - e[0]) > (e[3] - e[2])
+    fig, ax = plt.subplots(figsize=(14, 5.6) if wide else (7.5, 12.5))
+    ax.imshow(np.where(g.free, 1.0, np.nan), origin="lower", extent=e, cmap="Greys", vmin=0, vmax=4)
+    walls_overlay(ax, g)
+    ax.plot(*gcs, "*", ms=16, mfc="white", mec="k", zorder=8)
+    ax.annotate("GCS", gcs, xytext=(6, 6), textcoords="offset points", fontsize=8, fontweight="bold")
+    trails = {n: ax.plot([], [], "-", color=c, lw=1.2, alpha=0.5)[0] for n, c in COL.items()}
+    dots = {n: ax.plot([], [], "D" if n == "head" else "o", ms=9, color=c, mec="k", zorder=9)[0]
+            for n, c in COL.items()}
+    links = [ax.plot([], [], "-", lw=3, zorder=7)[0] for _ in range(3)]
+    labels = [ax.text(0, 0, "", fontsize=8, ha="center", zorder=10,
+                      bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.85)) for _ in range(3)]
+    title = ax.set_title("", fontsize=10)
+    ax.set_xlabel("world x (m)"); ax.set_ylabel("world y (m)")
+    fig.tight_layout(rect=[0, 0, 1, 0.94])        # room for the two-line title
+
+    def pos(r, n):
+        x, y = r.get(f"{CSV_KEY[n]}_x"), r.get(f"{CSV_KEY[n]}_y")
+        return (float(x), float(y)) if x not in (None, "") else None
+
+    def frame(i):
+        r = rows[i]
+        t = tod(r["wall_time"])
+        past = [d for d in dec if d[0] <= t]
+        chain = next((d[1] for d in reversed(past) if d[1]), ["gcs", "head"])
+        what = past[-1][2] if past else "waiting for the first goal"
+        for n in COL:
+            pts = [pos(q, n) for q in rows[: i + 1] if pos(q, n)]
+            if pts:
+                trails[n].set_data([p[0] for p in pts], [p[1] for p in pts])
+                dots[n].set_data([pts[-1][0]], [pts[-1][1]])
+        names = ["GCS" if c == "gcs" else c for c in chain]
+        xy = {"GCS": gcs, **{n: pos(r, n) for n in COL}}
+        for k, ln in enumerate(links):
+            if k < len(names) - 1 and xy.get(names[k]) and xy.get(names[k + 1]):
+                a_, b_ = names[k], names[k + 1]
+                P = pred.link("gcs" if a_ == "GCS" else a_, xy[a_], b_, xy[b_])
+                col = "#2ca02c" if P > -65 else ("#e6b800" if P >= -85 else "#d62728")
+                ln.set_data([xy[a_][0], xy[b_][0]], [xy[a_][1], xy[b_][1]]); ln.set_color(col)
+                labels[k].set_position(((xy[a_][0] + xy[b_][0]) / 2, (xy[a_][1] + xy[b_][1]) / 2))
+                labels[k].set_text(f"{P:.0f}")
+            else:
+                ln.set_data([], []); labels[k].set_text("")
+        title.set_text(f"{os.path.basename(a.csv)}   {r['wall_time']}   RTF {r.get('rtf') or '-'}\n"
+                       f"chain {' > '.join(names)}   |   last decision: {what}")
+        return list(dots.values()) + links + labels + [title]
+
+    import imageio_ffmpeg
+    plt.rcParams["animation.ffmpeg_path"] = imageio_ffmpeg.get_ffmpeg_exe()
+    out = os.path.splitext(a.csv)[0] + "_replay.mp4"
+    anim = animation.FuncAnimation(fig, frame, frames=len(rows), blit=False)
+    anim.save(out, writer=animation.FFMpegWriter(fps=a.fps, bitrate=2400), dpi=90)
+    print("wrote", out, f"({len(rows)} frames, {len(dec)} decisions)")
+
+
+if __name__ == "__main__":
+    main()

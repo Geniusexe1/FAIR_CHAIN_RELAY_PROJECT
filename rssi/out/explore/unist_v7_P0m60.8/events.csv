@@ -1,0 +1,8 @@
+decision,sim_time_s,goal_x,goal_y,decision_type,chain,relays_engaged,pred_min_hop_dBm_per_step,interval_s,client_m,relay_m,CR_sim_%,coverage_%,plan_s,note
+1,8.0,3.63,-4.78,client_only,GCS>head,0,"[-67.7, -59.7, -59.7, -61.7, -66.4, -67.7]","[1.6, 1.6, 1.6, 1.6, 1.6]",5.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,20.1,1.1,goal inside the bounded region (t_f 5)
+2,13.3,5.63,-7.88,client_only,GCS>head,0,"[-67.7, -66.4, -71.0, -76.4, -76.4, -76.4]","[1.8, 1.8, 1.8, 0.0, 0.0]",3.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,22.2,0.0,goal inside the bounded region (t_f 5)
+2,13.3,13.98,-6.18,skip,GCS>head,0,,,,,,22.2,15.2,2 relay(s) could be placed but no trajectories keep every step
+2,13.3,3.58,3.17,skip,GCS>head,0,,,,,,22.2,10.7,2 relay(s) could be placed but no trajectories keep every step
+3,30.7,-8.42,-6.88,deploy,GCS>relay1>head,1,"[-79.8, -74.6, -70.7, -72.2, -74.3, -72.9]","[4.4, 4.4, 2.1, 2.1, 4.4]",9.2,"{'relay1': 5.2, 'relay2': 0.0}",100.0,24.2,4.6,"1 relay(s) engaged (t_f 5); final hops -72.9, -74.2"
+3,30.7,-7.62,-7.73,skip,GCS>relay1>head,1,,,,,,24.2,10.5,2 relay(s) could be placed but no trajectories keep every step
+3,30.7,-11.07,-6.18,skip,GCS>relay1>head,1,,,,,,24.2,12.5,2 relay(s) could be placed but no trajectories keep every step

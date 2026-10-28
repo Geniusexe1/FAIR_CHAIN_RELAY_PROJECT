@@ -1,0 +1,11 @@
+decision,sim_time_s,goal_x,goal_y,decision_type,chain,relays_engaged,pred_min_hop_dBm_per_step,interval_s,client_m,relay_m,CR_sim_%,coverage_%,plan_s,note
+1,8.0,3.63,-4.78,client_only,GCS>head,0,"[-51.9, -43.9, -43.9, -45.9, -50.6, -51.9]","[1.6, 1.6, 1.6, 1.6, 1.6]",5.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,20.1,0.6,goal inside the bounded region (t_f 5)
+2,13.3,5.63,-7.88,client_only,GCS>head,0,"[-51.9, -50.6, -55.2, -60.6, -60.6, -60.6]","[1.8, 1.8, 1.8, 0.0, 0.0]",3.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,22.2,0.0,goal inside the bounded region (t_f 5)
+3,24.7,13.98,-6.18,client_only,GCS>head,0,"[-60.6, -62.5, -66.3, -67.8, -66.9, -68.4]","[2.3, 2.3, 2.3, 2.3, 2.3]",7.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.2,0.0,goal inside the bounded region (t_f 5)
+4,43.1,13.83,1.77,deploy,GCS>relay2>head,1,"[-68.8, -71.7, -74.4, -67.8, -67.2, -69.4]","[3.7, 3.7, 3.7, 3.7, 3.7]",8.1,"{'relay1': 0.0, 'relay2': 9.2}",100.0,38.7,6.7,"1 relay(s) engaged (t_f 5); final hops -69.4, -61.7"
+5,49.9,10.73,3.52,client_only,GCS>relay2>head,1,"[-69.4, -69.4, -69.4, -69.4, -71.2, -75.5]","[1.4, 1.4, 1.4, 1.4, 1.4]",4.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,48.3,0.0,goal inside the bounded region (t_f 5)
+6,54.5,6.78,5.17,client_only,GCS>relay2>head,1,"[-75.5, -76.8, -77.7, -78.2, -78.6, -79.3, -79.3, -79.3, -79.3, -80.5, -80.5, -80.5, -81.6]","[0.7, 0.7, 0.7, 0.7, 0.7, 0.0, 0.0, 0.0, 0.7, 0.0, 0.0, 0.7]",3.2,"{'relay1': 0.0, 'relay2': 0.0}",91.7,50.5,0.3,goal inside the bounded region (t_f 12)
+6,54.5,-0.42,3.57,skip,GCS>relay2>head,1,,,,,,50.5,18.6,2 relay(s) could be placed but no trajectories keep every step
+7,87.9,21.63,4.27,deploy,GCS>relay1>relay2>head,2,"[-81.6, -74.4, -81.4, -78.9, -75.3, -71.2]","[6.7, 6.7, 6.7, 6.7, 6.7]",14.1,"{'relay1': 16.7, 'relay2': 5.6}",94.3,53.9,7.2,"2 relay(s) engaged (t_f 5); final hops -68.4, -69.8, -71.2"
+7,87.9,21.88,-7.08,skip,GCS>relay1>relay2>head,2,,,,,,53.9,21.3,2 relay(s) could be placed but no trajectories keep every step
+7,87.9,-8.42,-6.88,skip,GCS>relay1>relay2>head,2,,,,,,53.9,1.4,2 relay(s) could be placed but no trajectories keep every step

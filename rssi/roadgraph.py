@@ -69,12 +69,17 @@ class RoadGraph:
     @classmethod
     def build(cls, grid: GridMap, clearance: float = 0.45, spur_m: float = 1.0,
               cache_dir: str | None = None) -> "RoadGraph":
-        key = hashlib.md5(grid.occ.tobytes() + f"{clearance}{spur_m}".encode()).hexdigest()[:12]
+        key = hashlib.md5(grid.occ.tobytes() + f"{clearance}{spur_m}v2".encode()).hexdigest()[:12]
         path = os.path.join(cache_dir, f"roadgraph_{key}.npz") if cache_dir else None
         if path and os.path.exists(path):
             skel = np.load(path)["skel"]
         else:
             free = grid.occ == 0
+            # free space connected to the grid's border is OUTSIDE the building (the margin round
+            # the outer wall): without this its long thin ring can be the biggest network (UNIST)
+            flab, _ = label(free)
+            outside = np.unique(np.r_[flab[0], flab[-1], flab[:, 0], flab[:, -1]])
+            free &= ~np.isin(flab, outside[outside > 0])
             clear = distance_transform_edt(free) * grid.res >= clearance
             skel = skeletonize(clear, method="zhang")
             skel = _prune(skel, int(round(spur_m / grid.res)))

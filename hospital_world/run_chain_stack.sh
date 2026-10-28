@@ -28,7 +28,7 @@ W() { local pat="$1" log="$2" name="$3" max="${4:-90}"
   done; echo "  !!  $name did not report ready (see $log)"; return 1; }
 
 echo "[1/7] gazebo + hospital + chain_robot"
-R "ros2 launch chain_robot chain_robot2.launch.py world:=/hw/hospital_chain.world verbose:=true" /tmp/1_gazebo.log
+R "ros2 launch chain_robot chain_robot2.launch.py world:=${WORLD_FILE:-/hw/hospital_chain.world} verbose:=true" /tmp/1_gazebo.log
 W "Tracked robot plugin loaded successfully" /tmp/1_gazebo.log "gazebo (~60 s, 169 MB of meshes)" 120
 
 echo "[2/7] FAST-LIO"
@@ -38,7 +38,7 @@ W "Initialize the map kdtree" /tmp/2_fastlio.log "fast_lio"
 echo "[3/7] occupancy grid"
 # Our copy of the package's launch with a hospital-sized map: theirs is 1.5 MB per /map,
 # which nodes silently stop receiving (see occ_grid_hospital.yaml).
-R "ros2 launch /hw/hospital_mapping.launch.xml" /tmp/3_occ.log
+R "ros2 launch ${MAPPING_LAUNCH:-/hw/hospital_mapping.launch.xml}" /tmp/3_occ.log
 W "mapped_cell_area" /tmp/3_occ.log "occ_grid"
 
 echo "[4/7] chain robot controller"

@@ -18,7 +18,7 @@ sys.path.insert(0, HERE)
 from propagation import GridMap                      # noqa: E402
 from phase1_heatmap import walls_overlay             # noqa: E402
 
-GT = os.path.join(os.path.dirname(HERE), "hospital_world", "gt", "hospital_gt")
+GT = os.path.join(os.path.dirname(HERE), os.environ.get("FAIR_GT", "hospital_world/gt/hospital_gt"))   # FAIR_GT=hospital_world/unist/gt/unist_gt
 ROBOTS = {"head": ("chain_robot (client)", "#d62728", "D"),
           "relay1": ("relay1", "#1f77b4", "o"), "relay2": ("relay2", "#2ca02c", "o")}
 
@@ -28,7 +28,9 @@ def main():
     log = sys.argv[2] if len(sys.argv) > 2 else None
     rows = list(csv.DictReader(open(path)))
     g = GridMap.load(GT + ".npy", GT + ".json")
-    fig, ax = plt.subplots(figsize=(8, 13))
+    e = g.extent()
+    wide = (e[1] - e[0]) > (e[3] - e[2])
+    fig, ax = plt.subplots(figsize=(15, 6.2) if wide else (8, 13))
     ax.imshow(np.where(g.free, 1.0, np.nan), origin="lower", extent=g.extent(), cmap="Greys", vmin=0, vmax=4)
     walls_overlay(ax, g)
     stats = []
@@ -42,7 +44,8 @@ def main():
         ax.plot(pts[:, 0], pts[:, 1], "-", color=col, lw=2, alpha=0.85, label=f"{label} ({d:.1f} m)")
         ax.plot(*pts[0], mk, ms=9, mfc="white", mec=col, mew=2, zorder=6)
         ax.plot(*pts[-1], mk, ms=10, color=col, mec="k", zorder=7)
-    ax.plot(0, 14, "*", ms=16, mfc="white", mec="k", zorder=8, label="GCS")
+    gcs = tuple(float(v) for v in os.environ.get("FAIR_GCS", "0,14").split(","))   # FAIR_GCS=1.5,-6.1 (UNIST)
+    ax.plot(*gcs, "*", ms=16, mfc="white", mec="k", zorder=8, label="GCS")
     seps = [(float(r["min_sep_m"]), r) for r in rows if r.get("min_sep_m") not in ("", "nan", None)]
     if seps:
         s, r = min(seps, key=lambda x: x[0])

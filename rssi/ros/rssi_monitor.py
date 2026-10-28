@@ -71,7 +71,7 @@ class RssiMonitor(RosNode):
         super().__init__("rssi_monitor")
         self.a = a
         root = os.path.dirname(RSSI_DIR)
-        gt = os.path.join(root, "hospital_world", "gt", "hospital_gt")
+        gt = a.gt if os.path.isabs(a.gt) else os.path.join(root, a.gt)
         self.grid = GridMap.load(gt + ".npy", gt + ".json")
         # nearest-free-cell lookup, for snapping positions that land in obstacles
         _, self.near = distance_transform_edt(self.grid.occ.astype(bool), return_indices=True)
@@ -310,6 +310,7 @@ class RssiMonitor(RosNode):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--gt", default="hospital_world/gt/hospital_gt", help="ground-truth grid, repo-relative")
     ap.add_argument("--config", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "nodes.yaml"))
     ap.add_argument("--rate", type=float, default=2.0, help="Hz")
     ap.add_argument("--log-every", type=float, default=5.0, help="s between terminal tables")
