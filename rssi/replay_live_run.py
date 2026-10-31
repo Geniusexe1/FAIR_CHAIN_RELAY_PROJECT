@@ -44,6 +44,13 @@ def decisions(log):
     out = []
     for line in open(log):
         m = re.search(r"\[(\d{10})\.\d+\].*?goal world \(([-\d.]+), ([-\d.]+)\): (\w+)(?: \[([^\]]*)\])?", line)
+        rg = re.search(r"\[(\d{10})\.\d+\].*?REGROUP after \d+ skips: client back to \(([-\d.]+), ([-\d.]+)\): "
+                       r"(CLIENT_ONLY|DEPLOY) \[([^\]]*)\]", line)
+        if rg:                              # the client returns to the GCS to re-plan from there
+            g = (float(rg.group(2)), float(rg.group(3)))
+            out.append((sod(rg.group(1)), [c.strip() for c in rg.group(5).split(">")],
+                        f"REGROUP: back to ({g[0]:.1f}, {g[1]:.1f})", g, rg.group(4)))
+            continue
         if not m:
             continue
         chain = [c.strip() for c in m.group(5).split(">")] if m.group(5) else None

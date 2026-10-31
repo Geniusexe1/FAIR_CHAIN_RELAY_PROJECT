@@ -1,0 +1,61 @@
+[INFO] [1793450826.102117010] [exploration_coordinator]: P0 -45.0 | req -81.68 dBm (Pr[link >= -85.0] >= 0.75) | client head, relays ['relay1', 'relay2'] | t_f 5 | re-place engaged relays (paper)
+[INFO] [1793450845.112082252] [exploration_coordinator]: goal world (6.80, 10.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (2.0 s) | targets head (6.80, 10.40)
+[INFO] [1793450976.548494992] [exploration_coordinator]: goal world (8.20, 15.20): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (1.4 s) | targets head (8.20, 15.20)
+[INFO] [1793450998.141697958] [exploration_coordinator]: relay1 drifted 0.36 m from its spot - sending it back
+[INFO] [1793450998.193589803] [exploration_coordinator]: relay2 drifted 0.36 m from its spot - sending it back
+[INFO] [1793451111.541058444] [exploration_coordinator]: goal world (4.50, 17.50): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (1.4 s) | targets head (4.50, 17.50)
+[INFO] [1793451158.712489007] [exploration_coordinator]: relay2 drifted 0.35 m from its spot - sending it back
+[WARN] [1793451354.363450857] [exploration_coordinator]: interval 1: ['head'] did not reach their waypoint - stopping the plan
+[INFO] [1793451356.411311962] [exploration_coordinator]: goal world (4.50, 17.50): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (1.3 s) | targets head (4.50, 17.50)
+[INFO] [1793451411.739388181] [exploration_coordinator]: relay2 drifted 0.35 m from its spot - sending it back
+[INFO] [1793451561.499495066] [exploration_coordinator]: relay1 drifted 0.32 m from its spot - sending it back
+[INFO] [1793451561.553960612] [exploration_coordinator]: relay2 drifted 0.36 m from its spot - sending it back
+[INFO] [1793451714.632721170] [exploration_coordinator]: relay1 drifted 0.44 m from its spot - sending it back
+[INFO] [1793451761.943399123] [exploration_coordinator]: goal world (10.40, 17.60): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.8 s) | targets head (10.40, 17.60)
+[INFO] [1793451820.339301039] [exploration_coordinator]: relay2 drifted 0.36 m from its spot - sending it back
+[INFO] [1793451887.048683654] [exploration_coordinator]: goal world (11.40, 19.20): SKIP [gcs > head] no feasible plan with 2 relays (23.9 s)
+[INFO] [1793451912.986639209] [exploration_coordinator]: goal world (9.50, 21.20): SKIP [gcs > head] no feasible plan with 2 relays (25.9 s)
+[INFO] [1793451922.155109880] [exploration_coordinator]: goal world (9.50, 21.20): SKIP [gcs > head] no feasible plan with 2 relays (9.1 s)
+[INFO] [1793451922.215011470] [exploration_coordinator]: goal world (9.50, 21.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793451922.269128648] [exploration_coordinator]: goal world (9.50, 21.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793451932.367873295] [exploration_coordinator]: goal world (9.50, 21.20): SKIP [gcs > head] no feasible plan with 2 relays (9.2 s)
+[INFO] [1793451932.420925532] [exploration_coordinator]: goal world (9.50, 21.20): REJECTED - skipped 3 times, nothing has moved since
+[INFO] [1793451937.215498321] [exploration_coordinator]: relay2 drifted 0.37 m from its spot - sending it back
+[INFO] [1793451942.493181890] [exploration_coordinator]: goal world (9.50, 21.20): SKIP [gcs > head] no feasible plan with 2 relays (10.0 s)
+[INFO] [1793451942.544852374] [exploration_coordinator]: goal world (9.50, 21.20): REJECTED - skipped 4 times, nothing has moved since
+[INFO] [1793451942.602379057] [exploration_coordinator]: goal world (9.50, 21.20): REJECTED - skipped 4 times, nothing has moved since
+[INFO] [1793451951.784216916] [exploration_coordinator]: goal world (9.50, 21.20): SKIP [gcs > head] no feasible plan with 2 relays (8.6 s)
+Traceback (most recent call last):
+  File "/fair/rssi/ros/exploration_coordinator.py", line 653, in <module>
+    main()
+  File "/fair/rssi/ros/exploration_coordinator.py", line 644, in main
+    ex.spin()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 323, in spin
+    self.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 863, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 860, in _spin_once_impl
+    future.result()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/task.py", line 109, in result
+    raise self.exception()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/task.py", line 272, in _execute_coroutine_step
+    result = coro.send(None)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 488, in handler
+    await call_coroutine(entity, arg)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 448, in _execute_waitable
+    await waitable.execute(data)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/action/server.py", line 504, in execute
+    await self._execute_goal_request(taken_data['goal'])
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/action/server.py", line 280, in _execute_goal_request
+    response = await await_or_execute(self._goal_callback, goal_request.goal)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 110, in await_or_execute
+    return callback(*args)
+  File "/fair/rssi/ros/exploration_coordinator.py", line 260, in _on_goal
+    rp = self.planner.plan(self.regroup_xy, self.client, movable, self.engaged, static=static)
+  File "/fair/rssi/relay_planner.py", line 460, in plan
+    traj, seg, ok = self.mcts(client.name, client.xy, goal, anchors, others=parked)
+  File "/fair/rssi/relay_planner.py", line 388, in mcts
+    vals, cur = [Q(*node)], node
+  File "/fair/rssi/relay_planner.py", line 354, in Q
+    clash = not self.allowed[rr, cc]           # robots cannot plan through unknown space
+IndexError: index -24659 is out of bounds for axis 0 with size 1181

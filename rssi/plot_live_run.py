@@ -46,7 +46,9 @@ def main():
         ax.plot(*pts[-1], mk, ms=10, color=col, mec="k", zorder=7)
     gcs = tuple(float(v) for v in os.environ.get("FAIR_GCS", "0,14").split(","))   # FAIR_GCS=1.5,-6.1 (UNIST)
     ax.plot(*gcs, "*", ms=16, mfc="white", mec="k", zorder=8, label="GCS")
-    seps = [(float(r["min_sep_m"]), r) for r in rows if r.get("min_sep_m") not in ("", "nan", None)]
+    # 0.00 m = two robots logged at the identical position: a logger glitch (one sample), not contact
+    seps = [(float(r["min_sep_m"]), r) for r in rows if r.get("min_sep_m") not in ("", "nan", None)
+            and float(r["min_sep_m"]) > 0.01]
     if seps:
         s, r = min(seps, key=lambda x: x[0])
         stats.append(f"closest robots {s:.2f} m ({r['closest_pair']} at {r['wall_time']})")
