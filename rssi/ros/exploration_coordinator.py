@@ -117,7 +117,7 @@ class Coordinator(RosNode):
         # station keeping: the relays creep slowly when idle (drive-plugin issue, see
         # hospital_world/CHECKPOINT.md), so an idle relay that drifts from its spot is sent back
         self.home, self.yaw, self.keeping, self.busy = {}, {}, {}, False
-        self.park = {}
+        self.park, self.seen = {}, set()
         for nm in names[1:-1]:
             if "park" in cfg[nm]:
                 self.home[nm] = self.park[nm] = tuple(cfg[nm]["park"])   # else: first pose seen
@@ -141,6 +141,10 @@ class Coordinator(RosNode):
         self.misses = {}           # relay -> consecutive plans it did not follow
         self.benched = {}          # relay -> sim time until which it is not moved (static radio)
         self.route = [self.gcs_name, self.client_name]
+        self.skip_streak = 0       # goals skipped in a row
+        # where the client regroups: its spawn point next to the GCS (= its odometry offset)
+        self.regroup_xy = tuple(cfg[self.client_name].get("regroup", cfg[self.client_name].get("offset", self.gcs_xy)))
+        self.regrouping = False
         if a.map_log:
             os.makedirs(a.map_log, exist_ok=True)
             self.create_timer(a.map_log_period, self._log_map, callback_group=cb)
@@ -155,8 +159,10 @@ class Coordinator(RosNode):
         self.robots[name].xy = (p.x + off[0], p.y + off[1])
         q = msg.pose.pose.orientation
         self.yaw[name] = math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z))
-        if name != self.client_name and name not in self.home:
-            self.home[name] = self.robots[name].xy                # parking spot = first pose
+        if name != self.client_name and name not in self.seen:
+            self.seen.add(name)                                   # first pose: a relay already out
+            self.home[name] = self.robots[name].xy                # (coordinator restarted) holds its
+                                                                  # spot instead of driving to park
 
     def _ready(self):
         missing = [n for n, r in self.robots.items() if r.xy is None]
@@ -241,10 +247,28 @@ class Coordinator(RosNode):
                                + ("" if not plan.targets else " | targets " + ", ".join(
                                    f"{n} ({xy[0]:.2f}, {xy[1]:.2f})" for n, xy in plan.targets.items())))
         self._state(event="decision", goal=goal, decision=plan.decision, chain=plan.chain, note=plan.note)
+        self.regrouping = False
         if plan.decision == "skip":
             self.skipped[key] = (self.skipped.get(key, (0,))[0] + 1, {n: r.xy for n, r in self.robots.items()},
                                  self._now())
+            self.skip_streak += 1
+            # Every frontier left is out of reach FROM HERE (client at the end of a long chain):
+            # regroup -- the client comes back to the GCS through the network it has; relays off
+            # the new route then return to park, and the frontiers are planned again from there.
+            if self.skip_streak >= self.a.regroup_after and math.dist(self.client.xy, self.regroup_xy) > 3.0:
+                with self.lock:
+                    rp = self.planner.plan(self.regroup_xy, self.client, movable, self.engaged, static=static)
+                self.get_logger().info(f"REGROUP after {self.skip_streak} skips: client back to "
+                                       f"({self.regroup_xy[0]:.2f}, {self.regroup_xy[1]:.2f}): {rp.decision.upper()} "
+                                       f"[{' > '.join(rp.chain)}] {rp.note}")
+                if rp.decision != "skip":
+                    self.skip_streak = 0
+                    self.regrouping = True
+                    self._last_plan = rp
+                    self._state(event="decision", goal=self.regroup_xy, decision="regroup", chain=rp.chain)
+                    return GoalResponse.ACCEPT                # the explorer re-picks once the client is back
             return GoalResponse.REJECT                        # explorer tries the next rank
+        self.skip_streak = 0
         self.skipped.pop(key, None)
         self._last_plan = plan
         return GoalResponse.ACCEPT
@@ -412,7 +436,7 @@ class Coordinator(RosNode):
                 for r in self.relays:                             # back to its parking spot, off the
                     if r.name not in plan.chain and r.name in self.park:   # corridors the client drives
                         self.home[r.name] = self.park[r.name]
-            if self._reached:                                     # only goals actually reached
+            if self._reached and not self.regrouping:             # only frontier goals actually reached
                 self.visited.append(tuple(plan.goal))
             elif self._client_failed:                             # a lagging relay is not the goal's fault
                 k = (round(plan.goal[0], 1), round(plan.goal[1], 1))
@@ -464,6 +488,7 @@ class Coordinator(RosNode):
 
             t_start = self.get_clock().now()                  # SIM time: plans are in sim seconds
             watch = {"xy": self.client.xy, "t": 0.0, "n": 0}  # client stuck watchdog
+            retries = {}                                      # relay waypoint re-sends
             waiting = sorted((n for n in movers if start[n] > 0), key=lambda n: start[n])
             for n in movers:
                 if start[n] <= 0:
@@ -475,6 +500,14 @@ class Coordinator(RosNode):
                         h.cancel_goal_async()
                     gh.canceled(); return NavigateToPose.Result()
                 el = (self.get_clock().now() - t_start).nanoseconds / 1e9
+                # a relay's Nav2 aborting ("Failed to make progress": Ackermann manoeuvring at a low
+                # speed cap) is usually transient -- re-send its waypoint before giving up the plan
+                for n in [n for n, st in done.items() if st != GoalStatus.STATUS_SUCCEEDED
+                          and n != self.client_name and retries.get(n, 0) < self.a.relay_retries]:
+                    retries[n] = retries.get(n, 0) + 1
+                    self.get_logger().info(f"interval {t}: {n} aborted - re-sending its waypoint ({retries[n]})")
+                    del done[n]
+                    launch(n)
                 while waiting and el >= start[waiting[0]]:
                     launch(waiting.pop(0))                    # delayed start: arrives with the rest
                 # keep the ETAs equal: v_r = remaining_r / T_remaining, never below the floor
@@ -580,7 +613,8 @@ def main():
     # DWB samples no velocity at all below min_vel_x / min_speed_xy (0.2): a speed limit under
     # that freezes chain_robot ("No valid trajectories out of 0") -- it looked wedged on walls
     ap.add_argument("--v-min", type=float, default=0.22, help="client speed-limit floor, m/s (DWB min 0.2)")
-    ap.add_argument("--v-floor-relay", type=float, default=0.18,
+    ap.add_argument("--relay-retries", type=int, default=2, help="re-sends of an aborted relay waypoint")
+    ap.add_argument("--v-floor-relay", type=float, default=0.25,
                     help="relay speed floor, m/s: the drive stalls at 0.10 m/s, moves at 0.15")
     ap.add_argument("--interval-timeout", type=float, default=6.0, help="x planned interval duration")
     ap.add_argument("--interval-slack", type=float, default=90.0, help="+ sim seconds per interval (start-up)")
@@ -593,6 +627,7 @@ def main():
     ap.add_argument("--max-skip", type=int, default=2,
                     help="reject a goal skipped this many times at once, until a robot moves >= 1.5 m ...")
     ap.add_argument("--skip-cooldown", type=float, default=180.0, help="... or this many sim s passed")
+    ap.add_argument("--regroup-after", type=int, default=6, help="skips in a row -> client regroups at the GCS")
     ap.add_argument("--bench-after", type=int, default=5, help="plans a relay may miss in a row before benching")
     ap.add_argument("--bench-time", type=float, default=300.0, help="sim s a benched relay is not moved")
     ap.add_argument("--map-log", default="", help="directory for /map snapshots (replay video)")
