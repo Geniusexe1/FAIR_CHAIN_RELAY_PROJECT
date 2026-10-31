@@ -8,13 +8,16 @@ docker exec safe_robot bash -c 'for p in $(ps -eo pid,args --no-headers \
   | grep -E "gzserver|gzclient|fastlio|rviz2|occ_grid|nav2_|frontier|chain_robot|path_planner|pointcloud_to_laser|static_transform|robot_state_pub|classical|bin/ros2|mapping|topic pub" \
   | awk "{print \$1}"); do kill -9 $p 2>/dev/null; done' 2>/dev/null || true
 echo "[NUC1] nuc1 (relay1 brain)..."
-docker exec nuc1 bash -c 'pkill -9 -f "nav_robot|nav2_|bin/ros2" 2>/dev/null' 2>/dev/null || true
+docker exec nuc1 bash -c 'pkill -9 -f "[n]av_robot|[n]av2_|bin/[r]os2|[s]tatic_transform_publisher" 2>/dev/null' 2>/dev/null || true
 echo "[NUC2] nuc2 (relay2 brain)..."
 python3 - <<'PY' 2>/dev/null || true
 import paramiko, os
 c=paramiko.SSHClient(); c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 c.connect('10.195.221.0',username='asl',password=os.environ['NUC2_SSH_PASSWORD'],timeout=15)
-c.exec_command('docker exec nuc2 bash -c \'pkill -9 -f "nav_robot|nav2_|bin/ros2"\'')
+# static_transform_publisher too: a survivor keeps publishing an old map->relay2/odom and
+# relay2's Nav2 then puts the robot off its costmap (every goal aborted)
+i, o, e = c.exec_command('docker exec nuc2 bash -c \'pkill -9 -f "[n]av_robot|[n]av2_|bin/[r]os2|[s]tatic_transform_publisher"\'')
+o.channel.recv_exit_status()
 try: c.close()
 except Exception: pass
 PY

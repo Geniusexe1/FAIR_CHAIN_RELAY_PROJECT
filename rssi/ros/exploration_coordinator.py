@@ -9,11 +9,13 @@ its action remapped:
 
 so every frontier goal it picks comes here first. For each goal:
 
-  inside the client's bounded region   -> client goes alone
-  outside                              -> one more relay is engaged, relays placed and
+  inside the client's bounded region   -> client goes alone (relays stay where they are
+                                          and forward if they are on the best route)
+  outside                              -> the fewest relays that reach it are placed and
                                           assigned, all trajectories planned (MCTS)
-  outside with every relay engaged     -> REJECTED: the explorer automatically tries
-     and no feasible placement             its next-ranked frontier
+  outside even with every relay placed -> REJECTED: the explorer automatically tries
+                                          its next-ranked frontier; a goal skipped twice
+                                          is rejected at once until a relay moves
 
 Execution is synchronised: the plan has t_f waypoints per robot; in interval t every
 moving robot is sent its waypoint t, with a Nav2 speed limit chosen so that all of them
@@ -23,8 +25,10 @@ arrive together, re-adjusted every 0.5 s from each robot's remaining path length
 Subscribes  /Odometry (client, FAST-LIO, world = pose + client offset), /relayN/odom (world)
 Uses        /navigate_to_pose, /relayN/navigate_to_pose   (map frame = world - (0, 12))
 Publishes   /speed_limit, /relayN/speed_limit             nav2_msgs/SpeedLimit (m/s)
-            /coord/chain   std_msgs/String  JSON list: GCS, engaged relays, client
-                           (rssi_monitor --chain-topic follows it for the margin map)
+            /coord/chain   std_msgs/String  JSON list: the CURRENT best route GCS, ..., client
+                           (fewest hops meeting the requirement; rssi_monitor --chain-topic
+                           follows it for the margin map)
+Writes      --map-log DIR: the client's /map every --map-log-period s (npz) for the replay
             /coord/state   std_msgs/String  JSON: decision, plan, interval, speeds
             /coord/plan_markers  visualization_msgs/MarkerArray  planned trajectories
 """
@@ -129,6 +133,13 @@ class Coordinator(RosNode):
         self.visited = []          # goals already reached: the explorer re-sends frontiers it
                                    # cannot clear from there, which loops forever
         self.create_timer(a.keep_period, self._station_keep, callback_group=cb)
+        self.skipped = {}          # goal key -> (times skipped, relay positions at the last skip)
+        self.misses = {}           # relay -> consecutive plans it did not follow
+        self.benched = {}          # relay -> sim time until which it is not moved (static radio)
+        self.route = [self.gcs_name, self.client_name]
+        if a.map_log:
+            os.makedirs(a.map_log, exist_ok=True)
+            self.create_timer(a.map_log_period, self._log_map, callback_group=cb)
         self.get_logger().info(
             f"P0 {a.P0} | req {self.pp.req:.2f} dBm (Pr[link >= {self.pp.eta}] >= {self.pp.theta}) | "
             f"client {self.client_name}, relays {[r.name for r in self.relays]} | t_f {self.pp.t_f} | "
@@ -148,7 +159,29 @@ class Coordinator(RosNode):
         return not missing, missing
 
     def _publish_chain(self):
-        self.pub_chain.publish(String(data=json.dumps([self.gcs_name] + self.engaged + [self.client_name])))
+        """The route the mesh would use right now (live positions)."""
+        if self._ready()[0] and self.lock.acquire(blocking=False):   # never wait on a planning goal
+            try:
+                pos = {self.gcs_name: self.gcs_xy, **{n: r.xy for n, r in self.robots.items()}}
+                self.route = self.planner.route(pos, self.client_name)[1]
+            except Exception as e:
+                self.get_logger().warn(f"route: {type(e).__name__}: {e}")
+            finally:
+                self.lock.release()
+        self.pub_chain.publish(String(data=json.dumps(self.route)))
+
+    def _log_map(self):
+        m = self.map_msg
+        if m is None:
+            return
+        g = np.asarray(m.data, dtype=np.int8).reshape(m.info.height, m.info.width)
+        np.savez_compressed(os.path.join(self.a.map_log, f"map_{time.time():.0f}.npz"), grid=g,
+                            res=m.info.resolution, origin=(m.info.origin.position.x, m.info.origin.position.y),
+                            off=self.off, wall=time.time(), route=json.dumps(self.route),
+                            pos=json.dumps({n: r.xy for n, r in self.robots.items()}))
+
+    def _now(self):
+        return self.get_clock().now().nanoseconds / 1e9
 
     def _state(self, **kw):
         self.pub_state.publish(String(data=json.dumps(kw, default=float)))
@@ -172,6 +205,12 @@ class Coordinator(RosNode):
             self.get_logger().info(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): REJECTED - failed "
                                    f"{self.failed[key]} times, Nav2 cannot reach it")
             return GoalResponse.REJECT
+        sk = self.skipped.get(key)
+        if sk and sk[0] >= self.a.max_skip and all(
+                math.dist(r.xy, sk[1][r.name]) < 1.0 for r in self.relays):
+            self.get_logger().info(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): REJECTED - skipped {sk[0]} times, "
+                                   f"no relay has moved since")
+            return GoalResponse.REJECT
         g = self.planner.grid
         r_, c_ = g.world_to_cell(*goal)
         if not g.in_bounds(r_, c_):                           # frontier past the building's edge
@@ -181,7 +220,10 @@ class Coordinator(RosNode):
         try:
             with self.lock:
                 self.planner.allowed = self._known_free()
-                plan = self.planner.plan(goal, self.client, self.relays, self.engaged)
+                now = self._now()
+                movable = [r for r in self.relays if self.benched.get(r.name, -1) < now]
+                static = {r.name: r.xy for r in self.relays if r not in movable}
+                plan = self.planner.plan(goal, self.client, movable, self.engaged, static=static)
         except Exception as e:                                # never let one goal take the node down
             import traceback
             self.get_logger().error(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): REJECTED - planner error "
@@ -194,7 +236,9 @@ class Coordinator(RosNode):
                                    f"{n} ({xy[0]:.2f}, {xy[1]:.2f})" for n, xy in plan.targets.items())))
         self._state(event="decision", goal=goal, decision=plan.decision, chain=plan.chain, note=plan.note)
         if plan.decision == "skip":
+            self.skipped[key] = (self.skipped.get(key, (0,))[0] + 1, {r.name: r.xy for r in self.relays})
             return GoalResponse.REJECT                        # explorer tries the next rank
+        self.skipped.pop(key, None)
         self._last_plan = plan
         return GoalResponse.ACCEPT
 
@@ -342,8 +386,18 @@ class Coordinator(RosNode):
                     h.cancel_goal_async()
                 self.keeping.pop(n, None)
         try:
-            self._reached, self._client_failed = False, False
+            self._reached, self._client_failed, self._missed = False, False, set()
             res = self._execute_plan(gh)
+            for n in self.moving - {self.client_name}:           # a relay that keeps missing its
+                if n in self._missed:                             # waypoints is benched for a while:
+                    self.misses[n] = self.misses.get(n, 0) + 1    # it forwards where it stands
+                    if self.misses[n] >= self.a.bench_after:
+                        self.benched[n] = self._now() + self.a.bench_time
+                        self.misses[n] = 0
+                        self.get_logger().warn(f"{n} missed its waypoints {self.a.bench_after} plans in a row - "
+                                               f"not moving it for {self.a.bench_time:.0f} s (it still forwards)")
+                else:
+                    self.misses[n] = 0
             for n, xy in plan.targets.items():                    # where each relay now belongs:
                 if n != self.client_name:                         # its target if the plan finished,
                     self.home[n] = tuple(xy) if self._reached else self.robots[n].xy   # else where it is
@@ -359,8 +413,7 @@ class Coordinator(RosNode):
 
     def _execute_plan(self, gh):
         plan = self._last_plan
-        if plan.decision == "deploy":
-            self.engaged = [n for n in plan.chain if n in {r.name for r in self.relays}]
+        self.engaged = [n for n in plan.chain if n in {r.name for r in self.relays}]
         self._markers(plan)
         sched = schedule(plan, {n: self.robots[n].vmax for n in plan.seg})
         tf = len(next(iter(plan.seg.values())))      # per plan: the ladder may refine t_f
@@ -450,6 +503,7 @@ class Coordinator(RosNode):
                 for n in self.robots:
                     self._limit(n, self.robots[n].vmax)
                 self._client_failed = self.client_name in missing   # only that counts against the goal
+                self._missed = set(missing)
                 self._state(event="aborted", t=t, failed=missing)
                 gh.abort()
                 return NavigateToPose.Result()
@@ -496,6 +550,12 @@ def main():
     ap.add_argument("--guard", type=float, default=0.6,
                     help="stop the plan if the client comes this close to a relay (m); below d_sep 0.8")
     ap.add_argument("--max-fail", type=int, default=2, help="reject a goal after this many failed attempts")
+    ap.add_argument("--max-skip", type=int, default=2,
+                    help="reject a goal skipped this many times at once, until a relay moves >= 1 m")
+    ap.add_argument("--bench-after", type=int, default=3, help="plans a relay may miss in a row before benching")
+    ap.add_argument("--bench-time", type=float, default=300.0, help="sim s a benched relay is not moved")
+    ap.add_argument("--map-log", default="", help="directory for /map snapshots (replay video)")
+    ap.add_argument("--map-log-period", type=float, default=5.0, help="sim s between snapshots")
     ap.add_argument("--visited-r", type=float, default=0.6, help="reject goals this close to a reached one (m)")
     ap.add_argument("--keep-tol", type=float, default=0.3, help="station keeping: drift (m) that triggers a return")
     ap.add_argument("--keep-period", type=float, default=10.0, help="station keeping check period (s)")

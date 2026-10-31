@@ -14,6 +14,7 @@
 #
 # Watch:   docker logs -f fair_coord
 #          ros2 topic echo /coord/state
+# Map snapshots for the replay: --map-log /live_runs/<run>_maps  (= rssi/out/live_runs/<run>_maps)
 # Stop:    docker rm -f fair_coord; docker exec safe_robot pkill -f frontier
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -21,7 +22,7 @@ docker image inspect fair_rssi:humble >/dev/null 2>&1 || docker build -t fair_rs
 docker rm -f fair_coord >/dev/null 2>&1 || true
 docker run -d --name fair_coord --network host --ipc host \
   -e ROS_DOMAIN_ID=42 -e ROS_LOCALHOST_ONLY=0 \
-  -v "$ROOT":/fair:ro \
+  -v "$ROOT":/fair:ro -v "$ROOT/rssi/out/live_runs":/live_runs \
   fair_rssi:humble \
   /entrypoint.sh python3 -u /fair/rssi/ros/exploration_coordinator.py "$@" \
   --ros-args -p use_sim_time:=true >/dev/null

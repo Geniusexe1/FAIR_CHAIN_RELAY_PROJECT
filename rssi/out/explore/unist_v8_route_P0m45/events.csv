@@ -1,0 +1,17 @@
+decision,sim_time_s,goal_x,goal_y,decision_type,chain,relays_engaged,pred_min_hop_dBm_per_step,interval_s,client_m,relay_m,CR_sim_%,coverage_%,plan_s,note
+1,8.0,3.63,-4.78,client_only,GCS>head,0,"[-51.9, -43.9, -43.9, -45.9, -50.6, -51.9]","[1.6, 1.6, 1.6, 1.6, 1.6]",5.6,"{'relay1': 0.0, 'relay2': 0.0}",100.0,20.1,1.1,goal inside the bounded region (t_f 5)
+2,13.3,5.63,-7.88,client_only,GCS>head,0,"[-51.9, -50.6, -55.2, -60.6, -60.6, -60.6]","[1.8, 1.8, 1.8, 0.0, 0.0]",3.7,"{'relay1': 0.0, 'relay2': 0.0}",100.0,22.2,0.1,goal inside the bounded region (t_f 5)
+3,24.7,13.98,-6.18,client_only,GCS>head,0,"[-60.6, -62.5, -66.3, -67.8, -66.9, -68.4]","[2.3, 2.3, 2.3, 2.3, 2.3]",7.9,"{'relay1': 0.0, 'relay2': 0.0}",100.0,33.2,0.0,goal inside the bounded region (t_f 5)
+4,43.1,13.83,1.77,deploy,GCS>relay2>head,1,"[-68.4, -70.4, -78.4, -67.8, -67.2, -69.4]","[3.7, 3.7, 3.7, 3.7, 3.7]",8.1,"{'relay1': 0.0, 'relay2': 9.2}",95.0,38.7,6.3,"1 relay(s) moved (t_f 5); final route GCS > relay2 > head, weakest hop -69.4"
+5,49.9,10.73,3.52,client_only,GCS>relay2>head,1,"[-69.4, -69.4, -69.4, -69.4, -71.2, -75.5]","[1.4, 1.4, 1.4, 1.4, 1.4]",4.8,"{'relay1': 0.0, 'relay2': 0.0}",100.0,48.3,0.0,goal inside the bounded region (t_f 5)
+6,57.7,6.78,5.17,client_only,GCS>head,0,"[-75.5, -77.9, -79.1, -79.7, -74.6, -72.9]","[1.6, 1.6, 1.6, 1.6, 1.6]",5.5,"{'relay1': 0.0, 'relay2': 0.0}",92.9,51.2,0.1,goal inside the bounded region (t_f 5)
+7,82.7,-1.27,3.92,deploy,GCS>relay1>head,1,"[-72.9, -73.1, -71.9, -75.8, -69.8, -70.2]","[5.0, 5.0, 5.0, 5.0, 5.0]",9.8,"{'relay1': 12.5, 'relay2': 0.0}",100.0,57.3,1.2,"1 relay(s) moved (t_f 5); final route GCS > relay1 > head, weakest hop -70.2"
+8,94.4,-7.62,4.82,client_only,GCS>relay1>head,1,"[-70.2, -72.7, -76.8, -76.9, -78.8, -78.0]","[2.3, 2.3, 2.3, 2.3, 2.3]",8.2,"{'relay1': 0.0, 'relay2': 0.0}",100.0,61.9,0.0,goal inside the bounded region (t_f 5)
+9,107.4,-15.37,3.82,deploy,GCS>relay1>head,1,"[-78.0, -78.2, -77.2, -75.3, -75.1, -74.2]","[2.6, 2.6, 2.6, 2.6, 2.6]",9.1,"{'relay1': 2.9, 'relay2': 0.0}",100.0,68.3,5.6,"1 relay(s) moved (t_f 5); final route GCS > relay1 > head, weakest hop -74.2"
+10,118.7,-23.32,3.87,client_only,GCS>relay1>head,1,"[-74.2, -74.2, -74.3, -74.9, -75.4, -76.0]","[2.3, 2.3, 2.3, 2.3, 2.3]",8.0,"{'relay1': 0.0, 'relay2': 0.0}",95.0,78.0,0.1,goal inside the bounded region (t_f 5)
+11,121.6,-23.37,-4.08,client_only,GCS>relay1>head,1,"[-76.0, -76.0, -76.0, -77.4, -77.4, -77.4, -77.4, -77.4, -77.4]","[1.4, 0.0, 1.4, 0.0, 0.0, 0.0, 0.0, 0.0]",2.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,80.4,0.4,goal inside the bounded region (t_f 8)
+11,121.6,-23.37,-6.08,skip,GCS>relay1>head,1,,,,,,80.4,25.1,2 relay(s) could be placed but no trajectories keep every step
+11,121.6,-8.42,-6.88,skip,GCS>relay1>head,1,,,,,,80.4,19.9,2 relay(s) could be placed but no trajectories keep every step
+12,213.3,21.63,4.27,deploy,GCS>relay2>relay1>head,2,"[-77.4, -70.0, -62.7, -56.1, -79.1, -72.2]","[18.3, 18.3, 18.3, 18.3, 18.3]",64.2,"{'relay1': 13.9, 'relay2': 0.8}",92.2,96.9,16.0,"2 relay(s) moved (t_f 5); final route GCS > relay2 > relay1 > head, weakest hop -72.2"
+13,254.7,21.88,-7.08,client_only,GCS>head,0,"[-72.2, -69.1, -74.6, -52.9, -52.9, -52.9]","[13.8, 13.8, 13.8, 0.0, 0.0]",29.0,"{'relay1': 0.0, 'relay2': 0.0}",100.0,96.9,0.3,goal inside the bounded region (t_f 5)
+13,254.7,21.88,-7.08,skip,GCS>head,0,,,,,,96.9,15.0,2 relay(s) could be placed but no trajectories keep every step

@@ -152,7 +152,9 @@ class Explorer:
                     robots[n].xy = pos[n]
                 if k % 2 == 0 or k == nsub:
                     self.sense(self.client.xy)
-                P = self.chain_rssi(plan.chain, pos, noisy=True)
+                route = self.pl.route(pos, self.client.name)[1]       # the mesh re-routes as robots move
+                self.engaged = [n_ for n_ in route if n_.startswith("relay")]
+                P = self.chain_rssi(route, pos, noisy=True)
                 cr_n += 1; cr_ok += P >= self.pp.eta
                 bots = self.relays + [self.client]
                 sep, pa, pb = min((np.hypot(a_.xy[0] - b_.xy[0], a_.xy[1] - b_.xy[1]), a_, b_)
@@ -183,9 +185,7 @@ class Explorer:
                      f"{plan.decision.upper()}: {plan.note}", fontsize=9)
         ax2 = axs[1]
         names = ["GCS"] + self.engaged
-        chain_xy = [("GCS", tuple(self.a.gcs))] + [(n, next(r.xy for r in self.relays if r.name == n))
-                                                   for n in self.engaged]
-        m = self.pl.region(chain_xy, self.client.name)
+        m = self.pl.region({"GCS": tuple(self.a.gcs), **{r.name: r.xy for r in self.relays}}, self.client.name)
         m = np.where(g.occ.astype(bool), np.nan, m)
         norm = TwoSlopeNorm(vmin=-30, vcenter=0, vmax=25)
         im = ax2.imshow(m, origin="lower", extent=g.extent(), cmap="RdYlBu", norm=norm, interpolation="nearest")
@@ -202,7 +202,7 @@ class Explorer:
                    cmap=ListedColormap([(0, 0, 0, 0), (0.08, 0.08, 0.1, 1)]), interpolation="nearest", zorder=3)
         fig.colorbar(im, ax=ax2, fraction=0.035, pad=0.02).set_label(
             CBAR_LABEL + f"\n(relative to {self.pp.req:.1f} dBm: Pr[link >= {self.pp.eta:g}] >= {self.pp.theta})")
-        ax2.set_title(f"bounded region of {self.client.name} on {names[-1]} after this step "
+        ax2.set_title(f"bounded region of {self.client.name} (any route) after this step "
                       f"(solid: Pr >= theta, dashed: {STRONG_DBM:g} dBm)", fontsize=9)
         for a_ in (ax, ax2):
             self._robots(a_, plan, names)
@@ -268,8 +268,7 @@ class Explorer:
                     break
                 if plan is None:
                     continue                           # all tried were blacklisted; re-detect
-                if plan.decision == "deploy":
-                    self.engaged = [n for n in plan.chain if n.startswith("relay")]
+                self.engaged = [n for n in plan.chain if n.startswith("relay")]
                 self.decision = k + 1
                 sched, ok, n = self.execute(plan)
                 k += 1

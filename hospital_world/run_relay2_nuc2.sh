@@ -34,6 +34,10 @@ sshpass_py "docker exec nuc2 /entrypoint.sh bash -c \"
   export ROS_DOMAIN_ID=42 ROS_LOCALHOST_ONLY=0
   timeout 25 ros2 topic list 2>/dev/null | grep -E '^/(clock|${NS}/)' || echo 'NOT VISIBLE - is NUC1 up and ${NS} spawned?'\""
 
+echo "[relay2] clearing any earlier ${NS} stack on NUC2 (a stale map->${NS}/odom breaks localisation)..."
+P="[${NS:0:1}]${NS:1}"     # [r]elay2: the pattern must not match this pkill's own shell
+sshpass_py "docker exec nuc2 bash -c 'pkill -9 -f \"namespace:=$P|child-frame-id $P/odom|__ns:=/$P\"; sleep 1; true'"
+
 echo "[relay2] starting Nav2 for ${NS} on NUC2..."
 sshpass_py "docker exec -d nuc2 /entrypoint.sh bash -c \"
   export ROS_DOMAIN_ID=42 ROS_LOCALHOST_ONLY=0
