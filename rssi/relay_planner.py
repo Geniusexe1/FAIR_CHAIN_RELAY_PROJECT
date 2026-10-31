@@ -406,9 +406,17 @@ class RelayPlanner:
         while len(seq) < tf + 1:                              # tree not expanded that deep
             j, i, t = seq[-1]
             seq.append((j, min(i + 1, tf) if j is not None else 0, t + 1))
+        ok = all(Q(j, i, t) > -1 for j, i, t in seq[1:])
+        if not ok:
+            # the search is random: a long route that works only if driven straight through can
+            # be missed. Check each candidate driven straight through, shortest first  (ours)
+            for j in sorted(range(len(W)), key=lambda j: Ls[j]):
+                straight = [(j, t, t) for t in range(1, tf + 1)]
+                if all(Q(*n_) > -1 for n_ in straight):
+                    seq, ok = [root] + straight, True
+                    break
         traj = np.array([pos(j, i) for j, i, _ in seq])
         arc = np.array([0.0 if j is None else S[j][i] for j, i, _ in seq])
-        ok = all(Q(j, i, t) > -1 for j, i, t in seq[1:])
         return traj, np.diff(arc), ok
 
     # ------------------------------------------------------------- top level
