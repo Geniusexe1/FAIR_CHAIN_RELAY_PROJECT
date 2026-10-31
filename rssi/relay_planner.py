@@ -57,9 +57,10 @@ class PlannerParams:            # paper Table I unless noted
     t_f: int = 5                # rollout length = number of synchronised intervals
     C_p: float = 1.0            # UCT balancing coefficient
     n_routes: int = 3           # candidate trajectories per robot (|J|)       -- ours
+    route_ratio: float = 1.6    # candidates up to this x the shortest route   -- ours
     d_sep: float = 0.8          # min distance between robots at every waypoint (m) -- ours
-    pass_clear: float = 0.9     # a robot standing still where the free space is at least this wide
-                                # on each side does not block a route: Nav2 drives around it  -- ours
+    pass_clear: float = 0.9     # a robot standing still in a corridor at least 2x this wide does not
+                                # block a route: Nav2 drives around it                       -- ours
     keep_deployed: bool = False # True: relays never move once placed; False (paper):
                                 # relays are re-placed for each new mission point
 
@@ -150,8 +151,10 @@ class RelayPlanner:
         self.allowed = None                       # optional bool grid: where robots may drive
         self.p = params
         self.rng = np.random.default_rng(seed)
-        from scipy.ndimage import distance_transform_edt
-        self.clear = distance_transform_edt(grid.free) * grid.res   # free-space half-width (m)
+        from scipy.ndimage import distance_transform_edt, maximum_filter
+        clr = distance_transform_edt(grid.free) * grid.res
+        k = int(round(1.0 / grid.res)) * 2 + 1                     # corridor half-width around a
+        self.clear = maximum_filter(clr, size=k)                   # point: max clearance within 1 m
 
     # ------------------------------------------------------------ routing
     def route(self, pos: dict, dst: str):
@@ -284,6 +287,9 @@ class RelayPlanner:
 
         def route_P(t, x):
             return max(min(Wt[t][n], self.pred.link(n, tuple(tr[t]), name, x)) for n, tr in anchors.items())
+        # a robot already below the requirement where it stands (a relay drifted, say) may still
+        # move -- as long as it never gets worse than now: recovery towards coverage  (ours)
+        need = min(self.p.req, route_P(0, tuple(start)) - 0.5)
         others = [np.asarray(o, float) for o in others]
 
         def passable(o):                  # standing still where there is room to drive around it
@@ -298,7 +304,7 @@ class RelayPlanner:
             return stay, np.zeros(tf), True
         avoid = {tuple(np.round(o[k], 2)) for o in others for k in (0, -1) if np.isfinite(o[k]).all()}
         routes = self.rg.routes(start, target, k=self.p.n_routes, avoid=list(avoid), avoid_r=self.p.d_sep,
-                                allowed=self.allowed)
+                                allowed=self.allowed, max_ratio=self.p.route_ratio)
         if not routes:
             stay = np.repeat([start], tf + 1, axis=0)
             return stay, np.zeros(tf), False
@@ -347,7 +353,7 @@ class RelayPlanner:
                     rr, cc = self.grid.world_to_cell(*x)
                     clash = not self.allowed[rr, cc]           # robots cannot plan through unknown space
                 P = -np.inf if clash else route_P(t, x)
-                qcache[key] = (1.0 - remaining(j, i) / dhat) if P >= self.p.req else -1.0
+                qcache[key] = (1.0 - remaining(j, i) / dhat) if P >= need else -1.0
             return qcache[key]
 
         def children(j, i, t):
@@ -408,16 +414,18 @@ class RelayPlanner:
     # ------------------------------------------------------------- top level
     # If MCTS cannot keep every step of a move above the requirement, retry with more
     # candidate routes and finer steps; a move that still cannot is NOT executed.
-    LADDER = ((3, 5), (5, 5), (5, 8), (6, 12))          # (|J| routes, t_f intervals)  -- ours
+    # The last rung also allows long detours (up to 3x the shortest route): the way back along
+    # the chain a client came by is often far longer than an uncovered shortcut.
+    LADDER = ((3, 5, 1.6), (5, 5, 1.6), (5, 8, 1.6), (6, 12, 1.6), (6, 12, 3.0))   # (|J|, t_f, ratio) -- ours
 
     def _tries(self):
-        keep = (self.p.n_routes, self.p.t_f)
+        keep = (self.p.n_routes, self.p.t_f, self.p.route_ratio)
         try:
-            for nr, tf in self.LADDER:
-                self.p.n_routes, self.p.t_f = nr, tf
+            for nr, tf, ratio in self.LADDER:
+                self.p.n_routes, self.p.t_f, self.p.route_ratio = nr, tf, ratio
                 yield tf
         finally:
-            self.p.n_routes, self.p.t_f = keep
+            self.p.n_routes, self.p.t_f, self.p.route_ratio = keep
 
     def plan(self, goal, client: Robot, relays: list[Robot], engaged: list[str] = (), static: dict = None) -> Plan:
         """relays: the relays the planner may move. engaged: relay names placed so far
@@ -433,7 +441,11 @@ class RelayPlanner:
         blocked = [n for n, xy in here.items() if n != self.G and math.dist(xy, goal) < d]
         if blocked:
             why = f"goal within {d} m of {', '.join(blocked)}"
-        if self.in_region(here, client.name, goal) and not blocked:
+        inside = self.in_region(here, client.name, goal)
+        # where the relays are needed: around the goal (paper) -- or, when the goal itself is
+        # covered and only the way there is not, along the way: place on GCS -> client  (ours)
+        cover = tuple(client.xy) if inside else goal
+        if inside and not blocked:
             for tf in self._tries():
                 anchors = {n: np.repeat([xy], tf + 1, axis=0) for n, xy in here.items()}
                 parked = [v for n, v in anchors.items() if n != self.G]
@@ -459,11 +471,11 @@ class RelayPlanner:
             if self.p.keep_deployed:
                 fixed = [(n, byname[n].xy) for n in engaged]
                 free = [r for r in relays if r.name not in engaged]
-                spots, hops, G = self.place(k - len(engaged), goal, client.name,
+                spots, hops, G = self.place(k - len(engaged), cover, client.name,
                                             [r.name for r in free[:k - len(engaged)]], fixed)
                 pool = free
             else:
-                spots, hops, G = self.place(k, goal, client.name, [r.name for r in relays[:k]])
+                spots, hops, G = self.place(k, cover, client.name, [r.name for r in relays[:k]])
                 pool = relays
             if spots is None:
                 continue
