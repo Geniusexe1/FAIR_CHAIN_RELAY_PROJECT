@@ -620,8 +620,8 @@ def main():
     ap.add_argument("--interval-slack", type=float, default=90.0, help="+ sim seconds per interval (start-up)")
     ap.add_argument("--map-offset", nargs=2, type=float, default=[0.0, 12.0], help="world = map + offset")
     ap.add_argument("--keep-deployed", action="store_true")
-    ap.add_argument("--guard", type=float, default=0.6,
-                    help="stop the plan if the client comes this close to a relay (m); below d_sep 0.8")
+    ap.add_argument("--guard", type=float, default=0.45,
+                    help="stop the plan if the client comes this close to a relay (m): near contact; passing a parked relay in a corridor is fine")
     ap.add_argument("--max-fail", type=int, default=2, help="reject a goal after this many failed attempts")
     ap.add_argument("--stuck-s", type=float, default=40.0, help="sim s without client progress -> back up")
     ap.add_argument("--max-skip", type=int, default=2,
