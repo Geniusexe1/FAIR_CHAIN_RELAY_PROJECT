@@ -16,7 +16,12 @@ relay1:
 relay2:
   topic: /relay2/odom
   offset: [0.0, 0.0]
-  park: [6.7, -7.6]
+  # The MOUTH of the alcove at (6.7, -7.6), facing west: relay2's controller runs on NUC2 over the
+  # mesh at ~10 Hz and could not make the S-turn out of the alcove itself (unist5: every plan that
+  # moved it failed). Here it drives straight out, and it is 0.8 m off the corridor's road (the
+  # client passes; a relay ON a road blocks every plan through it -- d_sep).
+  park: [7.2, -7.2]
+  park_yaw: 3.1416
 
 head:
   topic: /Odometry

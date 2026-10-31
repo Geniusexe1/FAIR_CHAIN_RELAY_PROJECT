@@ -75,11 +75,12 @@ fi
 
 if [ "$FROM" -le 2 ]; then
 echo "[2/5] relays at their parking spots"
-read -r P1X P1Y P2X P2Y < <(python3 -c "
+read -r P1X P1Y Y1 P2X P2Y Y2 < <(python3 -c "
 import yaml; c = yaml.safe_load(open('${NODES:-$ROOT/rssi/ros/nodes.yaml}'))
-print(*c['relay1']['park'], *c['relay2']['park'])")
-spawn relay1 "$P1X" "$P1Y"
-spawn relay2 "$P2X" "$P2Y"
+y = ${PARK_YAW:--1.5708}
+print(*c['relay1']['park'], c['relay1'].get('park_yaw', y), *c['relay2']['park'], c['relay2'].get('park_yaw', y))")
+PARK_YAW=$Y1 spawn relay1 "$P1X" "$P1Y"
+PARK_YAW=$Y2 spawn relay2 "$P2X" "$P2Y"
 fi
 
 if [ "$FROM" -le 3 ]; then

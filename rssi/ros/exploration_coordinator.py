@@ -117,9 +117,10 @@ class Coordinator(RosNode):
         # station keeping: the relays creep slowly when idle (drive-plugin issue, see
         # hospital_world/CHECKPOINT.md), so an idle relay that drifts from its spot is sent back
         self.home, self.yaw, self.keeping, self.busy = {}, {}, {}, False
+        self.park = {}
         for nm in names[1:-1]:
             if "park" in cfg[nm]:
-                self.home[nm] = tuple(cfg[nm]["park"])            # else: first pose seen
+                self.home[nm] = self.park[nm] = tuple(cfg[nm]["park"])   # else: first pose seen
         # The explorer reads /map (1.5 MB). Some participants cannot get a FastDDS SHM port
         # on this host ("open_and_lock_file failed") and fall back to UDP, where 1.5 MB never
         # arrives with the default socket buffers -- its is_goal_occupied() then crashes on
@@ -136,7 +137,7 @@ class Coordinator(RosNode):
         self.visited = []          # goals already reached: the explorer re-sends frontiers it
                                    # cannot clear from there, which loops forever
         self.create_timer(a.keep_period, self._station_keep, callback_group=cb)
-        self.skipped = {}          # goal key -> (times skipped, relay positions at the last skip)
+        self.skipped = {}          # goal key -> (times skipped, robot positions + sim time at the last skip)
         self.misses = {}           # relay -> consecutive plans it did not follow
         self.benched = {}          # relay -> sim time until which it is not moved (static radio)
         self.route = [self.gcs_name, self.client_name]
@@ -209,10 +210,12 @@ class Coordinator(RosNode):
                                    f"{self.failed[key]} times, Nav2 cannot reach it")
             return GoalResponse.REJECT
         sk = self.skipped.get(key)
-        if sk and sk[0] >= self.a.max_skip and all(
-                math.dist(r.xy, sk[1][r.name]) < 1.0 for r in self.relays):
+        # a goal skipped again and again is not re-planned (each plan costs seconds) until the
+        # situation changed: some robot moved, or a cool-down passed -- never forever (deadlock)
+        if sk and sk[0] >= self.a.max_skip and self._now() - sk[2] < self.a.skip_cooldown and all(
+                math.dist(r.xy, sk[1][n]) < 1.5 for n, r in self.robots.items()):
             self.get_logger().info(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): REJECTED - skipped {sk[0]} times, "
-                                   f"no relay has moved since")
+                                   f"nothing has moved since")
             return GoalResponse.REJECT
         g = self.planner.grid
         r_, c_ = g.world_to_cell(*goal)
@@ -239,7 +242,8 @@ class Coordinator(RosNode):
                                    f"{n} ({xy[0]:.2f}, {xy[1]:.2f})" for n, xy in plan.targets.items())))
         self._state(event="decision", goal=goal, decision=plan.decision, chain=plan.chain, note=plan.note)
         if plan.decision == "skip":
-            self.skipped[key] = (self.skipped.get(key, (0,))[0] + 1, {r.name: r.xy for r in self.relays})
+            self.skipped[key] = (self.skipped.get(key, (0,))[0] + 1, {n: r.xy for n, r in self.robots.items()},
+                                 self._now())
             return GoalResponse.REJECT                        # explorer tries the next rank
         self.skipped.pop(key, None)
         self._last_plan = plan
@@ -404,6 +408,10 @@ class Coordinator(RosNode):
             for n, xy in plan.targets.items():                    # where each relay now belongs:
                 if n != self.client_name:                         # its target if the plan finished,
                     self.home[n] = tuple(xy) if self._reached else self.robots[n].xy   # else where it is
+            if self._reached:                                     # a relay the route does not use goes
+                for r in self.relays:                             # back to its parking spot, off the
+                    if r.name not in plan.chain and r.name in self.park:   # corridors the client drives
+                        self.home[r.name] = self.park[r.name]
             if self._reached:                                     # only goals actually reached
                 self.visited.append(tuple(plan.goal))
             elif self._client_failed:                             # a lagging relay is not the goal's fault
@@ -574,8 +582,8 @@ def main():
     ap.add_argument("--v-min", type=float, default=0.22, help="client speed-limit floor, m/s (DWB min 0.2)")
     ap.add_argument("--v-floor-relay", type=float, default=0.18,
                     help="relay speed floor, m/s: the drive stalls at 0.10 m/s, moves at 0.15")
-    ap.add_argument("--interval-timeout", type=float, default=4.0, help="x planned interval duration")
-    ap.add_argument("--interval-slack", type=float, default=30.0, help="+ sim seconds per interval (start-up)")
+    ap.add_argument("--interval-timeout", type=float, default=6.0, help="x planned interval duration")
+    ap.add_argument("--interval-slack", type=float, default=90.0, help="+ sim seconds per interval (start-up)")
     ap.add_argument("--map-offset", nargs=2, type=float, default=[0.0, 12.0], help="world = map + offset")
     ap.add_argument("--keep-deployed", action="store_true")
     ap.add_argument("--guard", type=float, default=0.6,
@@ -583,8 +591,9 @@ def main():
     ap.add_argument("--max-fail", type=int, default=2, help="reject a goal after this many failed attempts")
     ap.add_argument("--stuck-s", type=float, default=40.0, help="sim s without client progress -> back up")
     ap.add_argument("--max-skip", type=int, default=2,
-                    help="reject a goal skipped this many times at once, until a relay moves >= 1 m")
-    ap.add_argument("--bench-after", type=int, default=3, help="plans a relay may miss in a row before benching")
+                    help="reject a goal skipped this many times at once, until a robot moves >= 1.5 m ...")
+    ap.add_argument("--skip-cooldown", type=float, default=180.0, help="... or this many sim s passed")
+    ap.add_argument("--bench-after", type=int, default=5, help="plans a relay may miss in a row before benching")
     ap.add_argument("--bench-time", type=float, default=300.0, help="sim s a benched relay is not moved")
     ap.add_argument("--map-log", default="", help="directory for /map snapshots (replay video)")
     ap.add_argument("--map-log-period", type=float, default=5.0, help="sim s between snapshots")
