@@ -62,6 +62,15 @@ if [ "$FROM" -le 1 ]; then
 echo "[1/5] chain stack"
 "$HW/run_chain_stack.sh" 2>&1 | grep -E "ok|!!"
 nav_up ""
+# chain_robot is differential drive but its DWB config (min_vel_x = min_speed_xy = 0.2) forbids
+# turning in place: nose-first at a dead end every arc hits the wall and it is stuck for good
+# and its costmaps model it as a 5 cm robot (robot_radius 0.05), so paths and DWB hug walls
+docker exec nuc1 /entrypoint.sh bash -c "export ROS_DOMAIN_ID=42; for p in FollowPath.min_vel_x FollowPath.min_speed_xy; do
+  timeout 20 ros2 param set /controller_server \$p 0.0; done
+  timeout 20 ros2 param set /global_costmap/global_costmap robot_radius 0.2
+  timeout 20 ros2 param set /local_costmap/local_costmap robot_radius 0.12
+  timeout 20 ros2 param set /local_costmap/local_costmap inflation_layer.inflation_radius 0.25" >/dev/null 2>&1 \
+  && echo "  ok  chain_robot may turn in place; costmap radius 0.2 global / 0.12 local"
 fi
 
 if [ "$FROM" -le 2 ]; then

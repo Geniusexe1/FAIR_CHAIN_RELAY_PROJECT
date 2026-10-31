@@ -45,7 +45,7 @@ from rclpy.node import Node as RosNode
 from rclpy.qos import qos_profile_sensor_data
 from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import Point, PoseStamped
-from nav2_msgs.action import NavigateToPose
+from nav2_msgs.action import BackUp, NavigateToPose
 from nav2_msgs.msg import SpeedLimit
 from nav2_msgs.srv import ManageLifecycleNodes
 from lifecycle_msgs.msg import State
@@ -97,6 +97,9 @@ class Coordinator(RosNode):
         self.nav = {n: ActionClient(self, NavigateToPose, f"{ns(n)}/navigate_to_pose", callback_group=cb)
                     for n in self.robots}
         self.speed = {n: self.create_publisher(SpeedLimit, f"{ns(n)}/speed_limit", 10) for n in self.robots}
+        # chain_robot cannot reverse or turn in place (DWB min_vel_x 0.2) and its BT does not
+        # back up: nose-first at a dead end it is stuck for good. The watchdog backs it out.
+        self.backup = ActionClient(self, BackUp, "/backup", callback_group=cb)
         # at low real-time factor Nav2's lifecycle manager misses bond heartbeats and
         # deactivates its own nodes; goals are then rejected. RESET + STARTUP revives it.
         self.lm = {n: self.create_client(ManageLifecycleNodes, f"{ns(n)}/lifecycle_manager_navigation/manage_nodes",
@@ -448,9 +451,11 @@ class Coordinator(RosNode):
                     done[n] = GoalStatus.STATUS_ABORTED
                     return
                 handles[n] = h
-                h.get_result_async().add_done_callback(lambda r, n=n: done.__setitem__(n, r.result().status))
+                h.get_result_async().add_done_callback(            # ignore a goal replaced by the watchdog
+                    lambda r, n=n, h=h: done.__setitem__(n, r.result().status) if handles.get(n) is h else None)
 
             t_start = self.get_clock().now()                  # SIM time: plans are in sim seconds
+            watch = {"xy": self.client.xy, "t": 0.0, "n": 0}  # client stuck watchdog
             waiting = sorted((n for n in movers if start[n] > 0), key=lambda n: start[n])
             for n in movers:
                 if start[n] <= 0:
@@ -484,6 +489,19 @@ class Coordinator(RosNode):
                     self._state(event="aborted", t=t, reason="proximity", robots=close)
                     gh.abort()
                     return NavigateToPose.Result()
+                # client stuck (no progress although it has a waypoint): back it out, resend
+                if self.client_name in handles and self.client_name not in done:
+                    if math.dist(self.client.xy, watch["xy"]) > 0.15:
+                        watch["xy"], watch["t"] = self.client.xy, el
+                    elif el - watch["t"] > self.a.stuck_s and watch["n"] < 2:
+                        watch["n"] += 1
+                        self.get_logger().warn(f"interval {t}: client stuck {el - watch['t']:.0f} s at "
+                                               f"({self.client.xy[0]:.2f}, {self.client.xy[1]:.2f}) - backing up 0.6 m")
+                        h = handles.pop(self.client_name)
+                        self._call(h.cancel_goal_async(), 10.0)
+                        self._back_up(0.6)
+                        launch(self.client_name)
+                        watch["xy"], watch["t"] = self.client.xy, (self.get_clock().now() - t_start).nanoseconds / 1e9
                 # slack: a relay needs time to plan and turn (Ackermann) before it moves at all
                 if (self.get_clock().now() - t_start).nanoseconds / 1e9 > \
                         self.a.interval_timeout * max(sched[t - 1]["dt"], 1.0) + self.a.interval_slack:
@@ -512,6 +530,17 @@ class Coordinator(RosNode):
         self._reached = True
         gh.succeed()
         return NavigateToPose.Result()
+
+    def _back_up(self, dist):
+        if not self.backup.wait_for_server(timeout_sec=5.0):
+            self.get_logger().error("/backup not available")
+            return
+        g = BackUp.Goal(speed=0.15)
+        g.target.x = float(dist)
+        g.time_allowance.sec = 30
+        h = self._call(self.backup.send_goal_async(g), 10.0)
+        if h is not None and h.accepted:
+            self._call(h.get_result_async(), 60.0)
 
     def _markers(self, plan):
         ma = MarkerArray()
@@ -552,6 +581,7 @@ def main():
     ap.add_argument("--guard", type=float, default=0.6,
                     help="stop the plan if the client comes this close to a relay (m); below d_sep 0.8")
     ap.add_argument("--max-fail", type=int, default=2, help="reject a goal after this many failed attempts")
+    ap.add_argument("--stuck-s", type=float, default=40.0, help="sim s without client progress -> back up")
     ap.add_argument("--max-skip", type=int, default=2,
                     help="reject a goal skipped this many times at once, until a relay moves >= 1 m")
     ap.add_argument("--bench-after", type=int, default=3, help="plans a relay may miss in a row before benching")
