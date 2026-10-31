@@ -86,7 +86,14 @@ def main():
                   cmap=ListedColormap(["#a8a8a8"]), interpolation="nearest")   # true walls, faint
         live = ax.imshow(np.full((2, 2), np.nan), origin="lower", extent=e, zorder=2, interpolation="nearest",
                          cmap=ListedColormap(["#ffffff", "#111111"]), vmin=0, vmax=1)
-        free_area = float(g.free.sum()) * g.res ** 2
+        from scipy.ndimage import distance_transform_edt
+        from propagation import geodesic_distance
+        first = next(r for r in rows if r.get("head_x"))           # reachable floor, as explore_sim scores it
+        reach = np.isfinite(geodesic_distance(g, g.world_to_cell(float(first["head_x"]), float(first["head_y"])))) \
+            & (distance_transform_edt(g.free) * g.res >= 0.45)
+        H_, W_ = g.shape
+        gx = g.origin[0] + (np.arange(W_) + 0.5) * g.res
+        gy = g.origin[1] + (np.arange(H_) + 0.5) * g.res
         state = {"snap": None}
         ax.set_xlim(e[0], e[1]); ax.set_ylim(e[2], e[3])
     else:
@@ -101,9 +108,18 @@ def main():
     links = [ax.plot([], [], "-", lw=3, zorder=7)[0] for _ in range(4)]
     labels = [ax.text(0, 0, "", fontsize=8, ha="center", zorder=10,
                       bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.85)) for _ in range(4)]
+    from matplotlib.lines import Line2D
+    ax.legend(handles=[Line2D([], [], ls="", marker="D", color=COL["head"], mec="k", label="chain_robot (client)"),
+                       Line2D([], [], ls="", marker="o", color=COL["relay1"], mec="k", label="relay1"),
+                       Line2D([], [], ls="", marker="o", color=COL["relay2"], mec="k", label="relay2"),
+                       Line2D([], [], ls="", marker="*", ms=12, color="#ff7f0e", mec="k", label="current goal"),
+                       Line2D([], [], color="#2ca02c", lw=3, label="link > -65 dBm"),
+                       Line2D([], [], color="#e6b800", lw=3, label="link -65..-85"),
+                       Line2D([], [], color="#d62728", lw=3, label="link < -85")],
+              loc="upper left", bbox_to_anchor=(1.005, 1.0), fontsize=8, framealpha=0.9)
     title = ax.set_title("", fontsize=10)
     ax.set_xlabel("world x (m)"); ax.set_ylabel("world y (m)")
-    fig.tight_layout(rect=[0, 0, 1, 0.94])        # room for the two-line title
+    fig.tight_layout(rect=[0, 0, 0.88 if wide else 1, 0.94])        # room for the two-line title
 
     def pos(r, n):
         x, y = r.get(f"{CSV_KEY[n]}_x"), r.get(f"{CSV_KEY[n]}_y")
@@ -127,11 +143,14 @@ def main():
                 img = np.where(G < 0, np.nan, np.where(G >= 50, 1.0, 0.0))
                 live.set_data(img)
                 live.set_extent((ox, ox + G.shape[1] * res, oy, oy + G.shape[0] * res))
-                state["pct"] = 100 * float(((G >= 0) & (G < 50)).sum()) * res ** 2 / free_area
+                cc = np.floor((gx - ox) / res).astype(int); rr = np.floor((gy - oy) / res).astype(int)
+                ins = ((rr >= 0) & (rr < G.shape[0]))[:, None] & ((cc >= 0) & (cc < G.shape[1]))[None, :]
+                v = G[np.clip(rr, 0, G.shape[0] - 1)[:, None], np.clip(cc, 0, G.shape[1] - 1)[None, :]]
+                state["pct"] = 100 * float((ins & (v >= 0) & (v < 50) & reach).sum()) / reach.sum()
                 state["route"] = json.loads(str(z["route"]))
             if state.get("route"):
                 chain = state["route"]
-            explored = f"   |   map built: {min(state.get('pct', 0.0), 100):.0f}% of the floor"
+            explored = f"   |   explored: {state.get('pct', 0.0):.0f}% of the reachable floor"
         for n in COL:
             pts = [pos(q, n) for q in rows[: i + 1] if pos(q, n)]
             if pts:

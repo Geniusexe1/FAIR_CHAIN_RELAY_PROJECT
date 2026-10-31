@@ -30,7 +30,14 @@ nav_active() {   # $1 = namespace ('' for chain_robot); prints the bt_navigator 
 }
 nav_up() {       # bring a Nav2 stack to ACTIVE: wait, STARTUP, then RESET + STARTUP
   local ns="$1" s
-  for i in $(seq 18); do s=$(nav_active "$ns"); [ "$s" = active ] && { echo "  ok  Nav2 ${ns:-/ (chain_robot)} active"; return 0; }; sleep 5; done
+  for i in $(seq 9); do s=$(nav_active "$ns"); [ "$s" = active ] && { echo "  ok  Nav2 ${ns:-/ (chain_robot)} active"; return 0; }; sleep 5; done
+  if [ -z "$ns" ]; then
+    # chain_robot: a lost change_state reply freezes the lifecycle manager and it ignores
+    # manage_nodes too -- relaunching Nav2 (~20 s) is far quicker than waiting it out
+    docker exec safe_robot bash -c 'pkill -9 -f "[n]avigation_exploration_launch|[l]ifecycle_manager|[b]t_navigator|[c]ontroller_server|[p]lanner_server|[b]ehavior_server|[s]moother_server|[w]aypoint_follower|[v]elocity_smoother"; true'
+    docker exec -d safe_robot bash -ic "export GAZEBO_IP=127.0.0.1; ros2 launch nav2_bringup navigation_exploration_launch.py > /tmp/6_nav2.log 2>&1"
+    for i in $(seq 20); do s=$(nav_active ""); [ "$s" = active ] && { echo "  ok  Nav2 / active (relaunched)"; return 0; }; sleep 5; done
+  fi
   for cmds in "0" "3 0"; do
     for c in $cmds; do
       docker exec nuc1 /entrypoint.sh bash -c "export ROS_DOMAIN_ID=42; timeout 200 ros2 service call \

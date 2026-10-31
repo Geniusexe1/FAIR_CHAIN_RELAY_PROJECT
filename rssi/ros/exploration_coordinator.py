@@ -538,9 +538,11 @@ def main():
     ap.add_argument("--n", type=float, default=PropagationParams.n)
     ap.add_argument("--alpha", type=float, default=PropagationParams.alpha)
     ap.add_argument("--sigma-n", type=float, default=3.0)
-    ap.add_argument("--v-client", type=float, default=0.7)
+    ap.add_argument("--v-client", type=float, default=0.5, help="chain_robot DWB max_vel_x (m/s)")
     ap.add_argument("--v-relay", type=float, default=0.5)
-    ap.add_argument("--v-min", type=float, default=0.05, help="client speed-limit floor, m/s")
+    # DWB samples no velocity at all below min_vel_x / min_speed_xy (0.2): a speed limit under
+    # that freezes chain_robot ("No valid trajectories out of 0") -- it looked wedged on walls
+    ap.add_argument("--v-min", type=float, default=0.22, help="client speed-limit floor, m/s (DWB min 0.2)")
     ap.add_argument("--v-floor-relay", type=float, default=0.18,
                     help="relay speed floor, m/s: the drive stalls at 0.10 m/s, moves at 0.15")
     ap.add_argument("--interval-timeout", type=float, default=4.0, help="x planned interval duration")
