@@ -51,13 +51,15 @@ for i in "${!QUEUE[@]}"; do
     if python3 -c "import sys; sys.exit(0 if $COV > $BEST + 0.2 else 1)"; then BEST=$COV; TBEST=$(date +%s); fi
     echo "$(date +%T) $NAME coverage $COV% $(tail -n 1 "$OUT/$NAME.csv" | cut -d, -f2)"
     python3 -c "import sys; sys.exit(0 if $COV >= $DONE_PCT else 1)" && { WHY=complete; break; }
+    docker exec safe_robot pgrep -x gzserver >/dev/null || { WHY=gzserver_died; break; }
     [ $(( $(date +%s) - TBEST )) -gt $(( PLATEAU_MIN * 60 )) ] && { WHY=plateau; break; }
-    # FAST-LIO against Gazebo: the map is worthless once they disagree
+    # FAST-LIO against Gazebo: the map is worthless once they disagree. The two reads are seconds
+    # apart, so a robot driving at full speed shows up to ~2 m; only a sustained gap counts.
     D=$(docker exec safe_robot bash -ic "export ROS_DOMAIN_ID=42; timeout 15 ros2 topic echo --once /Odometry --field pose.pose.position" 2>/dev/null \
         | awk -v sx="$SX" -v sy="$SY" -v csv="$(tail -n 1 "$OUT/$NAME.csv" | cut -d, -f3,4)" \
           '/^x:/{x=$2} /^y:/{y=$2} END{split(csv,g,","); if (x!="") printf "%.1f", sqrt((x+sx-g[1])^2+(y+sy-g[2])^2)}')
     echo "$(date +%T) $NAME fastlio_vs_gazebo ${D:-?} m"
-    if [ -n "$D" ] && python3 -c "import sys; sys.exit(0 if $D > 2.0 else 1)"; then BAD=$((BAD + 1)); else BAD=0; fi
+    if [ -n "$D" ] && python3 -c "import sys; sys.exit(0 if $D > 3.0 else 1)"; then BAD=$((BAD + 1)); else BAD=0; fi
     [ "$BAD" -ge 3 ] && { WHY=fastlio_diverged; break; }
     # how fast each relay brain answers across the mesh
     for r in $(python3 -c "import yaml, os; print(*list(yaml.safe_load(open(os.environ.get('NODES', 'rssi/ros/nodes.yaml'))))[1:-1])"); do

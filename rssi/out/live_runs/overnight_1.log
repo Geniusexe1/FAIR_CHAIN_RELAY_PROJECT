@@ -1,0 +1,56 @@
+01:49:06 === big_u_full (unist, P0 -55, ) share 85 min
+01:54:24 big_u_full launched in 298 s: 0 launch problems
+01:56:27 big_u_full coverage 0% 0.30
+01:56:30 big_u_full fastlio_vs_gazebo 0.1 m
+01:58:47 big_u_full coverage 0% 0.31
+01:58:52 big_u_full fastlio_vs_gazebo 0.1 m
+02:01:08 big_u_full coverage 16.9% 0.31
+02:01:11 big_u_full fastlio_vs_gazebo 0.0 m
+02:03:29 big_u_full coverage 28.6% 0.31
+02:03:34 big_u_full fastlio_vs_gazebo 0.5 m
+02:05:53 big_u_full coverage 32.5% 0.29
+02:05:56 big_u_full fastlio_vs_gazebo 0.1 m
+02:08:15 big_u_full coverage 32.9% 0.30
+02:08:19 big_u_full fastlio_vs_gazebo 0.9 m
+02:10:38 big_u_full coverage 33.6% 0.27
+02:10:41 big_u_full fastlio_vs_gazebo 0.3 m
+02:12:59 big_u_full coverage 35.0% 0.28
+02:13:04 big_u_full fastlio_vs_gazebo 0.1 m
+02:15:23 big_u_full coverage 35.0% 0.29
+02:15:28 big_u_full fastlio_vs_gazebo 0.1 m
+02:17:46 big_u_full coverage 35.0% 0.27
+02:17:50 big_u_full fastlio_vs_gazebo 0.1 m
+02:20:07 big_u_full coverage 36.3% 0.28
+02:20:11 big_u_full fastlio_vs_gazebo 0.1 m
+02:22:29 big_u_full coverage 36.3% 0.27
+02:22:32 big_u_full fastlio_vs_gazebo 0.1 m
+02:24:49 big_u_full coverage 39.3% 0.27
+02:24:53 big_u_full fastlio_vs_gazebo 0.6 m
+02:27:10 big_u_full coverage 40.4% 0.32
+02:27:15 big_u_full fastlio_vs_gazebo 0.3 m
+02:29:34 big_u_full coverage 41.2% 0.27
+02:29:38 big_u_full fastlio_vs_gazebo 0.1 m
+02:31:57 big_u_full coverage 41.2% 0.27
+02:32:01 big_u_full fastlio_vs_gazebo 0.1 m
+02:34:19 big_u_full coverage 41.2% 0.28
+02:34:23 big_u_full fastlio_vs_gazebo 0.1 m
+02:36:39 big_u_full coverage 42.5% 0.30
+02:36:42 big_u_full fastlio_vs_gazebo 0.6 m
+02:38:59 big_u_full coverage 43.4% 0.31
+02:39:02 big_u_full fastlio_vs_gazebo 2.0 m
+02:41:21 big_u_full coverage 43.4% 0.32
+02:41:25 big_u_full fastlio_vs_gazebo 1.3 m
+02:43:42 big_u_full coverage 44.7% 0.31
+02:43:46 big_u_full fastlio_vs_gazebo 1.7 m
+02:46:05 big_u_full coverage 53.2% 0.26
+02:46:12 big_u_full fastlio_vs_gazebo 1.7 m
+02:48:30 big_u_full coverage 58.2% 0.24
+02:48:34 big_u_full fastlio_vs_gazebo 0.0 m
+02:50:56 big_u_full coverage 58.2% 
+02:51:00 big_u_full fastlio_vs_gazebo 19.2 m
+02:53:24 big_u_full coverage 58.2% 
+02:53:28 big_u_full fastlio_vs_gazebo 19.2 m
+02:55:52 big_u_full coverage 58.9% 
+02:55:55 big_u_full fastlio_vs_gazebo 20.0 m
+big_u_full result=fastlio_diverged coverage=58.9% wall_min=68 world=unist P0=-55 extra=
+02:57:28 === big_u_nav2 (unist, P0 -55, --yield-r 0 --guard 0) share 90 min

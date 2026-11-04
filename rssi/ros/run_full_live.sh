@@ -80,7 +80,9 @@ fi
 # peers (mesh_peers.xml); with every brain here (RELAY_HOSTS=relay_hosts_bignuc.conf) nothing leaves
 # this host. Unicast still collapsed the big NUC's link with ~27 remote Nav2 processes (2026-11-05).
 if [ -n "${RELAY_HOSTS:-}" ]; then DDS="ROS_LOCALHOST_ONLY=1"; else DDS="FASTRTPS_DEFAULT_PROFILES_FILE=/hw/mesh_peers.xml"; fi
-docker exec safe_robot bash -c "sed -i '/IGN_IP/d' /root/.bashrc; echo 'export IGN_IP=127.0.0.1 $DDS' >> /root/.bashrc"
+# ulimit: gzserver opens a socket per gz client; newer Docker gives containers 1024 files and at that
+# it dies with "Too many open files" (big_u_full, after an hour)
+docker exec safe_robot bash -c "sed -i '/IGN_IP/d' /root/.bashrc; echo 'export IGN_IP=127.0.0.1 $DDS; ulimit -n 524288' >> /root/.bashrc"
 echo "[1/5] chain stack"
 "$HW/run_chain_stack.sh" 2>&1 | grep -E "ok|!!"
 nav_up ""

@@ -8,6 +8,9 @@
 # robot pushed by another shows up as it really happened. Appends if the file exists.
 set -uo pipefail
 OUT="${1:?usage: live_logger.sh <out.csv> [period_s]}"; PERIOD="${2:-20}"
+# Each gz call is a new client connection to gzserver. Every 5 s it leaks about 1000 sockets an hour and
+# gzserver aborts in its transport code near the hour (big_u_nav2): no faster than this.
+[ "$PERIOD" -lt 15 ] && PERIOD=15
 mkdir -p "$(dirname "$OUT")"
 RELAYS="${RELAYS:-relay1 relay2 relay3}"
 [ -s "$OUT" ] || echo "wall_time,rtf,head_x,head_y,$(for r in $RELAYS; do printf '%s_x,%s_y,' "$r" "$r"; done)min_sep_m,closest_pair,decisions,client_only,deploy,skip,waypoint_failures" > "$OUT"

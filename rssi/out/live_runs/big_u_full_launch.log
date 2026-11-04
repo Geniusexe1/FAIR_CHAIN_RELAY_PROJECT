@@ -1,0 +1,29 @@
+  ok  virtual 2560x1440 display
+[1/5] chain stack
+  ok  gazebo (~60 s, 169 MB of meshes)
+  ok  fast_lio
+  ok  occ_grid
+  ok  controller
+  ok  path planner
+  ok  Nav2 / (chain_robot) active
+  ok  chain_robot may turn in place; costmap radius 0.2 global / 0.12 local
+[2/5] relays at their parking spots
+  ok  relay1 at (-1.05, -7.6)
+  ok  relay2 at (7.2, -7.2)
+  ok  relay3 at (-6.92, -6.98)
+[3/5] relay brains
+[relay1] Nav2 starting on local in relays. tail: ssh local docker exec relays tail -f /tmp/relay1_nav.log
+[relay2] Nav2 starting on local in relays. tail: ssh local docker exec relays tail -f /tmp/relay2_nav.log
+[relay3] Nav2 starting on local in relays. tail: ssh local docker exec relays tail -f /tmp/relay3_nav.log
+[4/5] Nav2 of every relay
+  ok  Nav2 /relay1 active
+  ok  Nav2 /relay2 active
+  ok  Nav2 /relay3 active
+[5/5] RSSI monitor, coordinator, explorer, logger
+docker: invalid reference format: repository name (/home/fair/FAIR_CHAIN_RELAY_PROJECT/hospital_world/relay_hosts_bignuc.conf) must be lowercase
+
+Run 'docker run --help' for more information
+docker: invalid reference format: repository name (/home/fair/FAIR_CHAIN_RELAY_PROJECT/hospital_world/relay_hosts_bignuc.conf) must be lowercase
+
+Run 'docker run --help' for more information
+logging ground truth to rssi/out/live_runs/big_u_full.csv

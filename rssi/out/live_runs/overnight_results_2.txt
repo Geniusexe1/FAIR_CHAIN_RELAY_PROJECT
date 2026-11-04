@@ -1,0 +1,2 @@
+big_u_full2 result=plateau coverage=56.1% wall_min=67 world=unist P0=-55 extra=
+big_u_nav2 result=gzserver_died coverage=67.8% wall_min=57 world=unist P0=-55 extra=--yield-r 0 --guard 0

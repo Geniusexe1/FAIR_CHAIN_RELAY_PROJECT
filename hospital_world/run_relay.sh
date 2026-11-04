@@ -21,7 +21,7 @@ CMD="
   # a surviving static_transform_publisher keeps publishing an old map->$NS/odom, and Nav2 then
   # localises the robot off its costmap (every goal aborted)
   docker exec $CONTAINER bash -c \"pkill -9 -f 'namespace:=$P|child-frame-id $P/odom|__ns:=/$P'; sleep 1; true\"
-  docker exec -d $CONTAINER /entrypoint.sh bash -c \"export ROS_DOMAIN_ID=42 $ENV
+  docker exec -d $CONTAINER /entrypoint.sh bash -c \"ulimit -n 524288; export ROS_DOMAIN_ID=42 $ENV
     ros2 launch saye_bringup nav_robot.launch.py namespace:=$NS static_map_odom:=true map_odom_x:=${MAP_ODOM_X:-0.0} map_odom_y:=${MAP_ODOM_Y:--12.0} > /tmp/${NS}_nav.log 2>&1\""
 if [ "$TARGET" = local ]; then bash -c "$CMD"; else ssh -n -o BatchMode=yes -o ConnectTimeout=10 "$TARGET" "$CMD"; fi
 echo "[$NS] Nav2 starting on $TARGET in $CONTAINER. tail: ssh $TARGET docker exec $CONTAINER tail -f /tmp/${NS}_nav.log"

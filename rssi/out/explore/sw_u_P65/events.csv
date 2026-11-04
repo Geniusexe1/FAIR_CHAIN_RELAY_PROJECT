@@ -1,0 +1,7 @@
+decision,sim_time_s,goal_x,goal_y,decision_type,chain,relays_engaged,pred_min_hop_dBm_per_step,interval_s,client_m,relay_m,CR_sim_%,coverage_%,plan_s,note
+1,8.0,3.63,-4.78,client_only,GCS>head,0,"[-71.9, -63.9, -63.9, -65.9, -70.6, -71.9]","[1.6, 1.6, 1.6, 1.6, 1.6]",5.6,"{'relay1': 0.0, 'relay2': 0.0, 'relay3': 0.0}",100.0,20.1,1.0,goal inside the bounded region (t_f 5)
+2,22.9,5.63,-7.88,deploy,GCS>head,0,"[-71.9, -70.8, -70.8, -70.8, -71.5, -71.5, -74.3, -78.7, -78.7]","[1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9]",3.1,"{'relay1': 7.4, 'relay2': 1.2, 'relay3': 0.0}",100.0,21.5,13.7,"2 relay(s) moved (t_f 8); final route GCS > relay1 > head, weakest hop -75.8"
+2,22.9,13.38,-6.23,skip,GCS>head,0,,,,,,21.5,14.8,3 relay(s) could be placed but no trajectories keep every step
+3,37.0,3.58,3.17,deploy,GCS>relay2>head,1,"[-78.7, -78.7, -78.7, -78.7, -79.3, -81.4, -81.4, -81.4, -81.4]","[1.3, 1.3, 1.3, 5.2, 1.3, 1.3, 1.3, 1.3]",3.6,"{'relay1': 5.1, 'relay2': 0.0, 'relay3': 0.0}",24.4,93.5,2.4,"1 relay(s) moved (t_f 8); final route GCS > relay1 > head, weakest hop -79.6"
+3,37.0,21.68,-6.98,skip,GCS>relay2>head,1,,,,,,93.5,2.7,no feasible plan with 3 relays
+3,37.0,21.73,4.32,skip,GCS>relay2>head,1,,,,,,93.5,3.7,no feasible plan with 3 relays

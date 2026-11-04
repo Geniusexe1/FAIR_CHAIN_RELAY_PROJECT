@@ -133,6 +133,7 @@ class Coordinator(RosNode):
         self.pub_map = self.create_publisher(OccupancyGrid, "/coord/map", latched)
         self.create_timer(2.0, self._publish_cropped_map, callback_group=cb)
         self.failed = {}           # goal -> times the client could not follow its plan
+        self.last_accept = None    # sim time of the last goal that got through the gate
         self.moving = set()        # robots moving in the plan being executed
         self.visited = []          # goals already reached: the explorer re-sends frontiers it
                                    # cannot clear from there, which loops forever
@@ -204,6 +205,16 @@ class Coordinator(RosNode):
             return GoalResponse.REJECT
         p = req.pose.pose.position
         goal = (p.x + self.off[0], p.y + self.off[1])
+        # every frontier left is one we remember as failed or visited: nothing moves and the explorer
+        # re-sends them for ever (big_u_nav2_P45: 4700 rejections at 84%). Forget them and try again.
+        now = self._now()
+        if self.last_accept is None:
+            self.last_accept = now
+        if now - self.last_accept > self.a.reject_reset and (self.failed or self.visited):
+            self.get_logger().warn(f"no goal accepted for {now - self.last_accept:.0f} s - forgetting "
+                                   f"{len(self.failed)} failed and {len(self.visited)} visited goals")
+            self.failed.clear(); self.visited.clear()
+            self.last_accept = now
         near = [v for v in self.visited + [self.client.xy] if math.dist(v, goal) < self.a.visited_r]
         if near:
             self.get_logger().info(f"goal world ({goal[0]:.2f}, {goal[1]:.2f}): REJECTED - already visited "
@@ -409,6 +420,7 @@ class Coordinator(RosNode):
 
     def _execute(self, gh):
         self.busy = True
+        self.last_accept = self._now()
         plan = self._last_plan
         self.moving = {n for n in plan.seg if float(np.sum(plan.seg[n])) > 0.05}
         for n, h in list(self.keeping.items()):                   # the plan overrides station keeping
@@ -659,6 +671,7 @@ def main():
     ap.add_argument("--guard", type=float, default=0.38,
                     help="stop the plan if the client comes this close to a relay (m): near contact; passing a parked relay in a corridor is fine")
     ap.add_argument("--max-fail", type=int, default=2, help="reject a goal after this many failed attempts")
+    ap.add_argument("--reject-reset", type=float, default=120.0, help="sim s without an accepted goal -> forget failed and visited goals")
     ap.add_argument("--stuck-s", type=float, default=40.0, help="sim s without client progress -> back up")
     ap.add_argument("--max-skip", type=int, default=2,
                     help="reject a goal skipped this many times at once, until a robot moves >= 1.5 m ...")

@@ -1,0 +1,2 @@
+big_u_nav2_P50 result=plateau coverage=65.1% wall_min=62 world=unist P0=-50 extra=--yield-r 0 --guard 0
+big_h_nav2_P50 result=plateau coverage=18.7% wall_min=50 world=hospital P0=-50 extra=--yield-r 0 --guard 0
