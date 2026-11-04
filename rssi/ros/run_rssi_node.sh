@@ -17,11 +17,13 @@
 # between this and safe_robot silently drops every message.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+if [ -n "${RELAY_HOSTS:-}" ]; then DDS_ENV="-e ROS_LOCALHOST_ONLY=1"
+else DDS_ENV="-e ROS_LOCALHOST_ONLY=0 -e FASTRTPS_DEFAULT_PROFILES_FILE=/fair/hospital_world/mesh_peers.xml"; fi
 docker image inspect fair_rssi:humble >/dev/null 2>&1 || docker build -t fair_rssi:humble "$ROOT/rssi/ros"
 docker rm -f fair_rssi >/dev/null 2>&1 || true
 mkdir -p "$ROOT/rssi/out/live"
 docker run -d --name fair_rssi --network host --ipc host \
-  -e ROS_DOMAIN_ID=42 -e ROS_LOCALHOST_ONLY=0 \
+  -e ROS_DOMAIN_ID=42 $DDS_ENV \
   -v "$ROOT":/fair:ro -v "$ROOT/rssi/out/live":/live \
   fair_rssi:humble \
   /entrypoint.sh python3 -u /fair/rssi/ros/rssi_monitor.py "$@" >/dev/null

@@ -11,25 +11,11 @@
 # NOTE on the frame: `map` is the CHAIN ROBOT's map origin, which is its spawn at
 # world (0, 12) - not the world origin. So map (0,0) is world (0,12).
 set -euo pipefail
-source "$HOME/.fair_chain.env" 2>/dev/null || { echo "missing ~/.fair_chain.env (needs NUC2_SSH_PASSWORD)"; exit 1; }
-NS="${1:?usage: waypoint.sh <relay1|relay2> <x y [x y ...]> | stop}"; shift
+HW="$(cd "$(dirname "$0")" && pwd)"
+NS="${1:?usage: waypoint.sh <relayN> <x y [x y ...]> | stop}"; shift
+read -r _ TARGET CONTAINER < <(awk -v n="$NS" '$1 == n' "$HW/relay_hosts.conf")
+[ -n "${TARGET:-}" ] || { echo "$NS is not in relay_hosts.conf"; exit 1; }
 
 if [ "${1:-}" = "stop" ]; then CMD="stop_robot.py $NS"; else CMD="send_waypoints.py $NS $*"; fi
 RUN="export ROS_DOMAIN_ID=42 ROS_LOCALHOST_ONLY=0; ros2 run saye_bringup $CMD"
-
-case "$NS" in
-  relay1) docker exec -it nuc1 /entrypoint.sh bash -c "$RUN" ;;
-  relay2) python3 - "$RUN" <<'PY'
-import paramiko, sys, os
-c = paramiko.SSHClient(); c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-c.connect('10.195.221.0', username='asl', password=os.environ['NUC2_SSH_PASSWORD'], timeout=20)
-i, o, e = c.exec_command("docker exec nuc2 /entrypoint.sh bash -c '%s'" % sys.argv[1], timeout=300)
-for line in iter(o.readline, ''): print(line, end='')
-err = e.read().decode()
-if err.strip(): print('ERR:', err[:400])
-try: c.close()
-except Exception: pass
-PY
-    ;;
-  *) echo "unknown relay '$NS' (expected relay1 or relay2)"; exit 1 ;;
-esac
+ssh -o BatchMode=yes "$TARGET" "docker exec $CONTAINER /entrypoint.sh bash -c '$RUN'"

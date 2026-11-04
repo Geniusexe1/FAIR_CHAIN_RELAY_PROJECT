@@ -6,7 +6,7 @@
 #   rssi/ros/run_exploration.sh --P0 -60.8      # measured 5 GHz P0
 #
 # Needs, already running: the chain stack WITHOUT --explore (gazebo, FAST-LIO, Nav2 ...),
-# both relays spawned with their Nav2 up (run_relay1_nuc1.sh, run_relay2_nuc2.sh).
+# every relay spawned with its Nav2 up (hospital_world/run_relay.sh).
 #
 # 1. fair_coord container: exploration_coordinator.py (extra args go to it)
 # 2. in safe_robot: the frontier detector + explorer, with the explorer's
@@ -18,10 +18,12 @@
 # Stop:    docker rm -f fair_coord; docker exec safe_robot pkill -f frontier
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+if [ -n "${RELAY_HOSTS:-}" ]; then DDS_ENV="-e ROS_LOCALHOST_ONLY=1"
+else DDS_ENV="-e ROS_LOCALHOST_ONLY=0 -e FASTRTPS_DEFAULT_PROFILES_FILE=/fair/hospital_world/mesh_peers.xml"; fi
 docker image inspect fair_rssi:humble >/dev/null 2>&1 || docker build -t fair_rssi:humble "$ROOT/rssi/ros"
 docker rm -f fair_coord >/dev/null 2>&1 || true
 docker run -d --name fair_coord --network host --ipc host \
-  -e ROS_DOMAIN_ID=42 -e ROS_LOCALHOST_ONLY=0 \
+  -e ROS_DOMAIN_ID=42 $DDS_ENV \
   -v "$ROOT":/fair:ro -v "$ROOT/rssi/out/live_runs":/live_runs \
   fair_rssi:humble \
   /entrypoint.sh python3 -u /fair/rssi/ros/exploration_coordinator.py "$@" \

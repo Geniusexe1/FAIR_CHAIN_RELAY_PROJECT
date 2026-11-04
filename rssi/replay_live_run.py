@@ -25,8 +25,8 @@ from network import NoiseParams                              # noqa: E402
 from relay_planner import Predictor                          # noqa: E402
 from phase1_heatmap import walls_overlay                     # noqa: E402
 
-COL = {"head": "#d62728", "relay1": "#1f77b4", "relay2": "#2ca02c"}
-CSV_KEY = {"head": "head", "relay1": "relay1", "relay2": "relay2"}
+COL = {"head": "#d62728", "relay1": "#1f77b4", "relay2": "#2ca02c", "relay3": "#9467bd"}
+CSV_KEY = {n: n for n in COL}
 
 
 def tod(s):                         # "HH:MM:SS" -> seconds of the day
@@ -112,13 +112,14 @@ def main():
     trails = {n: ax.plot([], [], "-", color=c, lw=1.2, alpha=0.6, zorder=5)[0] for n, c in COL.items()}
     dots = {n: ax.plot([], [], "D" if n == "head" else "o", ms=9, color=c, mec="k", zorder=9)[0]
             for n, c in COL.items()}
-    links = [ax.plot([], [], "-", lw=3, zorder=7)[0] for _ in range(4)]
+    links = [ax.plot([], [], "-", lw=3, zorder=7)[0] for _ in range(5)]
     labels = [ax.text(0, 0, "", fontsize=8, ha="center", zorder=10,
-                      bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.85)) for _ in range(4)]
+                      bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.85)) for _ in range(5)]
     from matplotlib.lines import Line2D
     ax.legend(handles=[Line2D([], [], ls="", marker="D", color=COL["head"], mec="k", label="chain_robot (client)"),
                        Line2D([], [], ls="", marker="o", color=COL["relay1"], mec="k", label="relay1"),
                        Line2D([], [], ls="", marker="o", color=COL["relay2"], mec="k", label="relay2"),
+                       Line2D([], [], ls="", marker="o", color=COL["relay3"], mec="k", label="relay3"),
                        Line2D([], [], ls="", marker="*", ms=12, color="#ff7f0e", mec="k", label="current goal"),
                        Line2D([], [], color="#2ca02c", lw=3, label="link > -65 dBm"),
                        Line2D([], [], color="#e6b800", lw=3, label="link -65..-85"),

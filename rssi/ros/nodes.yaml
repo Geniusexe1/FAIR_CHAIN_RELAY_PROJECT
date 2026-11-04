@@ -24,6 +24,11 @@ relay2:
   offset: [0.0, 0.0]
   park: [-1.75, 13.0]
 
+relay3:
+  topic: /relay3/odom
+  offset: [0.0, 0.0]
+  park: [-3.2, 13.6]
+
 head:
   topic: /Odometry
   offset: [0.0, 12.0]

@@ -58,7 +58,8 @@ class PlannerParams:            # paper Table I unless noted
     C_p: float = 1.0            # UCT balancing coefficient
     n_routes: int = 3           # candidate trajectories per robot (|J|)       -- ours
     route_ratio: float = 1.6    # candidates up to this x the shortest route   -- ours
-    d_sep: float = 0.8          # min distance between robots at every waypoint (m) -- ours
+    d_sep: float = 0.5          # min distance between robots at every waypoint (m): just over the bodies
+                                # (0.35 m); closer encounters are the coordinator's right of way -- ours
     pass_clear: float = 0.9     # a robot standing still in a corridor at least 2x this wide does not
                                 # block a route: Nav2 drives around it                       -- ours
     keep_deployed: bool = False # True: relays never move once placed; False (paper):

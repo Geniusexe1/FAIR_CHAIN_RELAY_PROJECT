@@ -76,7 +76,7 @@ class Coordinator(RosNode):
         cfg = yaml.safe_load(open(a.config))
         names = list(cfg)
         self.gcs_xy = tuple(cfg[names[0]]["xy"])
-        self.pp = PlannerParams(sigma=a.sigma_n, keep_deployed=a.keep_deployed)
+        self.pp = PlannerParams(sigma=a.sigma_n, keep_deployed=a.keep_deployed, d_sep=a.d_sep)
         self.gcs_name = names[0]
         self.planner = RelayPlanner(grid, rg, pred, self.gcs_xy, self.pp, gcs_name=self.gcs_name)
         self.off = np.array(a.map_offset)                    # world = map + off
@@ -489,6 +489,7 @@ class Coordinator(RosNode):
             t_start = self.get_clock().now()                  # SIM time: plans are in sim seconds
             watch = {"xy": self.client.xy, "t": 0.0, "n": 0}  # client stuck watchdog
             retries = {}                                      # relay waypoint re-sends
+            held, seps, no_hold = {}, {}, {}                  # right of way (_give_way)
             waiting = sorted((n for n in movers if start[n] > 0), key=lambda n: start[n])
             for n in movers:
                 if start[n] <= 0:
@@ -511,13 +512,14 @@ class Coordinator(RosNode):
                 while waiting and el >= start[waiting[0]]:
                     launch(waiting.pop(0))                    # delayed start: arrives with the rest
                 # keep the ETAs equal: v_r = remaining_r / T_remaining, never below the floor
-                rem = {n: fb[n] for n in movers if n in fb and n not in done}
+                rem = {n: fb[n] for n in movers if n in fb and n not in done and n not in held}
                 if rem:
                     T = max(rem[n] / self.robots[n].vmax for n in rem)
                     for n in rem:
                         self._limit(n, max(rem[n] / T if T > 0 else self.robots[n].vmax, self._floor(n)))
-                # runtime guard: the plan assumes every robot starts when told; a relay that has
-                # not (slow Ackermann start-up) can sit on the client's path (UNIST run 2: 0.27 m)
+                self._give_way(t, el, movers, done, handles, held, seps, no_hold, launch)
+                # runtime guard, last resort: the plan assumes every robot starts when told; a relay
+                # that has not (slow Ackermann start-up) can sit on the client's path (UNIST run 2: 0.27 m)
                 cxy = self.client.xy
                 close = [r.name for r in self.relays
                          if cxy and r.xy and math.dist(cxy, r.xy) < self.a.guard]
@@ -572,6 +574,37 @@ class Coordinator(RosNode):
         gh.succeed()
         return NavigateToPose.Result()
 
+    def _give_way(self, t, el, movers, done, handles, held, seps, no_hold, launch):
+        """Right of way between robots driving at each other: the client first, then relay1, relay2...
+        The one with less priority stops until the other has passed, and its Nav2 and the other's
+        steer around whatever stands still. A hold is bounded: two robots blocking a corridor must
+        not wait for each other for ever."""
+        rank = sorted(movers, key=lambda n: (n != self.client_name, n))
+        driving = [n for n in rank if n in handles and n not in done]
+        for n in list(held):
+            m, t0, sep0 = held[n]
+            sep = math.dist(self.robots[n].xy, self.robots[m].xy)
+            if m in done or sep > max(self.a.yield_r, sep0) + 0.2 or el - t0 > self.a.yield_max:
+                self.get_logger().info(f"interval {t}: {n} goes on ({m} at {sep:.2f} m, held {el - t0:.0f} s)")
+                del held[n]
+                no_hold[n] = el + self.a.yield_max              # gets its turn: no second hold straight away
+                launch(n)
+        for i, n in enumerate(rank):
+            if n == self.client_name or n not in driving or n in held or el < no_hold.get(n, 0.0):
+                continue
+            for m in rank[:i]:
+                if m not in driving or m in held:
+                    continue
+                sep = math.dist(self.robots[n].xy, self.robots[m].xy)
+                closing = sep < seps.get((n, m), np.inf)
+                seps[(n, m)] = sep
+                if sep < self.a.yield_r and closing:
+                    self.get_logger().info(f"interval {t}: {n} gives way to {m} ({sep:.2f} m)")
+                    handles.pop(n).cancel_goal_async()
+                    held[n] = (m, el, sep)
+                    self._state(event="give_way", t=t, robot=n, to=m, sep=round(sep, 2))
+                    break
+
     def _back_up(self, dist):
         if not self.backup.wait_for_server(timeout_sec=5.0):
             self.get_logger().error("/backup not available")
@@ -620,7 +653,10 @@ def main():
     ap.add_argument("--interval-slack", type=float, default=90.0, help="+ sim seconds per interval (start-up)")
     ap.add_argument("--map-offset", nargs=2, type=float, default=[0.0, 12.0], help="world = map + offset")
     ap.add_argument("--keep-deployed", action="store_true")
-    ap.add_argument("--guard", type=float, default=0.45,
+    ap.add_argument("--d-sep", type=float, default=PlannerParams.d_sep, help="planned robot separation (m)")
+    ap.add_argument("--yield-r", type=float, default=0.8, help="a relay closing within this of a robot with right of way stops (m)")
+    ap.add_argument("--yield-max", type=float, default=30.0, help="longest such stop (sim s)")
+    ap.add_argument("--guard", type=float, default=0.38,
                     help="stop the plan if the client comes this close to a relay (m): near contact; passing a parked relay in a corridor is fine")
     ap.add_argument("--max-fail", type=int, default=2, help="reject a goal after this many failed attempts")
     ap.add_argument("--stuck-s", type=float, default=40.0, help="sim s without client progress -> back up")

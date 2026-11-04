@@ -23,6 +23,13 @@ relay2:
   park: [7.2, -7.2]
   park_yaw: 3.1416
 
+relay3:
+  topic: /relay3/odom
+  offset: [0.0, 0.0]
+  # the mouth of the next alcove west, facing east: drives straight out, like relay2
+  park: [-6.92, -6.98]
+  park_yaw: 0.0
+
 head:
   topic: /Odometry
   offset: [-0.5, -6.0]

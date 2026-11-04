@@ -20,7 +20,8 @@ from phase1_heatmap import walls_overlay             # noqa: E402
 
 GT = os.path.join(os.path.dirname(HERE), os.environ.get("FAIR_GT", "hospital_world/gt/hospital_gt"))   # FAIR_GT=hospital_world/unist/gt/unist_gt
 ROBOTS = {"head": ("chain_robot (client)", "#d62728", "D"),
-          "relay1": ("relay1", "#1f77b4", "o"), "relay2": ("relay2", "#2ca02c", "o")}
+          "relay1": ("relay1", "#1f77b4", "o"), "relay2": ("relay2", "#2ca02c", "o"),
+          "relay3": ("relay3", "#9467bd", "o")}
 
 
 def main():
