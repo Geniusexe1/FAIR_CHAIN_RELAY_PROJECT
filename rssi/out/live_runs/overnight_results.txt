@@ -1,1 +1,2 @@
-big_u_nav2_P50 result=plateau coverage=65.1% wall_min=62 world=unist P0=-50 extra=--yield-r 0 --guard 0
+v3_u_nav2 result=plateau coverage=95.6% wall_min=157 world=unist P0=-45 extra=--yield-r 0 --guard 0
+v3_u_full result=complete coverage=100.0% wall_min=100 world=unist P0=-45 extra=

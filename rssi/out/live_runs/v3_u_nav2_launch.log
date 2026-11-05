@@ -1,0 +1,21 @@
+[1/5] chain stack
+  ok  gazebo (~60 s, 169 MB of meshes)
+  ok  fast_lio
+  ok  occ_grid
+  ok  controller
+  ok  path planner
+  ok  Nav2 / (chain_robot) active
+  ok  chain_robot may turn in place; costmap radius 0.2 global / 0.12 local
+  ok  map throttled for the mesh (/map_mesh)
+[2/5] relays at their parking spots
+  ok  relay1 at (-1.05, -7.6)
+  ok  relay2 at (7.2, -7.2)
+[3/5] relay brains
+[relay1] Nav2 starting on asl@10.195.221.0 in nuc2. tail: ssh asl@10.195.221.0 docker exec nuc2 tail -f /tmp/relay1_nav.log
+[relay2] Nav2 starting on asl@10.195.220.0 in nuc3. tail: ssh asl@10.195.220.0 docker exec nuc3 tail -f /tmp/relay2_nav.log
+[4/5] Nav2 of every relay
+  ok  Nav2 /relay1 active
+  ok  Nav2 /relay2 active (after restart)
+[5/5] RSSI monitor, coordinator, explorer, logger
+explorer started in safe_robot (/tmp/7a_detector.log, /tmp/7b_explore.log)
+logging ground truth to rssi/out/live_runs/v3_u_nav2.csv

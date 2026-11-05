@@ -1,0 +1,462 @@
+[INFO] [1793852495.399713562] [exploration_coordinator]: P0 -45.0 | req -81.68 dBm (Pr[link >= -85.0] >= 0.75) | client head, relays ['relay1', 'relay2'] | t_f 5 | re-place engaged relays (paper)
+[INFO] [1793852559.604017134] [exploration_coordinator]: goal world (6.40, -6.80): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.5 s) | targets head (6.40, -6.80)
+[INFO] [1793852610.475838035] [exploration_coordinator]: goal world (11.10, -6.10): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.4 s) | targets head (11.10, -6.10)
+[INFO] [1793852628.069627793] [exploration_coordinator]: relay1 drifted 1.39 m from its spot - sending it back
+[INFO] [1793852628.120914951] [exploration_coordinator]: relay2 drifted 1.25 m from its spot - sending it back
+[INFO] [1793852638.529736351] [exploration_coordinator]: goal world (15.50, -6.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.4 s) | targets head (15.50, -6.40)
+[INFO] [1793852683.299249210] [exploration_coordinator]: goal world (20.90, -6.70): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.2 s) | targets head (20.90, -6.70)
+[INFO] [1793852726.448385147] [exploration_coordinator]: goal world (-7.20, -6.10): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.4 s) | targets head (-7.20, -6.10)
+[INFO] [1793852929.250308365] [exploration_coordinator]: relay2 drifted 0.36 m from its spot - sending it back
+[INFO] [1793852954.238547527] [exploration_coordinator]: relay1 drifted 0.48 m from its spot - sending it back
+[INFO] [1793853000.426425078] [exploration_coordinator]: relay2 drifted 0.41 m from its spot - sending it back
+[INFO] [1793853046.340292217] [exploration_coordinator]: relay2 drifted 0.48 m from its spot - sending it back
+[WARN] [1793853087.086609652] [exploration_coordinator]: no goal accepted for 155 s - forgetting 0 failed and 5 visited goals
+[INFO] [1793853087.546938125] [exploration_coordinator]: goal world (-13.10, -6.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.5 s) | targets head (-13.10, -6.40)
+[INFO] [1793853134.349864951] [exploration_coordinator]: goal world (-18.10, -6.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.3 s) | targets head (-18.10, -6.40)
+[INFO] [1793853173.356143046] [exploration_coordinator]: goal world (-23.90, -5.90): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.3 s) | targets head (-23.90, -5.90)
+[INFO] [1793853224.701049854] [exploration_coordinator]: goal world (-23.50, 0.60): DEPLOY [gcs > relay1 > head] 1 relay(s) moved (t_f 5); final route gcs > relay1 > head, weakest hop -71.3 (3.6 s) | targets relay1 (-18.89, -6.13), head (-23.50, 0.60)
+[WARN] [1793853367.721471044] [exploration_coordinator]: interval 1: ['relay1'] did not reach their waypoint - stopping the plan
+[INFO] [1793853370.505340668] [exploration_coordinator]: goal world (-23.50, 1.80): DEPLOY [gcs > relay1 > head] 1 relay(s) moved (t_f 5); final route gcs > relay1 > head, weakest hop -71.1 (2.4 s) | targets relay1 (-19.25, -6.13), head (-23.50, 1.80)
+[INFO] [1793853514.960852381] [exploration_coordinator]: relay2 drifted 0.35 m from its spot - sending it back
+[WARN] [1793853714.073038201] [exploration_coordinator]: interval 1 timed out
+[WARN] [1793853714.073629214] [exploration_coordinator]: interval 1: ['relay1'] did not reach their waypoint - stopping the plan
+[WARN] [1793853715.093862121] [exploration_coordinator]: no goal accepted for 139 s - forgetting 0 failed and 3 visited goals
+[INFO] [1793853726.041110270] [exploration_coordinator]: goal world (-23.40, 2.70): DEPLOY [gcs > relay1 > head] 2 relay(s) moved (t_f 5); final route gcs > relay1 > head, weakest hop -74.0 (10.9 s) | targets relay2 (-10.04, -6.13), relay1 (-21.73, -6.33), head (-23.40, 2.70)
+[WARN] [1793854149.897570760] [exploration_coordinator]: interval 5 timed out
+[WARN] [1793854149.897861042] [exploration_coordinator]: interval 5: ['relay2'] did not reach their waypoint - stopping the plan
+[INFO] [1793854152.344525348] [exploration_coordinator]: goal world (-18.40, 2.50): DEPLOY [gcs > relay1 > head] 1 relay(s) moved (t_f 5); final route gcs > relay1 > head, weakest hop -74.5 (2.2 s) | targets relay1 (-23.37, -4.06), head (-18.40, 2.50)
+[INFO] [1793854181.901234299] [exploration_coordinator]: relay2 drifted 0.35 m from its spot - sending it back
+[INFO] [1793854230.137133252] [exploration_coordinator]: relay2 drifted 0.37 m from its spot - sending it back
+[INFO] [1793854398.188725560] [exploration_coordinator]: relay2 drifted 0.33 m from its spot - sending it back
+[INFO] [1793854472.409611291] [exploration_coordinator]: relay2 drifted 0.36 m from its spot - sending it back
+[WARN] [1793854572.265393117] [exploration_coordinator]: interval 4 timed out
+[WARN] [1793854572.266117507] [exploration_coordinator]: interval 4: ['relay1'] did not reach their waypoint - stopping the plan
+[INFO] [1793854576.405584043] [exploration_coordinator]: goal world (13.80, 1.00): DEPLOY [gcs > head] 1 relay(s) moved (t_f 5); final route gcs > relay2 > head, weakest hop -67.8 (3.3 s) | targets relay2 (13.83, -4.56), head (13.80, 1.00)
+[INFO] [1793854623.381736352] [exploration_coordinator]: relay1 drifted 0.32 m from its spot - sending it back
+[INFO] [1793854712.789303169] [exploration_coordinator]: relay1 drifted 0.40 m from its spot - sending it back
+[INFO] [1793854803.860300484] [exploration_coordinator]: relay1 drifted 0.40 m from its spot - sending it back
+[INFO] [1793854896.681532051] [exploration_coordinator]: relay1 drifted 0.45 m from its spot - sending it back
+[INFO] [1793855065.968712806] [exploration_coordinator]: relay1 drifted 0.34 m from its spot - sending it back
+[INFO] [1793855165.648871033] [exploration_coordinator]: relay1 drifted 0.40 m from its spot - sending it back
+[WARN] [1793855195.076224604] [exploration_coordinator]: no goal accepted for 259 s - forgetting 0 failed and 1 visited goals
+[INFO] [1793855195.516724703] [exploration_coordinator]: goal world (13.80, 1.00): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.4 s) | targets head (13.80, 1.00)
+[INFO] [1793855218.766766023] [exploration_coordinator]: relay1 drifted 23.00 m from its spot - sending it back
+[INFO] [1793855218.824621946] [exploration_coordinator]: relay2 drifted 7.29 m from its spot - sending it back
+[INFO] [1793855342.382039257] [exploration_coordinator]: relay1 drifted 8.61 m from its spot - sending it back
+[INFO] [1793855366.984996025] [exploration_coordinator]: relay2 drifted 0.38 m from its spot - sending it back
+[INFO] [1793855374.823407437] [exploration_coordinator]: goal world (11.80, 3.50): SKIP [gcs > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (25.7 s)
+[INFO] [1793855396.568457164] [exploration_coordinator]: goal world (11.80, 3.30): SKIP [gcs > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (21.7 s)
+[INFO] [1793855396.612027223] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793855411.340742590] [exploration_coordinator]: goal world (-12.20, 3.40): DEPLOY [gcs > head] 2 relay(s) moved (t_f 12); final route gcs > relay2 > relay1 > head, weakest hop -73.5 (14.7 s) | targets relay2 (-20.46, -6.13), relay1 (-23.37, 1.40), head (-12.20, 3.40)
+[INFO] [1793855596.002968357] [exploration_coordinator]: interval 1: relay1 aborted - re-sending its waypoint (1)
+[WARN] [1793855714.017587460] [exploration_coordinator]: interval 1: ['head'] did not reach their waypoint - stopping the plan
+[WARN] [1793855715.067553288] [exploration_coordinator]: no goal accepted for 125 s - forgetting 1 failed and 1 visited goals
+[INFO] [1793855733.989434461] [exploration_coordinator]: goal world (15.70, 3.40): SKIP [gcs > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (18.9 s)
+[INFO] [1793855755.772339580] [exploration_coordinator]: goal world (11.70, 3.40): SKIP [gcs > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (18.6 s)
+[INFO] [1793855755.811411731] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793855762.766614291] [exploration_coordinator]: relay2 drifted 0.45 m from its spot - sending it back
+[INFO] [1793855771.542302864] [exploration_coordinator]: goal world (-12.20, 3.40): DEPLOY [gcs > head] 2 relay(s) moved (t_f 12); final route gcs > relay2 > relay1 > head, weakest hop -73.5 (15.7 s) | targets relay2 (-20.46, -6.13), relay1 (-23.37, 1.40), head (-12.20, 3.40)
+[WARN] [1793856564.038122444] [exploration_coordinator]: interval 12 timed out
+[WARN] [1793856564.038442419] [exploration_coordinator]: interval 12: ['relay2'] did not reach their waypoint - stopping the plan
+[INFO] [1793856568.611703531] [exploration_coordinator]: goal world (2.20, 3.40): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.6 s) | targets head (2.20, 3.40)
+[INFO] [1793856623.240598120] [exploration_coordinator]: relay1 drifted 24.56 m from its spot - sending it back
+[INFO] [1793856623.355856168] [exploration_coordinator]: relay2 drifted 26.05 m from its spot - sending it back
+[INFO] [1793856624.557552668] [exploration_coordinator]: goal world (-1.90, 3.10): SKIP [gcs > head] 2 relay(s) could be placed but no trajectories keep every step (17.5 s)
+[INFO] [1793856624.649667321] [exploration_coordinator]: goal world (5.30, 5.10): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.0 s) | targets head (5.30, 5.10)
+[INFO] [1793856710.064075591] [exploration_coordinator]: goal world (5.10, 5.10): REJECTED - already visited (within 0.6 m of the client or a reached goal)
+[INFO] [1793856734.095460050] [exploration_coordinator]: goal world (15.70, 3.40): SKIP [gcs > head] 2 relay(s) could be placed but no trajectories keep every step (24.0 s)
+[INFO] [1793856735.702671877] [exploration_coordinator]: goal world (-1.10, 5.10): DEPLOY [gcs > relay2 > head] 1 relay(s) moved (t_f 5); final route gcs > relay2 > head, weakest hop -65.8 (1.5 s) | targets relay2 (3.63, 1.40), head (-1.10, 5.10)
+[WARN] [1793857273.013072005] [exploration_coordinator]: interval 5 timed out
+[WARN] [1793857273.014163054] [exploration_coordinator]: interval 5: ['relay2'] did not reach their waypoint - stopping the plan
+[WARN] [1793857274.061799035] [exploration_coordinator]: no goal accepted for 218 s - forgetting 0 failed and 2 visited goals
+[INFO] [1793857274.062676067] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857274.170849440] [exploration_coordinator]: goal world (-7.90, 4.20): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.1 s) | targets head (-7.90, 4.20)
+[INFO] [1793857356.835695852] [exploration_coordinator]: relay2 drifted 0.39 m from its spot - sending it back
+[INFO] [1793857380.717072291] [exploration_coordinator]: relay1 drifted 24.94 m from its spot - sending it back
+[INFO] [1793857383.804934006] [exploration_coordinator]: relay2 drifted 0.41 m from its spot - sending it back
+[INFO] [1793857411.122682690] [exploration_coordinator]: goal world (-11.30, 3.40): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.1 s) | targets head (-11.30, 3.40)
+[INFO] [1793857451.062945590] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857451.202723399] [exploration_coordinator]: goal world (-15.40, 4.90): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.0 s) | targets head (-15.40, 4.90)
+[INFO] [1793857451.343382924] [exploration_coordinator]: relay2 drifted 0.30 m from its spot - sending it back
+[INFO] [1793857484.067232708] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857497.156258620] [exploration_coordinator]: goal world (-20.00, 5.20): SKIP [gcs > relay2 > head] no feasible plan with 2 relays (13.0 s)
+[INFO] [1793857497.278533284] [exploration_coordinator]: goal world (15.70, 3.40): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.1 s) | targets head (15.70, 3.40)
+[INFO] [1793857669.218470697] [exploration_coordinator]: relay1 drifted 25.07 m from its spot - sending it back
+[INFO] [1793857669.272588771] [exploration_coordinator]: relay2 drifted 0.33 m from its spot - sending it back
+[INFO] [1793857719.527508680] [exploration_coordinator]: relay2 drifted 0.37 m from its spot - sending it back
+[INFO] [1793857762.124922805] [exploration_coordinator]: goal world (20.70, 3.70): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.1 s) | targets head (20.70, 3.70)
+[INFO] [1793857818.533245943] [exploration_coordinator]: goal world (26.00, 2.60): SKIP [gcs > relay2 > head] 2 relay(s) could be placed but no trajectories keep every step (12.5 s)
+[INFO] [1793857827.348152907] [exploration_coordinator]: goal world (5.80, 1.10): SKIP [gcs > relay2 > head] no feasible plan with 2 relays (2.7 s)
+[INFO] [1793857840.561597490] [exploration_coordinator]: goal world (-20.00, 5.20): SKIP [gcs > relay2 > head] no feasible plan with 2 relays (13.2 s)
+[INFO] [1793857840.613233361] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857840.663619064] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857841.097612321] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857841.787971475] [exploration_coordinator]: goal world (5.80, 1.10): SKIP [gcs > relay2 > head] no feasible plan with 2 relays (0.5 s)
+[INFO] [1793857841.845666715] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857841.941450534] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857842.000228430] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857842.077352127] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857842.146878305] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857842.206515797] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857842.256685670] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857842.309378401] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857843.092017135] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857843.181328968] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857843.328785172] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857843.372952153] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857843.419936770] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857844.061862413] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857844.122757187] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857844.167688118] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857844.220330892] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857844.267240724] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857845.072617514] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857845.132111915] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857845.180152903] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857845.235145503] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857845.280961424] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857846.058553778] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857846.129967346] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857846.186934357] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857846.270876202] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857846.324423957] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857847.071801359] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857847.135753287] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857847.188856369] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857847.237100607] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857847.291325060] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857848.060201239] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857848.110898552] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857848.169201872] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857848.218230080] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857848.262506834] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857849.066714342] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857849.118280876] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857849.167934361] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857849.219623959] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857849.273533930] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857850.065651748] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857850.118088367] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857850.173401419] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857850.225797103] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857850.270139157] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857851.061624835] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857851.107078332] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857851.171681101] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857851.226829970] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857851.371328861] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857852.059889443] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857852.108415300] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857852.156921521] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857852.208993189] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857852.261246848] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857853.060653296] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857853.134916379] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857853.190077572] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857853.330367000] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857853.375161388] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857854.063153430] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857854.126252205] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857854.180539002] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857854.243890350] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857854.286892722] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857855.111049051] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857855.185605954] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857855.234636194] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857855.316763872] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857855.362234600] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857856.058992029] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857856.106519380] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857856.185585405] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857856.435929871] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857856.499401340] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857857.069245468] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857857.110082873] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857857.169683111] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857857.210531058] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857857.265888490] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857858.062996515] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857858.137275894] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857858.189697563] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857858.239881642] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857858.283547351] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857859.067794629] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857859.118305578] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857859.161745362] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857859.206045476] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857859.255996723] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857860.060902951] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857860.123150611] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857860.167430732] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857860.232101391] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857860.278143531] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857861.064383990] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857861.148480726] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857861.200678970] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857861.260698293] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857861.408707076] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857862.072514402] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857862.123005639] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857862.169555209] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857862.219416882] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857862.271109707] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857863.064976847] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857863.160252366] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857863.207480213] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857863.248921700] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857863.298123850] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857864.069836604] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857864.138884400] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857864.190353007] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857864.247474736] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857864.309461752] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857865.065292954] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857865.132965404] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857865.187931804] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857865.241279798] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857865.294604720] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857866.059262483] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857866.116241445] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857866.163754733] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857866.202639853] [exploration_coordinator]: relay2 drifted 0.35 m from its spot - sending it back
+[INFO] [1793857866.211074064] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857866.301019386] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857867.064346542] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857867.173220812] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857867.227456214] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857867.289783614] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857867.332760403] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857868.062972808] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857868.109312365] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857868.153600651] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857868.217612325] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857868.267882646] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857869.059873590] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857869.111758267] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857869.172195325] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857869.227035735] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857869.280640943] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857870.070738649] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857870.117904387] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857870.162371081] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857870.249345102] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857870.295231185] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857871.065179626] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857871.155091140] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857871.209223685] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857871.264607787] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857871.347464928] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857872.062099675] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857872.121287942] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857872.173354733] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857872.221668777] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857872.268106284] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857873.072720527] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857873.142950055] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857873.190900611] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857873.239270396] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857873.304912230] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857874.070155936] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857874.118703824] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857874.163129874] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857874.213273130] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857874.258533527] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857875.058152611] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857875.099030355] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857875.149562323] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857875.211602330] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857875.277472717] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857876.060900972] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857876.113387667] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857876.166143646] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857876.213726341] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857876.262112280] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857877.067168770] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857877.119526896] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857877.162557439] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857877.206924754] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857877.262365731] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857878.071789482] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857878.117530419] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857878.163284237] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857878.214890516] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857878.260327718] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857879.088510995] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857879.146113414] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857879.214707950] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857879.267335478] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857879.314591075] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857880.077775679] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857880.125271357] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857880.167385145] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857880.232252043] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857880.290107769] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857881.072099046] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857881.126370486] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857881.177326894] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857881.259363852] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857881.315963818] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857882.062107461] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857882.117179390] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857882.182950081] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857882.226733571] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857882.279203488] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857883.077536515] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857883.185945184] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857883.260697070] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857883.327913730] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857883.389492467] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857884.069320031] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857884.119281892] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857884.169153815] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857884.227839854] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857884.280324036] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857885.067693453] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857885.147240912] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857885.193325262] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857885.285787995] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857885.351155880] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857886.069155877] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857886.134034649] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857886.186710545] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857886.231310283] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857886.282348234] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857887.071863938] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857887.164960105] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857887.231186262] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857887.278763149] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857887.337358672] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857888.059383433] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857888.119965912] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857888.185244943] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857888.231067878] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857888.279926577] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857889.067917454] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857889.120073162] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857889.175128474] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857889.237632028] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857889.281844032] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857890.060294960] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857890.121907856] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857890.171714115] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857890.229313932] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857890.283060560] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857891.076686499] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857891.221596178] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857891.268254623] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857891.334266719] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857891.393931056] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857892.077335936] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857892.128784007] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857892.176446205] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857892.231495520] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857892.278357569] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857893.061818941] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857893.130711931] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857893.178404979] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857893.242387219] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857893.291873153] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857894.069392012] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857894.145676618] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857894.210442833] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857894.257425956] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857894.302615733] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857895.091852065] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857895.162108476] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857895.225609386] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857895.320186810] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857895.367330241] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857896.060700707] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857896.106623197] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857896.160336480] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857896.215620070] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857896.266932609] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857897.060051564] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857897.113569080] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857897.187378818] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857897.239082639] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857897.296441166] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857898.060466685] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857898.114104055] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857898.159211131] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857898.206368649] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857898.252997331] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857899.073328061] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857899.127914537] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857899.204004671] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857899.258345358] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857899.308216843] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857900.070911802] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857900.135504046] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857900.177287784] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857900.622353450] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857900.684078420] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857903.620463261] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857903.666650545] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857903.718456270] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857903.764998882] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857903.820506947] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857904.068599813] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857904.120937859] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857904.176415800] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857904.218825743] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857904.290426594] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857905.058064651] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857905.111479240] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857905.156400205] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857905.837540322] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857905.891275153] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857906.061059058] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857906.108900134] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857906.158956621] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857906.206120132] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857906.288395414] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857907.067434857] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857907.120356928] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857907.178877148] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857907.238453791] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857907.451368947] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857908.070182224] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857908.121742710] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857908.170856289] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857908.224419144] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857908.273249729] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857909.065367996] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857909.136636316] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857909.180201135] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857909.223089758] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857909.276931299] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857910.061146924] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857910.111496236] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857910.166841532] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857910.238342958] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857910.285644875] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857911.067451085] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857911.138999948] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857911.200173368] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857911.266775711] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857911.322272189] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857912.066143891] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857912.141328227] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857912.195335780] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857912.239529205] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857912.281100181] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857913.061045982] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857913.110367273] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857913.159965104] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857913.226047214] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857913.268485998] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857914.068261917] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857914.134031595] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857914.180895330] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857914.227000287] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857914.275519378] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857915.067985507] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857915.166676370] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857915.210056496] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857915.285331888] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857915.371186299] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857916.062677608] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
+[INFO] [1793857916.109501885] [exploration_coordinator]: goal world (5.80, 1.10): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857916.153855437] [exploration_coordinator]: goal world (-20.00, 5.20): REJECTED - skipped 2 times, nothing has moved since
+[INFO] [1793857916.196813579] [exploration_coordinator]: goal world (-22.00, 7.50): REJECTED - outside the map
