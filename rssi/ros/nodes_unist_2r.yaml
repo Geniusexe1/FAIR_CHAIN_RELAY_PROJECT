@@ -1,0 +1,28 @@
+# Nodes for the UNIST world (hospital_world/unist/unist_indoor.world). The FIRST entry is the GCS.
+# Same format as nodes.yaml. World = pose + offset:
+#   relays : the drive plugin publishes the model's WORLD pose          -> offset 0
+#   head   : FAST-LIO /Odometry starts at chain_robot's spawn (-0.5, -6) -> offset (-0.5, -6)
+gcs:
+  # A virtual radio (no body) in the corridor 2 m east of chain_robot's spawn.
+  xy: [1.5, -6.1]
+
+# park: one relay per alcove between the room blocks on the south wall, off the corridor
+# (each alcove fits one car: 0.85 m clearance at these spots)
+relay1:
+  topic: /relay1/odom
+  offset: [0.0, 0.0]
+  park: [-1.05, -7.6]
+
+relay2:
+  topic: /relay2/odom
+  offset: [0.0, 0.0]
+  # The MOUTH of the alcove at (6.7, -7.6), facing west: relay2's controller runs on NUC2 over the
+  # mesh at ~10 Hz and could not make the S-turn out of the alcove itself (unist5: every plan that
+  # moved it failed). Here it drives straight out, and it is 0.8 m off the corridor's road (the
+  # client passes; a relay ON a road blocks every plan through it -- d_sep).
+  park: [7.2, -7.2]
+  park_yaw: 3.1416
+
+head:
+  topic: /Odometry
+  offset: [-0.5, -6.0]

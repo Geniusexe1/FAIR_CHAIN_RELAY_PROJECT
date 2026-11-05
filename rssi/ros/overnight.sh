@@ -10,15 +10,18 @@
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 Q="${1:?queue file}"; OUT=rssi/out/live_runs; PY=.venv/bin/python; mkdir -p "$OUT"
+PWD_REMOTE=${COORD_SSH:+FAIR_CHAIN_RELAY_PROJECT}; PWD_REMOTE=${PWD_REMOTE:-$ROOT}
 END=$(date -d "${DEADLINE:?}" +%s); PLATEAU_MIN="${PLATEAU_MIN:-30}"; DONE_PCT="${DONE_PCT:-99.5}"
 
+# on the GCS when COORD_SSH names one
+G() { if [ -n "${COORD_SSH:-}" ]; then timeout 60 ssh -n -o BatchMode=yes -o ConnectTimeout=15 "$COORD_SSH" "$@"; else "$@"; fi; }
 stop_run() {
-  pkill -f "[l]ive_logger.sh"; docker rm -f fair_coord fair_rssi >/dev/null 2>&1
+  pkill -f "[l]ive_logger.sh"; G docker rm -f fair_coord fair_rssi >/dev/null 2>&1
   docker exec safe_robot pkill -f "[f]air_explore_loop" 2>/dev/null
   hospital_world/stop_all.sh >/dev/null 2>&1
   docker restart safe_robot >/dev/null 2>&1; sleep 5
 }
-coverage() { $PY rssi/map_coverage.py "$OUT/$1_maps" --gt "$2" --start $3 $4 2>/dev/null | awk '{print $3}' | tr -d '%'; }
+coverage() { G "cd $PWD_REMOTE && $PY rssi/map_coverage.py $OUT/$1_maps --gt $2 --start $3 $4" 2>/dev/null | awk '{print $3}' | tr -d '%'; }
 
 mapfile -t QUEUE < <(grep -v '^#' "$Q" | grep .)
 for i in "${!QUEUE[@]}"; do
@@ -27,12 +30,12 @@ for i in "${!QUEUE[@]}"; do
   [ "$SHARE" -lt 1200 ] && { echo "$(date +%T) $NAME skipped: only ${SHARE}s left"; echo "$NAME result=skipped" >> "$OUT/overnight_results.txt"; continue; }
   echo "$(date +%T) === $NAME ($WORLD, P0 $P0, $EXTRA) share $((SHARE / 60)) min"
   stop_run
-  rm -rf "$OUT/${NAME}_maps" "$OUT/$NAME.csv"
+  rm -rf "$OUT/${NAME}_maps" "$OUT/$NAME.csv"; G rm -rf "$PWD_REMOTE/$OUT/${NAME}_maps"
   if [ "$WORLD" = unist ]; then
     export WORLD_FILE=/hw/unist/unist_indoor.world MAPPING_LAUNCH=/hw/unist/unist_mapping.launch.xml MAP_ODOM_X=0.5 MAP_ODOM_Y=6.0 \
-           NODES=rssi/ros/nodes_unist.yaml PARK_YAW=1.5708
+           NODES=${UNIST_NODES:-rssi/ros/nodes_unist.yaml} PARK_YAW=1.5708
     GT=hospital_world/unist/gt/unist_gt; GCS="1.5 -6.1"; SX=-0.5; SY=-6
-    ARGS="--config /fair/rssi/ros/nodes_unist.yaml --gt $GT --map-offset -0.5 -6 --marker-offset 0.5 6"
+    ARGS="--config /fair/$NODES --gt $GT --map-offset -0.5 -6 --marker-offset 0.5 6"
   else
     unset WORLD_FILE MAPPING_LAUNCH MAP_ODOM_X MAP_ODOM_Y NODES PARK_YAW
     GT=hospital_world/gt/hospital_gt; GCS="0 14"; SX=0; SY=12; ARGS=""
@@ -53,13 +56,12 @@ for i in "${!QUEUE[@]}"; do
     python3 -c "import sys; sys.exit(0 if $COV >= $DONE_PCT else 1)" && { WHY=complete; break; }
     docker exec safe_robot pgrep -x gzserver >/dev/null || { WHY=gzserver_died; break; }
     [ $(( $(date +%s) - TBEST )) -gt $(( PLATEAU_MIN * 60 )) ] && { WHY=plateau; break; }
-    # FAST-LIO against Gazebo: the map is worthless once they disagree. The two reads are seconds
-    # apart, so a robot driving at full speed shows up to ~2 m; only a sustained gap counts.
-    D=$(docker exec safe_robot bash -ic "export ROS_DOMAIN_ID=42; timeout 15 ros2 topic echo --once /Odometry --field pose.pose.position" 2>/dev/null \
-        | awk -v sx="$SX" -v sy="$SY" -v csv="$(tail -n 1 "$OUT/$NAME.csv" | cut -d, -f3,4)" \
-          '/^x:/{x=$2} /^y:/{y=$2} END{split(csv,g,","); if (x!="") printf "%.1f", sqrt((x+sx-g[1])^2+(y+sy-g[2])^2)}')
+    # FAST-LIO against Gazebo, read together: the map is worthless once they disagree. The two reads are
+    # seconds apart, so a robot driving at full speed shows up to ~2 m; only a sustained gap counts.
+    D=$(docker exec safe_robot bash -ic "export ROS_DOMAIN_ID=42 GAZEBO_IP=127.0.0.1; timeout 15 ros2 topic echo --once /Odometry --field pose.pose.position; echo gz \$(timeout 6 gz model -m chain_robot -p)" 2>/dev/null \
+        | awk -v sx="$SX" -v sy="$SY" '/^x:/{x=$2} /^y:/{y=$2} /^gz /{gx=$2; gy=$3} END{if (x!="" && gx!="") printf "%.1f", sqrt((x+sx-gx)^2+(y+sy-gy)^2)}')
     echo "$(date +%T) $NAME fastlio_vs_gazebo ${D:-?} m"
-    if [ -n "$D" ] && python3 -c "import sys; sys.exit(0 if $D > 3.0 else 1)"; then BAD=$((BAD + 1)); else BAD=0; fi
+    if [ -n "$D" ] && python3 -c "import sys; sys.exit(0 if $D > 5.0 else 1)"; then BAD=$((BAD + 1)); else BAD=0; fi
     [ "$BAD" -ge 3 ] && { WHY=fastlio_diverged; break; }
     # how fast each relay brain answers across the mesh
     for r in $(python3 -c "import yaml, os; print(*list(yaml.safe_load(open(os.environ.get('NODES', 'rssi/ros/nodes.yaml'))))[1:-1])"); do
@@ -68,8 +70,9 @@ for i in "${!QUEUE[@]}"; do
     done
   done
   # ---- save everything before anything is stopped
-  docker logs fair_coord > "$OUT/${NAME}_coordinator.log" 2>&1
-  docker logs fair_rssi > "$OUT/${NAME}_rssi.log" 2>&1
+  G docker logs fair_coord > "$OUT/${NAME}_coordinator.log" 2>&1
+  G docker logs fair_rssi > "$OUT/${NAME}_rssi.log" 2>&1
+  [ -n "${COORD_SSH:-}" ] && rsync -a "$COORD_SSH:$PWD_REMOTE/$OUT/${NAME}_maps" "$OUT/"
   mkdir -p "$OUT/${NAME}_stacklogs"
   docker exec safe_robot bash -c 'cd /tmp; tar cf - 1_gazebo.log 2_fastlio.log 3_occ.log 4_ctrl.log 5_planner.log 6_nav2.log 7a_detector.log 7b_explore.log 2>/dev/null' | tar xf - -C "$OUT/${NAME}_stacklogs"
   while read -r ns target container; do

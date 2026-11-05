@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # The whole live system, in order, with the Nav2 start-up retries it needs at low RTF:
-# Run it on the big NUC, which holds the sim, the map, chain_robot and the coordinator:
+# Run it on the NUC that holds the sim and chain_robot; COORD_SSH=fair@10.195.222.0 puts the coordinator
+# and RSSI monitor on the GCS (the repo must be in ~/FAIR_CHAIN_RELAY_PROJECT there):
 #   1. chain stack (gazebo, FAST-LIO, mapping, controller, planner, Nav2)
 #   2. every relay in the nodes file spawned at its `park`, heading `park_yaw` (else PARK_YAW)
 #   3. relay brains on the NUCs in hospital_world/relay_hosts.conf
@@ -98,6 +99,8 @@ docker exec safe_robot bash -ic "export ROS_DOMAIN_ID=42; for p in FollowPath.mi
 fi
 
 if [ "$FROM" -le 2 ]; then
+echo "  ok  map throttled for the mesh (/map_mesh)"
+docker exec -d safe_robot bash -ic "python3 /hw/map_throttle.py > /tmp/8_map_throttle.log 2>&1"
 echo "[2/5] relays at their parking spots"
 while read -r NS X Y YAW; do
   PARK_YAW=$YAW spawn "$NS" "$X" "$Y" < /dev/null     # docker exec would swallow the loop's input
@@ -118,7 +121,8 @@ for NS in "${RELAYS[@]}"; do nav_up "/$NS"; done
 fi
 
 echo "[5/5] RSSI monitor, coordinator, explorer, logger"
-"$ROOT/rssi/ros/run_rssi_node.sh" "$@" >/dev/null
+if [ -n "${COORD_SSH:-}" ]; then ssh -n -o BatchMode=yes "$COORD_SSH" "cd FAIR_CHAIN_RELAY_PROJECT && rssi/ros/run_rssi_node.sh $(printf '%q ' "$@")" >/dev/null
+else "$ROOT/rssi/ros/run_rssi_node.sh" "$@" >/dev/null; fi
 "$ROOT/rssi/ros/run_exploration.sh" "$@" | tail -n 1
 pkill -f "[l]ive_logger.sh" 2>/dev/null
 RELAYS="${RELAYS[*]}" setsid nohup "$ROOT/rssi/ros/live_logger.sh" "$LOGCSV" "${LOG_PERIOD:-20}" >/dev/null 2>&1 < /dev/null &   # survives this shell

@@ -11,7 +11,7 @@ docker exec safe_robot bash -c 'for p in $(ps -eo pid,args --no-headers \
 while read -r ns target container; do
   case "$ns" in ''|\#*) continue ;; esac
   echo "[$target] $container ($ns brain)..."
-  KILL="docker exec $container bash -c 'pkill -9 -f \"[n]av_robot|[n]av2_|[c]omponent_container|bin/[r]os2|[s]tatic_transform_publisher\"; true'"
+  KILL="docker exec $container bash -c 'pkill -9 -f \"[n]av_robot|[n]av2_|[c]omponent_container|[t]f_relay|bin/[r]os2|[s]tatic_transform_publisher\"; true'"
   if [ "$target" = local ]; then bash -c "$KILL" 2>/dev/null; else
     ssh -n -o BatchMode=yes -o ConnectTimeout=5 "$target" "$KILL" 2>/dev/null || echo "  !! could not reach $target"; fi
 done < "${RELAY_HOSTS:-$(dirname "$0")/relay_hosts.conf}"

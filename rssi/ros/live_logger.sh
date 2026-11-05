@@ -19,8 +19,10 @@ while true; do
     for m in chain_robot '"$RELAYS"'; do echo "$m $(timeout 6 gz model -m $m -p 2>/dev/null)"; done
     echo "rtf $(timeout 6 gz stats -p 2>/dev/null | tail -n 1 | cut -d, -f1)"' 2>/dev/null)
   # counts, not the log itself: the log outgrows the 128 KB limit on one argument
-  C=$(docker logs fair_coord 2>&1 | awk '/goal world/{g++} /CLIENT_ONLY/{c++} /DEPLOY/{d++} /SKIP/{s++} /did not reach/{f++}
+  # never wait on the mesh for these counts: a hung ssh froze the poses for 8 minutes (v3_u_nav2)
+  C=$(${COORD_SSH:+timeout 8 ssh -n -o BatchMode=yes -o ConnectTimeout=5 $COORD_SSH} docker logs fair_coord 2>&1 | awk '/goal world/{g++} /CLIENT_ONLY/{c++} /DEPLOY/{d++} /SKIP/{s++} /did not reach/{f++}
         END {printf "%d,%d,%d,%d,%d", g, c, d, s, f}')
+  case "$C" in 0,0,0,0,0) C="${LASTC:-$C}" ;; *) LASTC=$C ;; esac
   python3 - "$P" "$C" $RELAYS >> "$OUT" <<'PY'
 import sys, math, time, itertools
 pose, counts = sys.argv[1], sys.argv[2]

@@ -128,7 +128,7 @@ class Coordinator(RosNode):
         latched = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
                              durability=DurabilityPolicy.TRANSIENT_LOCAL)
         self.map_msg = None
-        self.create_subscription(OccupancyGrid, "/map", lambda m: setattr(self, "map_msg", m), latched,
+        self.create_subscription(OccupancyGrid, a.map_topic, lambda m: setattr(self, "map_msg", m), latched,
                                  callback_group=cb)
         self.pub_map = self.create_publisher(OccupancyGrid, "/coord/map", latched)
         self.create_timer(2.0, self._publish_cropped_map, callback_group=cb)
@@ -672,6 +672,7 @@ def main():
                     help="stop the plan if the client comes this close to a relay (m): near contact; passing a parked relay in a corridor is fine")
     ap.add_argument("--max-fail", type=int, default=2, help="reject a goal after this many failed attempts")
     ap.add_argument("--reject-reset", type=float, default=120.0, help="sim s without an accepted goal -> forget failed and visited goals")
+    ap.add_argument("--map-topic", default="/map_mesh", help="the client's map; on the mesh, the throttled one")
     ap.add_argument("--stuck-s", type=float, default=40.0, help="sim s without client progress -> back up")
     ap.add_argument("--max-skip", type=int, default=2,
                     help="reject a goal skipped this many times at once, until a robot moves >= 1.5 m ...")
