@@ -89,7 +89,8 @@ layout. Every file is an unmodified copy; the changes this guide asks for are yo
 | `hospital_world/tf_relay.py` | Gives each relay its own TF topic | Use if relays run Nav2 across the mesh (6.5) |
 | `hospital_world/map_throttle.py` | Republishes the map every 4 s as `/map_mesh` | Use (6.5) |
 | `hospital_world/relay_hosts.conf` | Which computer runs which relay | Rewrite |
-| `rajant_mesh/` | ROS 2 package that reads the real Rajant radios | Use; see 6.4 |
+| `rajant_mesh/` | ROS 2 package that reads the real Rajant radios and publishes `mesh_matrix` and `weakest_link` | Use; see 6.4 |
+| `rajant_tools/` | Two command-line readers for the same radios, no ROS: `rajant_link_quality.py` (every link) and `rajant_status.py` (radio health) | Use for checks and calibration; see 6.4 |
 
 ### Use these to check your work
 
@@ -359,6 +360,24 @@ robots `rajant_mesh/mesh_matrix.py` reads the radios instead. Know these facts a
   API gives both `signal` and `noise` per peer, so publishing `signal` as well is a small change.
 - You need a table from radio serial number to robot name.
 
+The same package has a second node, `rajant_mesh/weakest_link.py`. Each cycle it publishes on `weakest_link`
+one line of text for the weakest link only: the two radios, signal (dBm), noise (dBm), SNR, routing cost and
+rate. `launch/mesh_launch.py` starts both nodes and takes a `namespace` argument (default: the `MESH_NS`
+environment variable), so each computer can publish under its own prefix.
+
+No node publishes the signal strength in dBm of **every** link. `mesh_matrix` has every link but as SNR;
+`weakest_link` has dBm but for one link. To compare with the model you need dBm for every link, so add
+`signal` to the matrix (or publish a second matrix) before step 10 of section 7.
+
+`rajant_tools/` holds two scripts that talk to the radios without ROS. They read the password from
+`RAJANT_PW` (not `RAJANT_ADMIN_PASSWORD`) and the role from `RAJANT_ROLE`, and each has its own radio address
+list to update.
+
+- `rajant_link_quality.py` prints signal, noise, SNR, cost and rate for every link in both directions;
+  `--watch 5` refreshes every 5 s. Use it to take the calibration measurements described above.
+- `rajant_status.py` prints each radio's version, uptime, temperature, dropped-flood counters and peers. Use
+  it to check that the mesh is healthy (6.5).
+
 **Nothing in the coordinator reads measurements yet.** It plans from the model only. The paper corrects the
 model online with a Kalman filter and Gaussian process regression; that part is not implemented. A sensible
 first step on real hardware is passive: log `mesh_matrix` next to `/rssi/links` (the prediction from
@@ -454,4 +473,5 @@ Ask the user. Do not assume.
 `sync_from_sim.sh` copies every file again from the simulator tree and rewrites `MANIFEST.md`.
 `sync_from_sim.sh --check` lists copies that differ from the simulator tree without changing anything. Once
 you start editing files here for the real robots, do not run the sync without `--check`: it overwrites your
-changes. `PORTING_GUIDE.md`, `smoke_test.py` and `smoke_test_expected.txt` exist only here.
+changes. `PORTING_GUIDE.md`, `smoke_test.py`, `smoke_test_expected.txt` and `rajant_tools/` exist only here
+(the two Rajant tools were never part of the simulator tree).

@@ -7,7 +7,7 @@
 # The copies keep the sim tree's relative paths (rssi/, rssi/ros/, hospital_world/), because the code
 # finds its modules and maps by them: exploration_coordinator.py imports from ../ and resolves --gt
 # against ../../. Files under reference/ are for reading only (they are replaced in the port).
-# PORTING_GUIDE.md, smoke_test.py and this script live only here and are never overwritten.
+# PORTING_GUIDE.md, smoke_test.py, rajant_tools/ and this script live only here and are never overwritten.
 set -euo pipefail
 PORT="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$PORT")"
