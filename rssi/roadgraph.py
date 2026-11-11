@@ -68,7 +68,7 @@ class RoadGraph:
     # ------------------------------------------------------------------ build
     @classmethod
     def build(cls, grid: GridMap, clearance: float = 0.45, spur_m: float = 1.0,
-              cache_dir: str | None = None) -> "RoadGraph":
+              cache_dir: str | None = None, drop_outside: bool = True) -> "RoadGraph":
         key = hashlib.md5(grid.occ.tobytes() + f"{clearance}{spur_m}v2".encode()).hexdigest()[:12]
         path = os.path.join(cache_dir, f"roadgraph_{key}.npz") if cache_dir else None
         if path and os.path.exists(path):
@@ -79,7 +79,8 @@ class RoadGraph:
             # the outer wall): without this its long thin ring can be the biggest network (UNIST)
             flab, _ = label(free)
             outside = np.unique(np.r_[flab[0], flab[-1], flab[:, 0], flab[:, -1]])
-            free &= ~np.isin(flab, outside[outside > 0])
+            if drop_outside:                           # a live map has no such margin: unknown is not free
+                free &= ~np.isin(flab, outside[outside > 0])
             clear = distance_transform_edt(free) * grid.res >= clearance
             skel = skeletonize(clear, method="zhang")
             skel = _prune(skel, int(round(spur_m / grid.res)))
@@ -141,6 +142,8 @@ class RoadGraph:
         allowed: optional bool grid (GT shape) of cells the robots may drive through, e.g. the
         space their own SLAM map already knows is free -- Nav2 cannot plan through unknown
         space, so a waypoint there is unreachable however open the corridor really is."""
+        if not len(self.rc):                         # nothing explored yet that a robot fits in
+            return []
         i, j = self.attach(a_xy), self.attach(b_xy)
         W0 = self.W
         avoid = [tuple(p) for p in avoid if np.hypot(p[0] - a_xy[0], p[1] - a_xy[1]) > 1e-3]

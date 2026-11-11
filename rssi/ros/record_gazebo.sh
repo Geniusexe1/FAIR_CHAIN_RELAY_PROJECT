@@ -35,10 +35,15 @@ walk(display.Display().screen().root)")
       -i :0.0 -vf "crop=$W:$H:0:0" -c:v libx264 -preset veryfast -crf 26 -pix_fmt yuv420p \
       "${BASE}_gazebo_raw.mkv" > "${BASE}_gazebo_ffmpeg.log" 2>&1 < /dev/null &
     echo $! > "${BASE}_gazebo.pid"
+    date +%s.%N > "${BASE}_gazebo_t0.txt"
     echo "recording ${W}x${H}+${X}+${Y} -> ${BASE}_gazebo_raw.mkv (pid $(cat "${BASE}_gazebo.pid"))" ;;
   stop)
     PID=$(cat "${BASE}_gazebo.pid" 2>/dev/null) && kill -INT "$PID" 2>/dev/null
     for _ in $(seq 30); do kill -0 "$PID" 2>/dev/null || break; sleep 1; done
+    if [ -s "${BASE}_relay_states.jsonl" ]; then
+      "$PY" "$ROOT/rssi/ros/state_strip.py" "$BASE" --speedup "$SPEEDUP" --crop "${CROP:-690:1232:270:68}"
+      rm -f "${BASE}_gazebo.pid"; exit 0
+    fi
     # 2 fps captured -> played at 2*SPEEDUP fps-equivalent: each frame shown 1/(2*SPEEDUP) s, output 30 fps
     "$FF" -hide_banner -loglevel error -y -i "${BASE}_gazebo_raw.mkv" \
       -vf "crop=${CROP:-690:1232:270:68},setpts=PTS/${SPEEDUP},fps=30" -c:v libx264 -preset medium -crf 28 -pix_fmt yuv420p -an \

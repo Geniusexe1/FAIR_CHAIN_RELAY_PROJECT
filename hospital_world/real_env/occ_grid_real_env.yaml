@@ -1,0 +1,27 @@
+# occ_grid_mapping parameters for the real environment (real_env.world, from scans.pcd).
+# Same as the package's default.yaml except the map size, kept small so /map (117 KB) reaches
+# every node with default transports -- see ../occ_grid_hospital.yaml for why that matters.
+#
+# Map frame = chain_robot's spawn = world (4.4, 5.0). Floor in the map frame:
+#   x -16.5 .. 1.9,  y -20.7 .. 3.6   ->  grid x -18 .. 3, y -22 .. 5 (210 x 270 cells = 57 KB)
+mapping:
+  ros__parameters:
+    mapping:
+      map:
+        sizex: 210
+        sizey: 270
+        initx: 180
+        inity: 220
+        cell_size: 0.1
+      robot_laser:
+        x: 0.0
+        y: 0.0
+        theta: 0.0
+      sensor_model:
+        P_occ: 0.99
+        P_free: 0.3
+        P_prior: 0.5
+      gap_thresh: 0.1
+      occ_thresh: 0.50005
+      free_thresh: 0.49995
+      r_max: 7.0

@@ -1,0 +1,8 @@
+P0 -57.0 req -81.68 dBm
+lobby, relays parked           client_only  gcs > head                   client ends 0.0 m from the goal | no relay moves
+corridor, relays parked        deploy       gcs > relay1 > head          client ends 0.0 m from the goal | relay1(2.4,2.6)
+far corridor, relays parked    skip         gcs > head                   client ends 10.5 m from the goal | no relay moves
+south corridor, relay1 out     client_only  gcs > relay1 > head          client ends 3.4 m from the goal | no relay moves
+south room far, both out       client_only  gcs > relay1 > relay2 > head client ends 1.2 m from the goal | no relay moves
+south room, relays out         deploy       gcs > relay2 > head          client ends 0.0 m from the goal | relay2(2.4,-7.3)
+west classroom, relays out     client_only  gcs > relay1 > head          client ends 0.0 m from the goal | no relay moves

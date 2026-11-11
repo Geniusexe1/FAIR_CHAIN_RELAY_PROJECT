@@ -90,12 +90,30 @@ nav_up ""
 # chain_robot is differential drive but its DWB config (min_vel_x = min_speed_xy = 0.2) forbids
 # turning in place: nose-first at a dead end every arc hits the wall and it is stuck for good
 # and its costmaps model it as a 5 cm robot (robot_radius 0.05), so paths and DWB hug walls
-docker exec safe_robot bash -ic "export ROS_DOMAIN_ID=42; for p in FollowPath.min_vel_x FollowPath.min_speed_xy; do
-  timeout 20 ros2 param set /controller_server \$p 0.0; done
-  timeout 20 ros2 param set /global_costmap/global_costmap robot_radius 0.2
-  timeout 20 ros2 param set /local_costmap/local_costmap robot_radius 0.12
-  timeout 20 ros2 param set /local_costmap/local_costmap inflation_layer.inflation_radius 0.25" >/dev/null 2>&1 \
-  && echo "  ok  chain_robot may turn in place; costmap radius 0.2 global / 0.12 local"
+# ros2 param set is flaky over a loaded DDS graph: read each value back, and a run with the wrong
+# values is not worth running
+chain_param() {  # node param value
+  for i in $(seq 15); do
+    docker exec safe_robot bash -ic "export ROS_DOMAIN_ID=42; timeout 25 ros2 param set $1 $2 $3 >/dev/null 2>&1; timeout 25 ros2 param get $1 $2 2>/dev/null | tail -1" 2>/dev/null \
+      | grep -q "value is: $3\$" && return 0
+    sleep 5
+  done
+  echo "  !!  could not set $1 $2 $3"; exit 1
+}
+chain_param /controller_server FollowPath.min_vel_x 0.0
+chain_param /controller_server FollowPath.min_speed_xy 0.0
+chain_param /global_costmap/global_costmap robot_radius 0.2
+chain_param /local_costmap/local_costmap robot_radius 0.12
+chain_param /local_costmap/local_costmap inflation_layer.inflation_radius 0.25
+# a softer, wider cost around obstacles keeps plans off walls, so the body behind the head cuts corners less
+chain_param /global_costmap/global_costmap inflation_layer.inflation_radius 0.8
+chain_param /global_costmap/global_costmap inflation_layer.cost_scaling_factor 2.5
+echo "  ok  chain_robot may turn in place; costmap radius 0.2 global / 0.12 local, global inflation 0.8 / 2.5 (read back)"
+# every touch of the chain against the world, for the run's record
+docker cp "$HW/contact_log.py" safe_robot:/tmp/contact_log.py
+docker exec safe_robot bash -c 'pkill -f "[w]hile pgrep -x gzserver"; pkill -f "[c]ontact_log.py"; pkill -f "gz topi[c]"; true'
+# gz topic -e has dropped out mid-run (real_full_live5: 4 min in): start it again while Gazebo runs
+docker exec -d safe_robot bash -ic 'rm -f /tmp/contacts.jsonl /tmp/contact_log.err; while pgrep -x gzserver >/dev/null; do gz topic -e /gazebo/default/physics/contacts 2>/dev/null | python3 -u /tmp/contact_log.py /tmp/contacts.jsonl 2>>/tmp/contact_log.err; echo "$(date +%T) restart" >> /tmp/contact_log.err; sleep 2; done'
 fi
 
 if [ "$FROM" -le 2 ]; then
@@ -108,6 +126,7 @@ done < <(python3 -c "
 import yaml; c = yaml.safe_load(open('$NODES'))
 for n in list(c)[1:-1]:
     print(n, *c[n]['park'], c[n].get('park_yaw', ${PARK_YAW:--1.5708}))")
+docker exec -d safe_robot bash -ic "export ROS_DOMAIN_ID=42; pkill -f [p]arking_brake.py; python3 /hw/parking_brake.py ${RELAYS[*]} > /tmp/8_parking_brake.log 2>&1"
 fi
 
 if [ "$FROM" -le 3 ]; then
@@ -120,6 +139,7 @@ echo "[4/5] Nav2 of every relay"
 for NS in "${RELAYS[@]}"; do nav_up "/$NS"; done
 fi
 
+[ "${STOP_AFTER:-5}" -le 4 ] && exit 0      # relay bench: no explorer, the chain stays parked
 echo "[5/5] RSSI monitor, coordinator, explorer, logger"
 if [ -n "${COORD_SSH:-}" ]; then ssh -n -o BatchMode=yes "$COORD_SSH" "cd FAIR_CHAIN_RELAY_PROJECT && rssi/ros/run_rssi_node.sh $(printf '%q ' "$@")" >/dev/null
 else "$ROOT/rssi/ros/run_rssi_node.sh" "$@" >/dev/null; fi

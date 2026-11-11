@@ -76,7 +76,8 @@ class RssiMonitor(RosNode):
         # nearest-free-cell lookup, for snapping positions that land in obstacles
         _, self.near = distance_transform_edt(self.grid.occ.astype(bool), return_indices=True)
 
-        self.net = Network(self.grid,
+        rgt = a.radio_gt if os.path.isabs(a.radio_gt) else os.path.join(root, a.radio_gt)
+        self.net = Network(GridMap.load(rgt + ".npy", rgt + ".json") if a.radio_gt else self.grid,
                            PropagationParams(P0=a.P0, n=a.n, alpha=a.alpha),
                            NoiseParams(a.sigma_shadow, a.corr, a.sigma_n, enabled=not a.no_noise))
         self.rng = np.random.default_rng()
@@ -312,6 +313,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--gt", default="hospital_world/gt/hospital_gt", help="ground-truth grid, repo-relative")
     ap.add_argument("--config", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "nodes.yaml"))
+    ap.add_argument("--radio-gt", default="", help="grid for the radio model if not --gt, repo-relative")
     ap.add_argument("--rate", type=float, default=2.0, help="Hz")
     ap.add_argument("--log-every", type=float, default=5.0, help="s between terminal tables")
     ap.add_argument("--P0", type=float, default=PropagationParams.P0)

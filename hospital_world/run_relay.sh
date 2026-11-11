@@ -28,9 +28,15 @@ CMD="
   docker exec $CONTAINER sed -i -E 's/^( *)SetRemap\(src=.\/tf/\1# &/' \$L
   # and the map at the rate the mesh can carry (map_throttle.py on the chain's NUC)
   docker exec $CONTAINER bash -c \"grep -q map_mesh \$L || sed -i '/PushRosNamespace(ns),/a\            SetRemap(src=\x27/map\x27, dst=\x27/map_mesh\x27),' \$L\"
+  # every relay runs the same Nav2 params: the launch reads this template, which had drifted apart between NUCs
+  [ -n \"${RELAY_PARAMS:-}\" ] && docker exec -i $CONTAINER tee /root/colcon_ws/install/saye_bringup/share/saye_bringup/config/nav2_params.yaml.in >/dev/null < /tmp/${NS}_params.in
   docker exec -d $CONTAINER /entrypoint.sh bash -c \"ulimit -n 524288; export ROS_DOMAIN_ID=42 $ENV
     python3 /tmp/tf_relay.py $NS > /tmp/${NS}_tf.log 2>&1\"
   docker exec -d $CONTAINER /entrypoint.sh bash -c \"ulimit -n 524288; export ROS_DOMAIN_ID=42 $ENV
     ros2 launch saye_bringup nav_robot.launch.py namespace:=$NS static_map_odom:=true map_odom_x:=${MAP_ODOM_X:-0.0} map_odom_y:=${MAP_ODOM_Y:--12.0} > /tmp/${NS}_nav.log 2>&1\""
+if [ -n "${RELAY_PARAMS:-}" ]; then
+  if [ "$TARGET" = local ]; then cp "$RELAY_PARAMS" /tmp/${NS}_params.in
+  else ssh -o BatchMode=yes -o ConnectTimeout=10 "$TARGET" "cat > /tmp/${NS}_params.in" < "$RELAY_PARAMS"; fi
+fi
 if [ "$TARGET" = local ]; then bash -c "$CMD"; else ssh -n -o BatchMode=yes -o ConnectTimeout=10 "$TARGET" "$CMD"; fi
 echo "[$NS] Nav2 starting on $TARGET in $CONTAINER. tail: ssh $TARGET docker exec $CONTAINER tail -f /tmp/${NS}_nav.log"

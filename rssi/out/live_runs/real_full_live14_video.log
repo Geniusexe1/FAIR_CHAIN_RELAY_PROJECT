@@ -1,0 +1,3 @@
+wrote rssi/out/live_runs/real_full_live14_gazebo.mp4 (11315 raw frames, x40.0)
+wrote rssi/out/live_runs/real_full_live14.png | chain_robot (client): 193.0 m  relay1: 54.7 m  relay2: 21.1 m  closest robots 0.23 m (chain_robot-relay2 at 05:56:51)
+wrote rssi/out/live_runs/real_full_live14_replay.mp4 (202 frames, 490 decisions)

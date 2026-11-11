@@ -1,2 +1,25 @@
 v3_u_nav2 result=plateau coverage=95.6% wall_min=157 world=unist P0=-45 extra=--yield-r 0 --guard 0
 v3_u_full result=complete coverage=100.0% wall_min=100 world=unist P0=-45 extra=
+real_full result=plateau coverage=34.0% wall_min=56 world=real P0=-60.8 extra=
+real_full result=plateau coverage=85.4% wall_min=92 world=real P0=-60.8 extra=
+real_nav2 result=plateau coverage=84.8% wall_min=119 world=real P0=-60.8 extra=--yield-r 0 --guard 0
+real_nav2_live result=plateau coverage=80.7% wall_min=93 world=real P0=-60.8 extra=--yield-r 0 --guard 0
+real_nav2_live2 result=INVALID_orphan_launch_my_restart coverage=17.9% wall_min=68 world=real P0=-60.8 extra=--yield-r 0 --guard 0
+real_full_p30 result=complete coverage=100.0% wall_min=97 world=real P0=-30 extra=
+real_nav2_p30 result=stopped_by_user coverage=71.5%_when_stopped world=real P0=-30
+real_full_live result=plateau coverage=58.3% wall_min=148 world=real P0=-60.8 extra=
+real_full_live2 result=plateau coverage=70.5% wall_min=146 world=real P0=-60.8 extra=
+real_full_live3 result=plateau coverage=87.3% wall_min=160 world=real P0=-60.8 extra=
+real_full_live4 result=plateau coverage=88.1% wall_min=169 world=real P0=-60.8 extra=
+real_full_live5 result=plateau coverage=57.0% wall_min=90 world=real P0=-60.8 extra=
+real_full_live6 result=plateau coverage=80.4% wall_min=137 world=real P0=-60.8 extra=
+real_full_live7 result=fastlio_diverged coverage=80.0% wall_min=131 world=real P0=-60.8 extra=
+real_full_live8 result=skipped
+real_full_live8 result=plateau coverage= wall_min=96 world=real P0=-60.8 extra=
+real_full_live9 result=plateau coverage=80.5% wall_min=126 world=real P0=-60.8 extra=
+real_full_live10 result=fastlio_diverged coverage=57.7% wall_min=118 world=real P0=-60.8 extra=
+real_full_live11 result=plateau coverage=87.2% wall_min=187 world=real P0=-60.8 extra=
+real_full_live12 result=plateau coverage=91.3% wall_min=123 world=real P0=-57 extra=
+real_full_live13 result=plateau coverage=47.6% wall_min=85 world=real P0=-57 extra=
+real_full_live14 result=complete coverage=99.7% wall_min=96 world=real P0=-57 extra=
+real_full_live15 result=plateau coverage=63.0% wall_min=81 world=real P0=-57 extra=

@@ -264,10 +264,7 @@
           <effort>2</effort>
           <velocity>100</velocity>
         </limit>
-        <dynamics>
-          <spring_reference>0</spring_reference>
-          <spring_stiffness>0</spring_stiffness>
-        </dynamics>
+        <dynamics><friction>0.005</friction></dynamics>
       </axis>
     </joint>
     <joint name="front_left_wheel_steering_joint" type="revolute">
@@ -351,10 +348,7 @@
           <effort>2</effort>
           <velocity>100</velocity>
         </limit>
-        <dynamics>
-          <spring_reference>0</spring_reference>
-          <spring_stiffness>0</spring_stiffness>
-        </dynamics>
+        <dynamics><friction>0.005</friction></dynamics>
       </axis>
     </joint>
     <joint name="front_right_wheel_steering_joint" type="revolute">
@@ -385,10 +379,7 @@
           <effort>2</effort>
           <velocity>100</velocity>
         </limit>
-        <dynamics>
-          <spring_reference>0</spring_reference>
-          <spring_stiffness>0</spring_stiffness>
-        </dynamics>
+        <dynamics><friction>0.005</friction></dynamics>
       </axis>
     </joint>
     <joint name="rear_left_wheel_joint" type="revolute">
@@ -403,10 +394,7 @@
           <effort>2</effort>
           <velocity>100</velocity>
         </limit>
-        <dynamics>
-          <spring_reference>0</spring_reference>
-          <spring_stiffness>0</spring_stiffness>
-        </dynamics>
+        <dynamics><friction>0.005</friction></dynamics>
       </axis>
     </joint>
     <link name="rear_right_wheel_link">

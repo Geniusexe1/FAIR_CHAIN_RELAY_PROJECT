@@ -1,0 +1,14 @@
+{
+ "resolution": 0.05,
+ "origin_xy": [
+  -13.0,
+  -16.5
+ ],
+ "shape": [
+  520,
+  410
+ ],
+ "occupied_value": 1,
+ "free_value": 0,
+ "note": "grid[row, col]; world_x = origin_xy[0] + (col+0.5)*res; world_y = origin_xy[1] + (row+0.5)*res"
+}

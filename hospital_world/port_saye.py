@@ -265,6 +265,20 @@ assert nb == 1, 'BaseCollision box not found'
 # made the GUI lag badly with two relays. The sensor itself is unaffected.
 s = s.replace('<visualize>true</visualize>', '<visualize>false</visualize>')
 
+# ---- 6d. a parked car's drag on the wheels ------------------------------------
+# With cmd_vel at zero the relay rolls on at 8.5 mm/s of sim time, about 1 m every 2 minutes (measured
+# on real_env; wheel friction and the velocity gain do not stop it). Joint friction 0.005 N.m gives
+# 1.7 mm/s and still tracks 0.1 and 0.25 m/s. At 0.15 the car stalls at 0.04 m/s.
+def add_wheel_drag(text, friction=0.005):
+    for j in ('front_left', 'front_right', 'rear_left', 'rear_right'):
+        m = re.search(r'<joint name="%s_wheel_joint".*?</joint>' % j, text, re.S)
+        b = m.group(0)
+        new = f'<dynamics><friction>{friction}</friction></dynamics>'
+        b2 = re.sub(r'<dynamics>.*?</dynamics>', new, b, flags=re.S) if '<dynamics>' in b else b.replace('<axis>', '<axis>' + new, 1)
+        text = text.replace(b, b2)
+    return text
+
+s = add_wheel_drag(s)
 open(DST, 'w').write(s)
 print(f'wrote {DST}')
 print(f'  gz_frame_id removed : {before}')

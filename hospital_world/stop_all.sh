@@ -4,7 +4,7 @@ set -uo pipefail
 echo "[big NUC] safe_robot (gazebo + chain stack)..."
 docker exec safe_robot bash -c 'for p in $(ps -eo pid,args --no-headers \
   | grep -vE "grep|ps -eo" \
-  | grep -E "gzserver|gzclient|fastlio|rviz2|occ_grid|nav2_|frontier|chain_robot|path_planner|pointcloud_to_laser|static_transform|robot_state_pub|classical|bin/ros2|mapping|topic pub" \
+  | grep -E "gzserver|gzclient|parking_brake|fastlio|rviz2|occ_grid|nav2_|frontier|chain_robot|path_planner|pointcloud_to_laser|static_transform|robot_state_pub|classical|bin/ros2|mapping|topic pub" \
   | awk "{print \$1}"); do kill -9 $p 2>/dev/null; done' 2>/dev/null || true
 # static_transform_publisher too: a survivor keeps publishing an old map->relayN/odom and that
 # relay's Nav2 then puts the robot off its costmap (every goal aborted)

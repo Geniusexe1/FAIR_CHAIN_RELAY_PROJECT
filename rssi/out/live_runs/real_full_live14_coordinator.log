@@ -1,0 +1,553 @@
+[INFO] [1794255441.832687179] [exploration_coordinator]: P0 -57.0 | req -81.68 dBm (Pr[link >= -85.0] >= 0.75) | client head, relays ['relay1', 'relay2'] | t_f 5 | re-place engaged relays (paper)
+[INFO] [1794255452.389313814] [exploration_coordinator]: relay1: start -> PARKED at (4.01, 7.40)
+[INFO] [1794255452.389964464] [exploration_coordinator]: relay2: start -> PARKED at (4.90, 7.40)
+[INFO] [1794255489.426335253] [exploration_coordinator]: goal world (2.40, 1.10): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.5 s) | targets head (2.40, 1.10)
+[INFO] [1794255763.986902402] [exploration_coordinator]: OWN GOAL instead of (-0.70, -3.20): goal world (-0.52, -2.88): DEPLOY [gcs > relay1 > head] 1 relay(s) moved (t_f 5); final route gcs > relay1 > head, weakest hop -75.7
+[INFO] [1794255764.256827474] [exploration_coordinator]: relay1: PARKED -> DEPLOYING at (4.01, 7.40)
+[INFO] [1794255830.296149797] [exploration_coordinator]: relay1: DEPLOYING -> RELAYING at (2.51, 2.94)
+[INFO] [1794255831.410970856] [exploration_coordinator]: goal world (0.00, -8.50): DEPLOY [gcs > relay1 > head] 1 relay(s) moved (t_f 5); final route gcs > relay1 > head, weakest hop -77.9 (0.9 s) | targets relay1 (0.79, 0.38), head (0.00, -8.50)
+[INFO] [1794255833.332567861] [exploration_coordinator]: relay1: RELAYING -> DEPLOYING at (2.49, 2.81)
+[INFO] [1794255894.759364157] [exploration_coordinator]: goal world (-2.40, -8.60): CLIENT_ONLY [gcs > relay1 > head] goal inside the bounded region (t_f 5) (0.2 s) | targets head (-2.40, -8.60)
+[INFO] [1794255895.569106790] [exploration_coordinator]: relay1: DEPLOYING -> RELAYING at (0.97, 0.32)
+[INFO] [1794255931.723122855] [exploration_coordinator]: goal world (-8.50, -8.50): too tight, using (-8.52, -8.47)
+[INFO] [1794255937.645028735] [exploration_coordinator]: goal world (-8.52, -8.47): DEPLOY [gcs > relay1 > head] 2 relay(s) moved (t_f 5, staged: client waits for the relays); final route gcs > relay1 > head, weakest hop -80.3 (6.1 s) | targets relay2 (2.43, 3.36), relay1 (-0.17, -3.24), head (-8.52, -8.47)
+[INFO] [1794255937.645341755] [exploration_coordinator]: relay2 is not on the route at any step - not moving it
+[INFO] [1794255939.853823942] [exploration_coordinator]: relay1: RELAYING -> DEPLOYING at (0.75, 0.27)
+[WARN] [1794256136.083511142] [exploration_coordinator]: interval 10: client gained nothing on its path in 30 s (at -7.66, -8.69) - stopping the plan
+[INFO] [1794256136.442772498] [exploration_coordinator]: relay1: DEPLOYING -> RELAYING at (-0.15, -3.06)
+[INFO] [1794256136.804743440] [exploration_coordinator]: OWN GOAL instead of (-10.10, -6.30): goal world (-10.38, -6.67): CLIENT_ONLY [gcs > relay1 > head] goal inside the bounded region (t_f 5)
+[INFO] [1794256279.842098094] [exploration_coordinator]: goal world (-10.40, -0.80): CLIENT_ONLY [gcs > relay1 > head] goal inside the bounded region (t_f 5) (0.3 s) | targets head (-10.40, -0.80)
+[INFO] [1794256383.795869688] [exploration_coordinator]: goal world (-10.60, 2.10): CLIENT_ONLY [gcs > relay1 > head] goal inside the bounded region (t_f 5) (0.3 s) | targets head (-10.60, 2.10)
+[WARN] [1794256559.838196269] [exploration_coordinator]: interval 1: ['head'] did not reach their waypoint - stopping the plan
+[INFO] [1794256561.871527129] [exploration_coordinator]: goal world (2.20, -6.60): DEPLOY [gcs > relay2 > head] 1 relay(s) moved (t_f 5); final route gcs > relay2 > head, weakest hop -80.6 (1.3 s) | targets relay2 (2.43, 1.74), head (2.20, -6.60)
+[INFO] [1794256563.790045890] [exploration_coordinator]: relay2: PARKED -> DEPLOYING at (4.90, 7.40)
+[INFO] [1794256650.990983918] [exploration_coordinator]: relay1: RELAYING -> HOLDING at (-0.15, -3.06)
+[INFO] [1794256666.886428456] [exploration_coordinator]: relay1: HOLDING -> RELAYING at (-0.15, -3.07)
+[INFO] [1794256686.054207155] [exploration_coordinator]: relay1: RELAYING -> HOLDING at (-0.15, -3.06)
+[INFO] [1794256751.428580794] [exploration_coordinator]: relay1: HOLDING -> RETURNING at (-0.15, -3.06)
+[INFO] [1794256764.425543276] [exploration_coordinator]: relay1 11.25 m from its spot - going back to its parking spot
+[INFO] [1794256815.163901532] [exploration_coordinator]: relay1: RETURNING -> RELAYING at (1.85, 1.02)
+[INFO] [1794256823.780731337] [exploration_coordinator]: OWN GOAL instead of (2.50, -12.60): goal world (2.18, -12.32): CLIENT_ONLY [gcs > relay1 > head] goal inside the bounded region (t_f 5)
+[INFO] [1794256825.396463864] [exploration_coordinator]: relay2: DEPLOYING -> HOLDING at (2.53, 1.92)
+[INFO] [1794256852.851610273] [exploration_coordinator]: relay1: RELAYING -> HOLDING at (1.88, 1.05)
+[INFO] [1794256852.852138064] [exploration_coordinator]: relay2: HOLDING -> RELAYING at (2.53, 1.92)
+[INFO] [1794256893.387611747] [exploration_coordinator]: goal world (0.10, -14.60): DEPLOY [gcs > relay1 > head] 1 relay(s) moved (t_f 5, staged: client waits for the relays); final route gcs > relay1 > head, weakest hop -79.3 (0.9 s) | targets relay1 (2.38, -4.27), head (0.10, -14.60)
+[INFO] [1794256894.731281995] [exploration_coordinator]: relay1: HOLDING -> DEPLOYING at (1.82, 0.98)
+[INFO] [1794256912.164937674] [exploration_coordinator]: relay2: RELAYING -> HOLDING at (2.53, 1.93)
+[INFO] [1794256919.254296270] [exploration_coordinator]: relay2: HOLDING -> RELAYING at (2.53, 1.93)
+[INFO] [1794256922.701732073] [exploration_coordinator]: relay2: RELAYING -> HOLDING at (2.53, 1.93)
+[INFO] [1794256936.710050607] [exploration_coordinator]: relay2: HOLDING -> RELAYING at (2.53, 1.93)
+[INFO] [1794257013.723430405] [exploration_coordinator]: relay2: RELAYING -> HOLDING at (2.53, 1.93)
+[INFO] [1794257057.395809202] [exploration_coordinator]: goal world (-7.40, -14.20): DEPLOY [gcs > relay2 > relay1 > head] 2 relay(s) moved (t_f 5, staged: client waits for the relays); final route gcs > relay2 > relay1 > head, weakest hop -78.6 (1.9 s) | targets relay2 (2.38, -2.00), relay1 (1.13, -11.82), head (-7.40, -14.20)
+[INFO] [1794257057.456286718] [exploration_coordinator]: relay2: HOLDING -> DEPLOYING at (2.53, 1.93)
+[INFO] [1794257255.749406516] [exploration_coordinator]: goal world (-10.30, -10.80): CLIENT_ONLY [gcs > relay2 > relay1 > head] goal inside the bounded region (t_f 5) (0.2 s) | targets head (-10.30, -10.80)
+[INFO] [1794257257.371420561] [exploration_coordinator]: relay1: DEPLOYING -> RELAYING at (1.25, -11.70)
+[INFO] [1794257257.371958115] [exploration_coordinator]: relay2: DEPLOYING -> RELAYING at (2.37, -1.83)
+[INFO] [1794257346.743279437] [exploration_coordinator]: goal world (-3.40, 2.60): too tight, using (-3.22, 2.48)
+[INFO] [1794257349.012106920] [exploration_coordinator]: goal world (-3.22, 2.48): DEPLOY [gcs > relay2 > head] 1 relay(s) moved (t_f 5, staged: client waits for the relays); final route gcs > relay2 > head, weakest hop -78.6 (2.5 s) | targets relay1 (2.38, -10.14), head (-3.22, 2.48)
+[INFO] [1794257350.613602243] [exploration_coordinator]: relay1: RELAYING -> DEPLOYING at (1.29, -11.63)
+[INFO] [1794257795.408971724] [exploration_coordinator]: relay2: RELAYING -> HOLDING at (2.37, -1.83)
+[INFO] [1794257861.126791002] [exploration_coordinator]: relay2: HOLDING -> RETURNING at (2.37, -1.83)
+[INFO] [1794257866.991237727] [exploration_coordinator]: relay2: RETURNING -> RELAYING at (2.37, -1.83)
+[INFO] [1794257872.782052309] [exploration_coordinator]: relay2: RELAYING -> HOLDING at (2.37, -1.83)
+[INFO] [1794257937.661596774] [exploration_coordinator]: relay2: HOLDING -> RETURNING at (2.37, -1.83)
+[INFO] [1794257940.831145737] [exploration_coordinator]: relay2 9.57 m from its spot - going back to its parking spot
+[INFO] [1794257954.062644687] [exploration_coordinator]: relay2: RETURNING -> RELAYING at (2.56, -0.65)
+[INFO] [1794257974.347684276] [exploration_coordinator]: relay2: RELAYING -> HOLDING at (2.57, -0.61)
+[INFO] [1794257980.513218602] [exploration_coordinator]: relay2: HOLDING -> RELAYING at (2.57, -0.61)
+[INFO] [1794258008.815943218] [exploration_coordinator]: relay2: RELAYING -> HOLDING at (2.57, -0.61)
+[INFO] [1794258024.083043893] [exploration_coordinator]: relay2: HOLDING -> RELAYING at (2.57, -0.61)
+[INFO] [1794258120.260913932] [exploration_coordinator]: relay1: DEPLOYING -> HOLDING at (2.50, -10.28)
+[WARN] [1794258120.546330351] [exploration_coordinator]: no goal accepted for 241 s - forgetting 2 failed and 12 visited goals
+[INFO] [1794258120.744767508] [exploration_coordinator]: goal world (0.00, 7.40): too tight, using (0.08, 7.43)
+[INFO] [1794258120.825292582] [exploration_coordinator]: goal world (0.08, 7.43): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.3 s) | targets head (0.08, 7.43)
+[INFO] [1794258182.022355278] [exploration_coordinator]: relay1: HOLDING -> RETURNING at (2.50, -10.28)
+[INFO] [1794258194.730787084] [exploration_coordinator]: relay1 17.75 m from its spot - going back to its parking spot
+[INFO] [1794258324.932180611] [exploration_coordinator]: relay1: RETURNING -> PARKED at (3.97, 7.17)
+[WARN] [1794258328.565972391] [exploration_coordinator]: interval 1: client gained nothing on its path in 30 s (at -2.78, 1.08) - stopping the plan
+[INFO] [1794258331.672560719] [exploration_coordinator]: OWN GOAL instead of (-3.40, -10.60): goal world (-11.18, 2.68): DEPLOY [gcs > relay2 > head] 1 relay(s) moved (t_f 5); final route gcs > relay2 > head, weakest hop -78.9
+[INFO] [1794258332.013852758] [exploration_coordinator]: relay2: RELAYING -> DEPLOYING at (2.57, -0.61)
+[WARN] [1794258722.107829176] [exploration_coordinator]: interval 5: client gained nothing on its path in 30 s (at -10.97, 0.86) - stopping the plan
+[INFO] [1794258722.550087237] [exploration_coordinator]: relay2: DEPLOYING -> RELAYING at (2.00, 0.65)
+[WARN] [1794258722.554400967] [exploration_coordinator]: no goal accepted for 120 s - forgetting 2 failed and 0 visited goals
+[INFO] [1794258722.749241905] [exploration_coordinator]: goal world (-10.40, 2.70): too tight, using (-10.97, 2.73)
+[INFO] [1794258722.777956966] [exploration_coordinator]: goal world (-10.97, 2.73): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.2 s) | targets head (-10.97, 2.73)
+[WARN] [1794259093.730155902] [exploration_coordinator]: interval 4: client gained nothing on its path in 30 s (at -10.53, 0.56) - stopping the plan
+[INFO] [1794259094.783871963] [exploration_coordinator]: OWN GOAL instead of (-3.40, -10.60): goal world (-9.22, 2.73): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5)
+[WARN] [1794259226.892395134] [exploration_coordinator]: interval 2: client gained nothing on its path in 30 s (at -10.53, -0.31) - stopping the plan
+[INFO] [1794259227.764875884] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794259228.379636094] [exploration_coordinator]: goal world (-11.70, 1.80): too tight, using (-11.22, 2.18)
+[INFO] [1794259228.416828523] [exploration_coordinator]: goal world (-11.22, 2.18): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5) (0.0 s) | targets head (-11.22, 2.18)
+[WARN] [1794259540.087139482] [exploration_coordinator]: interval 4: client gained nothing on its path in 30 s (at -10.37, -0.38) - stopping the plan
+[INFO] [1794259540.794420088] [exploration_coordinator]: OWN GOAL instead of (-3.40, -10.60): goal world (-11.22, 2.18): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5)
+[INFO] [1794259742.811629274] [exploration_coordinator]: OWN GOAL instead of (-10.30, 2.80): goal world (-10.97, 2.73): CLIENT_ONLY [gcs > relay2 > head] goal inside the bounded region (t_f 5)
+[INFO] [1794259754.756101255] [exploration_coordinator]: goal world (0.00, 7.40): too tight, using (0.08, 7.43)
+[INFO] [1794259754.872335828] [exploration_coordinator]: goal world (0.08, 7.43): CLIENT_ONLY [gcs > head] goal inside the bounded region (t_f 5) (0.3 s) | targets head (0.08, 7.43)
+[INFO] [1794260030.834055374] [exploration_coordinator]: relay2: RELAYING -> HOLDING at (2.00, 0.65)
+[INFO] [1794260095.021009177] [exploration_coordinator]: relay2: HOLDING -> RETURNING at (2.00, 0.65)
+[INFO] [1794260122.056770115] [exploration_coordinator]: relay2 7.35 m from its spot - going back to its parking spot
+[WARN] [1794260148.560281686] [exploration_coordinator]: no goal accepted for 123 s - forgetting 3 failed and 3 visited goals
+[INFO] [1794260149.765516727] [exploration_coordinator]: goal world (-5.80, 7.60): DEPLOY [gcs > relay1 > head] 1 relay(s) moved (t_f 5); final route gcs > relay1 > head, weakest hop -75.9 (1.2 s) | targets relay1 (-0.49, 7.48), head (-5.80, 7.60)
+[INFO] [1794260150.520917237] [exploration_coordinator]: relay1: PARKED -> DEPLOYING at (3.97, 7.20)
+[INFO] [1794260200.636258184] [exploration_coordinator]: relay2: RETURNING -> PARKED at (4.73, 7.21)
+[INFO] [1794260226.768330010] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260226.810342878] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260226.858516930] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260226.897157425] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260226.939083038] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260227.549811158] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260227.596286799] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260227.652959703] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260227.698581360] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260227.746407582] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260228.542737390] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260228.583117988] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260228.632022032] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260228.672742471] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260228.720150822] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260229.218416053] [exploration_coordinator]: relay1: DEPLOYING -> RELAYING at (-0.23, 7.45)
+[INFO] [1794260229.747033026] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260229.819704864] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260229.872268098] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260229.927019795] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260229.976415318] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260230.557497717] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260230.627581409] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260230.690274240] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260230.738109081] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260230.882197483] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260231.553029155] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260231.608483954] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260231.661860368] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260231.717030058] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260231.760681951] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260232.553255076] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260232.595864124] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260232.643536588] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260232.688968435] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260232.732249733] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260233.747049407] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260233.790462972] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260233.842409519] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260233.897241005] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260233.937992553] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260234.552682647] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260234.602945703] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260234.650693039] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260234.696068416] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260234.745454417] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260235.547313470] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260235.597567018] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260235.651233688] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260235.690762207] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260235.733718044] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260236.552819329] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260236.598570214] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260236.646742636] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260236.692612886] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260236.736285695] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260237.747108979] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260237.796484030] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260237.850491572] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260237.893648369] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260237.939752705] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260238.554544094] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260238.607738602] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260238.658124780] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260238.708410242] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260238.750787020] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260239.543243769] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260239.593742062] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260239.639972198] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260239.685280865] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260239.731485454] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260240.550286361] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260240.595991476] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260240.637175544] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260240.688850808] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260240.740886077] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260241.752790649] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260241.798073763] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260241.846217500] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260241.883955591] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260241.939971200] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260242.552044836] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260242.595789601] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260242.637332563] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260242.676910418] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260242.721339941] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260243.557294093] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260243.608014778] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260243.646874614] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260243.689044574] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260243.733373426] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260244.550765680] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260244.614676506] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260244.664544584] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260244.705795635] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260244.743373717] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260245.750889371] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260245.795804435] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260245.847607005] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260245.899808568] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260245.938274365] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260246.557336284] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260246.603663221] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260246.659185258] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260246.702472890] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260246.752843923] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260247.550185637] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260247.596922888] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260247.634140650] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260247.680409991] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260247.717649572] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260248.547841073] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260248.594164210] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260248.636038170] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260248.714975133] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260248.755895778] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260249.751786414] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260249.801185738] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260249.849475336] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260249.899364717] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260249.950719846] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260250.550532228] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260250.600606801] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260250.652497565] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260250.692279986] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260250.745749532] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260251.560319457] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260251.629324510] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260251.672322521] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260251.718599046] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260251.763456573] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260252.545140002] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260252.588434240] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260252.640496292] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260252.684088965] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260252.735931249] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260253.753599853] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260253.796823380] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260253.849266564] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260253.892022621] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260253.943122815] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260254.556658535] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260254.603193486] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260254.650465085] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260254.693826559] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260254.741879719] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260255.550284585] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260255.617666562] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260255.658048088] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260255.707864251] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260255.750331443] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260256.547408632] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260256.591152557] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260256.640085401] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260256.683491988] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260256.733194313] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260257.740089773] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260257.787050727] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260257.841720934] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260257.889300829] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260257.935706334] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260258.548116364] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260258.602343702] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260258.647963235] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260258.689636636] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260258.733713533] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260259.555415355] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260259.604334080] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260259.647965415] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260259.693779276] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260259.743025218] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260260.546578892] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260260.583886516] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260260.629548573] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260260.679727351] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260260.717097129] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260261.756102756] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260261.821254441] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260261.865375379] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260261.904708454] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260261.945414155] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260262.546574721] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260262.602109444] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260262.645369789] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260262.691572794] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260262.734651618] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260263.549057166] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260263.592322354] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260263.643712658] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260263.698204780] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260263.739380291] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260264.562151294] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260264.617732737] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260264.659841070] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260264.708166031] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260264.771188226] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260265.753738917] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260265.797417732] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260265.842310357] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260265.884236472] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260265.931349376] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260266.549164052] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260266.591753818] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260266.632891756] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260266.671996231] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260266.715969439] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260267.548606832] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260267.590617219] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260267.640195463] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260267.697287238] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260267.742156810] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260268.553587289] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260268.597795310] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260268.645211843] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260268.685440409] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260268.733895965] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260269.745452411] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260269.798771723] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260269.842268925] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260269.890513666] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260269.942425354] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260270.553064357] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260270.602184714] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260270.642837687] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260270.683327066] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260270.732813683] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260271.550683033] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260271.598450133] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260271.647872961] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260271.697501960] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260271.739938288] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260272.547959196] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260272.594515843] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260272.652135454] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260272.705285447] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260272.756254635] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260273.756283053] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260273.800810843] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260273.845401301] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260273.895013857] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260273.936565257] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260274.552439855] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260274.604024713] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260274.659252535] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260274.709788272] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260274.751745266] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260275.553468493] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260275.592826166] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260275.642543817] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260275.682959931] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260275.735593234] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260276.550741712] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260276.605709908] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260276.649507660] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260276.698906377] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260276.743825549] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260277.748925136] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260277.788560862] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260277.828824981] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260277.874113912] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260277.916667251] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260278.549121314] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260278.608931958] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260278.652583987] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260278.708791105] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260278.759110784] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260279.551708402] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260279.589434108] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260279.630233887] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260279.672377387] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260279.719657980] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260280.561231537] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260280.604497865] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260280.655360745] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260280.712652745] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260280.767730382] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260281.750670470] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260281.798383102] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260281.845546159] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260281.886947982] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260281.931322423] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260282.556472963] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260282.607048944] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260282.651422171] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260282.695443683] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260282.744049683] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260283.560300059] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260283.610351594] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260283.661063299] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260283.712847814] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260283.754828824] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260284.557447332] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260284.599917766] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260284.646178602] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260284.697825246] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260284.746323616] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260285.753444585] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260285.796437182] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260285.853681108] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260285.903462456] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260285.941770397] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260286.551928110] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260286.594519270] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260286.645399850] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260286.688009373] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260286.734012009] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260287.549044201] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260287.592584628] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260287.628758146] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260287.667076875] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260287.710385682] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260288.547725096] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260288.590144602] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260288.640975209] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260288.679550930] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260288.717681183] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260289.741302535] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260289.785454535] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260289.829121778] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260289.879481690] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260289.924683035] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260290.546908572] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260290.589451146] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260290.644415388] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260290.683343834] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260290.726171799] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260291.547293435] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260291.590157607] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260291.629971848] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260291.683164147] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260291.738787641] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260292.552916769] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260292.603448270] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260292.648798791] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260292.688141580] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260292.746495993] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260293.746340758] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260293.786300956] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260293.831106340] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260293.878966484] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260293.918437058] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260294.546010965] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260294.586083313] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260294.622896400] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260294.674106466] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260294.720267154] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260295.559903097] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260295.609261895] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260295.655196257] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260295.706432111] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260295.748600938] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260296.546946628] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260296.583065622] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260296.619433743] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260296.670882092] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260296.716015865] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260297.748383913] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260297.798239767] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260297.841202234] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260297.886203019] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260297.925688180] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260298.550514721] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260298.603171941] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260298.649968406] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260298.692284390] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260298.738156084] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260299.549462632] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260299.599476845] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260299.647294741] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260299.695663396] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260299.741770401] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260300.552543381] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260300.593848164] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260300.636506599] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260300.675429783] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260300.716162811] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260301.740451511] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260301.785094112] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260301.832391206] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260301.877873518] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260301.925045429] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260302.552587279] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260302.591142679] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260302.629338295] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260302.676521968] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260302.718913135] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260303.559128748] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260303.610274864] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260303.657297040] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260303.696367328] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260303.739854465] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260304.553346102] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260304.605821003] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260304.661842229] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260304.708466495] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260304.758684262] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260305.808850836] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260305.851468315] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260306.003309801] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260306.045919902] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260306.093231405] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260306.549495128] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260306.592440826] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260306.639445735] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260306.687045672] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260306.733456966] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260307.545693581] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260307.590342275] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260307.635712417] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260307.676606112] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260307.741708516] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260308.557740141] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260308.596520369] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260308.656610044] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260308.712626819] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260308.769555467] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260309.751798424] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260309.798227969] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260309.842249166] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260309.886671327] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260309.927496151] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260310.547777603] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260310.591107944] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260310.626992776] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260310.670156393] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260310.716477337] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260311.555731101] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260311.598556890] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260311.638443662] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260311.681598438] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260311.717890458] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260312.549058324] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260312.592256772] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260312.669760361] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260312.717659421] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260312.760612699] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260313.745329371] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260313.786127327] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260313.841477213] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260313.884490036] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260313.930674890] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260314.555743476] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260314.600292355] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260314.645476975] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260314.694779329] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260314.744559697] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260315.554656707] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260315.602509144] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260315.653189183] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260315.703889508] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260315.750160335] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260316.553324171] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260316.600259864] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260316.644667580] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260316.688741705] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260316.736595895] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor
+[INFO] [1794260317.741469642] [exploration_coordinator]: goal world (-12.90, 1.50): REJECTED - not connected to the explored floor
+[INFO] [1794260317.787616336] [exploration_coordinator]: goal world (-13.30, 2.70): REJECTED - not connected to the explored floor
+[INFO] [1794260317.824228177] [exploration_coordinator]: goal world (-13.00, 0.10): REJECTED - not connected to the explored floor
+[INFO] [1794260317.857848222] [exploration_coordinator]: goal world (-12.40, 2.10): REJECTED - not connected to the explored floor
+[INFO] [1794260317.891171988] [exploration_coordinator]: goal world (-12.50, 1.70): REJECTED - not connected to the explored floor

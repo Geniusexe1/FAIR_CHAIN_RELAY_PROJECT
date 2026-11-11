@@ -73,11 +73,17 @@ def main():
     ap.add_argument("--P0", type=float, default=-45.0)
     ap.add_argument("--fps", type=int, default=8)
     ap.add_argument("--maps", default="", help="the coordinator's --map-log directory")
+    ap.add_argument("--radio-gt", default="", help="the radio's own grid, if the run had one")
+    ap.add_argument("--states", default="", help="the coordinator's --state-log: labels each relay with its state")
+    ap.add_argument("--clearance", type=float, default=0.45, help="reachable floor: m from walls")
     a = ap.parse_args()
     root = os.path.dirname(HERE)
     gt = a.gt if os.path.isabs(a.gt) else os.path.join(root, a.gt)
     g = GridMap.load(gt + ".npy", gt + ".json")
-    pred = Predictor(g, PropagationParams(P0=a.P0), NoiseParams())
+    rg = a.radio_gt if os.path.isabs(a.radio_gt) else os.path.join(root, a.radio_gt)
+    pred = Predictor(GridMap.load(rg + ".npy", rg + ".json") if a.radio_gt else g, PropagationParams(P0=a.P0), NoiseParams())
+    states = [json.loads(x) for x in open(a.states)] if a.states else []
+    st_t = [x["t"] for x in states]
     rows = [r for r in csv.DictReader(open(a.csv)) if r.get("head_x")]
     dec = decisions(a.log)
     snaps = snapshots(a.maps) if a.maps else []
@@ -97,7 +103,7 @@ def main():
         from propagation import geodesic_distance
         first = next(r for r in rows if r.get("head_x"))           # reachable floor, as explore_sim scores it
         reach = np.isfinite(geodesic_distance(g, g.world_to_cell(float(first["head_x"]), float(first["head_y"])))) \
-            & (distance_transform_edt(g.free) * g.res >= 0.45)
+            & (distance_transform_edt(g.free) * g.res >= a.clearance)
         H_, W_ = g.shape
         gx = g.origin[0] + (np.arange(W_) + 0.5) * g.res
         gy = g.origin[1] + (np.arange(H_) + 0.5) * g.res
@@ -126,6 +132,9 @@ def main():
                        Line2D([], [], color="#d62728", lw=3, label="link < -85")],
               loc="upper left", bbox_to_anchor=(1.005, 1.0), fontsize=8, framealpha=0.9)
     title = ax.set_title("", fontsize=10)
+    st_col = {"PARKED": "#6b7280", "DEPLOYING": "#d97706", "RELAYING": "#15803d", "RETURNING": "#7c3aed", "HOLDING": "#b91c1c"}
+    st_txt = {n: ax.text(0, 0, "", fontsize=8, fontweight="bold", color="white", zorder=11, visible=False,
+                         bbox=dict(boxstyle="round,pad=0.2", ec="none")) for n in COL if n != "head"}
     ax.set_xlabel("world x (m)"); ax.set_ylabel("world y (m)")
     fig.tight_layout(rect=[0, 0, 0.88 if wide else 1, 0.94])        # room for the two-line title
 
@@ -164,6 +173,19 @@ def main():
             if pts:
                 trails[n].set_data([p[0] for p in pts], [p[1] for p in pts])
                 dots[n].set_data([pts[-1][0]], [pts[-1][1]])
+        if states:
+            import bisect
+            day = time.localtime(st_t[0])
+            base = st_t[0] - (day.tm_hour * 3600 + day.tm_min * 60 + day.tm_sec)
+            k = bisect.bisect_right(st_t, base + t) - 1
+            cur_st = states[k]["state"] if k >= 0 else {}
+            for n, tx in st_txt.items():
+                p_ = pos(r, n)
+                if n in cur_st and p_:
+                    tx.set(text=f"{n} {cur_st[n]}", x=p_[0] + 0.35, y=p_[1] + 0.25, visible=True)
+                    tx.get_bbox_patch().set_facecolor(st_col[cur_st[n]])
+                else:
+                    tx.set_visible(False)
         names = ["GCS" if c.lower() == "gcs" else c for c in chain]
         xy = {"GCS": gcs, **{n: pos(r, n) for n in COL}}
         for k, ln in enumerate(links):

@@ -1,1 +1,279 @@
-08:36:06 === big_h_nav2_P45 (hospital, P0 -45, --yield-r 0 --guard 0) share 233 min
+10:34:28 === v3_u_nav2 (unist, P0 -45, --yield-r 0 --guard 0) share 177 min
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841712.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842197.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842101.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842185.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841916.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841892.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841904.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841951.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842078.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842160.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842210.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841867.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841699.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842281.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841976.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841561.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841817.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841487.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842294.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841626.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841963.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841830.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842147.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842234.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842308.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841649.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841661.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841499.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841855.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842245.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841881.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841614.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842052.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841765.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842014.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841524.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841804.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842134.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842001.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841448.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841549.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842173.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841574.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841791.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841588.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842123.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841537.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841637.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841462.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841928.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841474.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841739.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841843.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842112.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841686.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841603.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842039.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842269.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842257.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841674.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842027.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841512.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841753.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841988.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842065.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841778.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842089.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793842222.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841940.npz': Permission denied
+rm: cannot remove 'FAIR_CHAIN_RELAY_PROJECT/rssi/out/live_runs/v3_u_nav2_maps/map_1793841725.npz': Permission denied
+10:43:12 v3_u_nav2 launched in 504 s: 0 launch problems
+10:45:13 v3_u_nav2 coverage 23.4% 0.41
+10:45:21 v3_u_nav2 fastlio_vs_gazebo 0.2 m
+10:47:34 v3_u_nav2 coverage 33.2% 0.42
+10:47:41 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+10:49:54 v3_u_nav2 coverage 33.2% 0.40
+10:49:58 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+10:52:12 v3_u_nav2 coverage 33.2% 0.41
+10:52:21 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+10:54:32 v3_u_nav2 coverage 33.2% 0.40
+10:54:35 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+10:56:48 v3_u_nav2 coverage 37.2% 0.40
+10:56:51 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+10:59:06 v3_u_nav2 coverage 0% 0.46
+10:59:09 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:01:23 v3_u_nav2 coverage 0% 0.45
+11:01:26 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:03:38 v3_u_nav2 coverage 0% 0.48
+11:03:41 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:06:03 v3_u_nav2 coverage 0% 0.44
+11:06:07 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:08:18 v3_u_nav2 coverage 46.9% 0.41
+11:08:31 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:10:47 v3_u_nav2 coverage 0% 0.44
+11:10:51 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:13:01 v3_u_nav2 coverage 0% 0.44
+11:13:05 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:15:15 v3_u_nav2 coverage 50.8% 0.44
+11:15:21 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:17:35 v3_u_nav2 coverage 50.8% 0.41
+11:17:41 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:20:04 v3_u_nav2 coverage 50.8% 0.40
+11:20:11 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:22:25 v3_u_nav2 coverage 0% 0.45
+11:22:31 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:24:42 v3_u_nav2 coverage 0% 0.41
+11:24:51 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:27:01 v3_u_nav2 coverage 0% 0.42
+11:27:11 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:29:28 v3_u_nav2 coverage 0% 0.42
+11:29:30 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:31:41 v3_u_nav2 coverage 0% 0.44
+11:31:44 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+11:34:00 v3_u_nav2 coverage 0% 0.43
+11:34:04 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+11:36:14 v3_u_nav2 coverage 64.6% 0.41
+11:36:21 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+11:38:43 v3_u_nav2 coverage 0% 0.41
+11:38:51 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+11:41:04 v3_u_nav2 coverage 0% 0.43
+11:41:07 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+11:43:25 v3_u_nav2 coverage 0% 0.41
+11:43:28 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+11:45:43 v3_u_nav2 coverage 0% 0.45
+11:45:52 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+11:48:07 v3_u_nav2 coverage 78.3% 0.40
+11:48:11 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+11:50:31 v3_u_nav2 coverage 78.7% 0.41
+11:50:41 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+11:52:55 v3_u_nav2 coverage 0% 0.39
+11:53:02 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:55:24 v3_u_nav2 coverage 83.9% 0.47
+11:55:33 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+11:57:45 v3_u_nav2 coverage 83.9% 0.44
+11:57:48 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:00:11 v3_u_nav2 coverage 83.9% 0.45
+12:00:21 v3_u_nav2 fastlio_vs_gazebo 0.2 m
+12:02:34 v3_u_nav2 coverage 83.9% 0.43
+12:02:41 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:04:54 v3_u_nav2 coverage 83.9% 0.46
+12:04:57 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:07:07 v3_u_nav2 coverage 83.9% 0.42
+12:07:10 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:09:24 v3_u_nav2 coverage 83.9% 0.43
+12:09:28 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:11:46 v3_u_nav2 coverage 87.0% 0.42
+12:11:54 v3_u_nav2 fastlio_vs_gazebo 0.3 m
+12:14:18 v3_u_nav2 coverage 91.0% 0.45
+12:14:31 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:16:44 v3_u_nav2 coverage 91.0% 0.44
+12:16:48 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:18:59 v3_u_nav2 coverage 91.0% 0.48
+12:19:11 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:21:36 v3_u_nav2 coverage 91.0% 0.41
+12:21:41 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:23:56 v3_u_nav2 coverage 91.0% 0.40
+12:23:58 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:26:10 v3_u_nav2 coverage 91.0% 0.40
+12:26:14 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:28:40 v3_u_nav2 coverage 91.0% 0.45
+12:28:43 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:30:55 v3_u_nav2 coverage 91.0% 0.41
+12:31:01 v3_u_nav2 fastlio_vs_gazebo 0.0 m
+12:33:14 v3_u_nav2 coverage 91.0% 0.40
+12:33:21 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:35:31 v3_u_nav2 coverage 91.0% 0.44
+12:35:35 v3_u_nav2 fastlio_vs_gazebo 0.2 m
+12:37:45 v3_u_nav2 coverage 91.6% 0.48
+12:37:51 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:40:10 v3_u_nav2 coverage 95.6% 0.39
+12:40:21 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:42:31 v3_u_nav2 coverage 95.6% 0.44
+12:42:41 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:44:52 v3_u_nav2 coverage 95.6% 0.44
+12:44:56 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:47:07 v3_u_nav2 coverage 95.6% 0.39
+12:47:11 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:49:24 v3_u_nav2 coverage 95.6% 0.38
+12:49:31 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:51:52 v3_u_nav2 coverage 95.6% 0.38
+12:51:55 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:54:08 v3_u_nav2 coverage 95.6% 0.38
+12:54:11 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:56:25 v3_u_nav2 coverage 95.6% 0.38
+12:56:31 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+12:58:45 v3_u_nav2 coverage 95.6% 0.39
+12:58:51 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+13:01:04 v3_u_nav2 coverage 95.6% 0.40
+13:01:08 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+13:03:19 v3_u_nav2 coverage 95.6% 0.39
+13:03:31 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+13:05:45 v3_u_nav2 coverage 95.6% 0.39
+13:05:51 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+13:08:08 v3_u_nav2 coverage 95.6% 0.37
+13:08:11 v3_u_nav2 fastlio_vs_gazebo 0.1 m
+13:10:32 v3_u_nav2 coverage 95.6% 0.38
+v3_u_nav2 result=plateau coverage=95.6% wall_min=157 world=unist P0=-45 extra=--yield-r 0 --guard 0
+13:12:28 === v3_u_full (unist, P0 -45, ) share 197 min
+13:21:46 v3_u_full launched in 538 s: 0 launch problems
+13:23:59 v3_u_full coverage 21.2% 0.45
+13:24:11 v3_u_full fastlio_vs_gazebo 0.2 m
+13:26:24 v3_u_full coverage 33.2% 0.45
+13:26:31 v3_u_full fastlio_vs_gazebo 0.1 m
+13:28:53 v3_u_full coverage 33.5% 0.46
+13:28:57 v3_u_full fastlio_vs_gazebo 0.0 m
+13:31:12 v3_u_full coverage 36.7% 0.46
+13:31:21 v3_u_full fastlio_vs_gazebo 0.1 m
+13:33:44 v3_u_full coverage 55.3% 0.44
+13:33:51 v3_u_full fastlio_vs_gazebo 0.0 m
+13:36:04 v3_u_full coverage 56.3% 0.46
+13:36:11 v3_u_full fastlio_vs_gazebo 0.0 m
+13:38:23 v3_u_full coverage 57.2% 0.40
+13:38:31 v3_u_full fastlio_vs_gazebo 0.0 m
+13:40:41 v3_u_full coverage 57.2% 0.41
+13:40:51 v3_u_full fastlio_vs_gazebo 0.0 m
+13:43:02 v3_u_full coverage 60.6% 0.46
+13:43:05 v3_u_full fastlio_vs_gazebo 0.1 m
+13:45:18 v3_u_full coverage 65.4% 0.42
+13:45:21 v3_u_full fastlio_vs_gazebo 0.0 m
+13:47:32 v3_u_full coverage 65.4% 0.41
+13:47:35 v3_u_full fastlio_vs_gazebo 0.1 m
+13:49:48 v3_u_full coverage 65.5% 0.40
+13:49:51 v3_u_full fastlio_vs_gazebo 0.1 m
+13:52:02 v3_u_full coverage 67.3% 0.46
+13:52:05 v3_u_full fastlio_vs_gazebo 0.1 m
+13:54:22 v3_u_full coverage 68.3% 0.41
+13:54:25 v3_u_full fastlio_vs_gazebo 0.1 m
+13:56:48 v3_u_full coverage 68.3% 0.39
+13:56:51 v3_u_full fastlio_vs_gazebo 0.1 m
+13:59:02 v3_u_full coverage 68.4% 0.44
+13:59:11 v3_u_full fastlio_vs_gazebo 0.1 m
+14:01:22 v3_u_full coverage 68.4% 0.46
+14:01:31 v3_u_full fastlio_vs_gazebo 0.1 m
+14:03:48 v3_u_full coverage 68.4% 0.41
+14:03:52 v3_u_full fastlio_vs_gazebo 0.2 m
+14:06:03 v3_u_full coverage 68.4% 0.39
+14:06:11 v3_u_full fastlio_vs_gazebo 0.1 m
+14:08:24 v3_u_full coverage 68.4% 0.43
+14:08:31 v3_u_full fastlio_vs_gazebo 0.2 m
+14:10:45 v3_u_full coverage 72.8% 0.38
+14:10:48 v3_u_full fastlio_vs_gazebo 0.0 m
+14:13:09 v3_u_full coverage 72.9% 0.45
+14:13:13 v3_u_full fastlio_vs_gazebo 0.1 m
+14:15:26 v3_u_full coverage 72.9% 0.41
+14:15:29 v3_u_full fastlio_vs_gazebo 0.1 m
+14:17:49 v3_u_full coverage 72.9% 0.42
+14:17:52 v3_u_full fastlio_vs_gazebo 0.1 m
+14:20:02 v3_u_full coverage 72.9% 0.42
+14:20:05 v3_u_full fastlio_vs_gazebo 0.1 m
+14:22:20 v3_u_full coverage 72.9% 0.47
+14:22:23 v3_u_full fastlio_vs_gazebo 0.1 m
+14:24:38 v3_u_full coverage 75.5% 0.41
+14:24:41 v3_u_full fastlio_vs_gazebo 0.0 m
+14:26:56 v3_u_full coverage 75.5% 0.39
+14:26:59 v3_u_full fastlio_vs_gazebo 0.0 m
+14:29:12 v3_u_full coverage 75.6% 0.39
+14:29:15 v3_u_full fastlio_vs_gazebo 0.0 m
+14:31:26 v3_u_full coverage 84.5% 0.45
+14:31:31 v3_u_full fastlio_vs_gazebo 0.2 m
+14:33:46 v3_u_full coverage 85.1% 0.46
+14:33:49 v3_u_full fastlio_vs_gazebo 0.1 m
+14:36:10 v3_u_full coverage 88.3% 0.44
+14:36:13 v3_u_full fastlio_vs_gazebo 0.1 m
+14:38:25 v3_u_full coverage 88.5% 0.41
+14:38:28 v3_u_full fastlio_vs_gazebo 0.0 m
+14:40:38 v3_u_full coverage 88.5% 0.39
+14:40:41 v3_u_full fastlio_vs_gazebo 0.0 m
+14:42:53 v3_u_full coverage 88.6% 0.42
+14:42:57 v3_u_full fastlio_vs_gazebo 0.1 m
+14:45:11 v3_u_full coverage 92.2% 0.41
+14:45:14 v3_u_full fastlio_vs_gazebo 0.1 m
+14:47:25 v3_u_full coverage 92.2% 0.40
+14:47:28 v3_u_full fastlio_vs_gazebo 0.1 m
+14:49:42 v3_u_full coverage 98.3% 0.41
+14:49:45 v3_u_full fastlio_vs_gazebo 0.1 m
+14:51:55 v3_u_full coverage 100.0% 0.39
+v3_u_full result=complete coverage=100.0% wall_min=100 world=unist P0=-45 extra=
+14:53:21 OVERNIGHT_DONE

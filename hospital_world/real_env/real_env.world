@@ -1,0 +1,499 @@
+<sdf version='1.7'>
+  <world name='default'>
+    <!-- FAIR copy of chain_robot_ros2/worlds/UNIST_indoor.world: the 9 'unit_box' test obstacles
+         (narrow gaps for chain_robot experiments, impassable for the relay cars) are removed,
+         leaving the plain 54 x 15 m corridor ring of UNIST building 112, 8th floor. The saved <state>
+         snapshot (old poses, sim time 38:50) is removed too. -->
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <physics name='default_physics' default='1' type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>100</iters>
+          <sor>1</sor>
+          <use_dynamic_moi_rescaling>0</use_dynamic_moi_rescaling>
+        </solver>
+        <constraints>
+          <cfm>1e-05</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>0.2</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+    </physics>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <model name='real_env'>
+      <static>1</static>
+      <link name='building'>
+        <collision name='c_w0'><pose>1.200 -14.040 1.300 0 0 0</pose><geometry><box><size>0.200 2.980 2.600</size></box></geometry></collision>
+        <visual name='v_w0'><pose>1.200 -14.040 1.300 0 0 0</pose><geometry><box><size>0.200 2.980 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w1'><pose>1.200 -5.700 1.300 0 0 0</pose><geometry><box><size>0.200 10.600 2.600</size></box></geometry></collision>
+        <visual name='v_w1'><pose>1.200 -5.700 1.300 0 0 0</pose><geometry><box><size>0.200 10.600 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w2'><pose>1.200 3.950 1.300 0 0 0</pose><geometry><box><size>0.200 5.600 2.600</size></box></geometry></collision>
+        <visual name='v_w2'><pose>1.200 3.950 1.300 0 0 0</pose><geometry><box><size>0.200 5.600 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w3'><pose>-11.950 -2.890 1.300 0 0 0</pose><geometry><box><size>0.200 13.120 2.600</size></box></geometry></collision>
+        <visual name='v_w3'><pose>-11.950 -2.890 1.300 0 0 0</pose><geometry><box><size>0.200 13.120 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w4'><pose>-5.475 3.570 1.300 0 0 0</pose><geometry><box><size>13.150 0.200 2.600</size></box></geometry></collision>
+        <visual name='v_w4'><pose>-5.475 3.570 1.300 0 0 0</pose><geometry><box><size>13.150 0.200 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w5'><pose>-5.475 -9.350 1.300 0 0 0</pose><geometry><box><size>13.150 0.200 2.600</size></box></geometry></collision>
+        <visual name='v_w5'><pose>-5.475 -9.350 1.300 0 0 0</pose><geometry><box><size>13.150 0.200 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w6'><pose>-11.690 -12.490 1.300 0 0 0</pose><geometry><box><size>0.200 6.080 2.600</size></box></geometry></collision>
+        <visual name='v_w6'><pose>-11.690 -12.490 1.300 0 0 0</pose><geometry><box><size>0.200 6.080 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w7'><pose>-5.345 -15.430 1.300 0 0 0</pose><geometry><box><size>12.890 0.200 2.600</size></box></geometry></collision>
+        <visual name='v_w7'><pose>-5.345 -15.430 1.300 0 0 0</pose><geometry><box><size>12.890 0.200 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w8'><pose>-4.200 6.650 1.300 0 0 0</pose><geometry><box><size>11.000 0.200 2.600</size></box></geometry></collision>
+        <visual name='v_w8'><pose>-4.200 6.650 1.300 0 0 0</pose><geometry><box><size>11.000 0.200 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w9'><pose>-9.600 7.530 1.300 0 0 0</pose><geometry><box><size>0.200 1.960 2.600</size></box></geometry></collision>
+        <visual name='v_w9'><pose>-9.600 7.530 1.300 0 0 0</pose><geometry><box><size>0.200 1.960 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w10'><pose>-1.700 8.410 1.300 0 0 0</pose><geometry><box><size>16.000 0.200 2.600</size></box></geometry></collision>
+        <visual name='v_w10'><pose>-1.700 8.410 1.300 0 0 0</pose><geometry><box><size>16.000 0.200 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w11'><pose>6.200 5.835 1.300 0 0 0</pose><geometry><box><size>0.200 5.350 2.600</size></box></geometry></collision>
+        <visual name='v_w11'><pose>6.200 5.835 1.300 0 0 0</pose><geometry><box><size>0.200 5.350 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w12'><pose>2.450 -15.540 1.300 0 0 0</pose><geometry><box><size>2.700 0.200 2.600</size></box></geometry></collision>
+        <visual name='v_w12'><pose>2.450 -15.540 1.300 0 0 0</pose><geometry><box><size>2.700 0.200 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w13'><pose>3.700 -6.140 1.300 0 0 0</pose><geometry><box><size>0.200 19.000 2.600</size></box></geometry></collision>
+        <visual name='v_w13'><pose>3.700 -6.140 1.300 0 0 0</pose><geometry><box><size>0.200 19.000 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_w14'><pose>4.950 3.260 1.300 0 0 0</pose><geometry><box><size>2.700 0.200 2.600</size></box></geometry></collision>
+        <visual name='v_w14'><pose>4.950 3.260 1.300 0 0 0</pose><geometry><box><size>2.700 0.200 2.600</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual>
+        <collision name='c_c0'><pose>-8.850 -9.025 0.400 0 0 0</pose><geometry><box><size>1.500 0.450 0.800</size></box></geometry></collision>
+        <visual name='v_c0'><pose>-8.850 -9.025 0.400 0 0 0</pose><geometry><box><size>1.500 0.450 0.800</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_c1'><pose>-11.425 -8.175 0.400 0 0 0</pose><geometry><box><size>0.850 2.150 0.800</size></box></geometry></collision>
+        <visual name='v_c1'><pose>-11.425 -8.175 0.400 0 0 0</pose><geometry><box><size>0.850 2.150 0.800</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_c2'><pose>-11.575 1.300 0.400 0 0 0</pose><geometry><box><size>0.550 0.600 0.800</size></box></geometry></collision>
+        <visual name='v_c2'><pose>-11.575 1.300 0.400 0 0 0</pose><geometry><box><size>0.550 0.600 0.800</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_c3'><pose>-0.650 -9.755 0.400 0 0 0</pose><geometry><box><size>2.900 0.610 0.800</size></box></geometry></collision>
+        <visual name='v_c3'><pose>-0.650 -9.755 0.400 0 0 0</pose><geometry><box><size>2.900 0.610 0.800</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_c4'><pose>0.800 -14.380 0.400 0 0 0</pose><geometry><box><size>0.600 1.440 0.800</size></box></geometry></collision>
+        <visual name='v_c4'><pose>0.800 -14.380 0.400 0 0 0</pose><geometry><box><size>0.600 1.440 0.800</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_c5'><pose>-11.295 -14.415 0.400 0 0 0</pose><geometry><box><size>0.590 1.830 0.800</size></box></geometry></collision>
+        <visual name='v_c5'><pose>-11.295 -14.415 0.400 0 0 0</pose><geometry><box><size>0.590 1.830 0.800</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_t0'><pose>-10.100 1.700 0.340 0 0 0</pose><geometry><box><size>0.800 1.400 0.680</size></box></geometry></collision>
+        <visual name='v_t0'><pose>-10.100 1.700 0.340 0 0 0</pose><geometry><box><size>0.800 1.400 0.680</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_t1'><pose>-8.600 -10.675 0.340 0 0 0</pose><geometry><box><size>1.200 1.550 0.680</size></box></geometry></collision>
+        <visual name='v_t1'><pose>-8.600 -10.675 0.340 0 0 0</pose><geometry><box><size>1.200 1.550 0.680</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_t2'><pose>-8.375 -13.575 0.340 0 0 0</pose><geometry><box><size>1.050 1.550 0.680</size></box></geometry></collision>
+        <visual name='v_t2'><pose>-8.375 -13.575 0.340 0 0 0</pose><geometry><box><size>1.050 1.550 0.680</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_t3'><pose>-10.945 -9.675 0.340 0 0 0</pose><geometry><box><size>1.290 0.450 0.680</size></box></geometry></collision>
+        <visual name='v_t3'><pose>-10.945 -9.675 0.340 0 0 0</pose><geometry><box><size>1.290 0.450 0.680</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_t4'><pose>-3.950 -11.000 0.340 0 0 0</pose><geometry><box><size>5.700 0.400 0.680</size></box></geometry></collision>
+        <visual name='v_t4'><pose>-3.950 -11.000 0.340 0 0 0</pose><geometry><box><size>5.700 0.400 0.680</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_t5'><pose>-3.950 -13.400 0.340 0 0 0</pose><geometry><box><size>5.700 0.400 0.680</size></box></geometry></collision>
+        <visual name='v_t5'><pose>-3.950 -13.400 0.340 0 0 0</pose><geometry><box><size>5.700 0.400 0.680</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_t6'><pose>-6.500 -12.200 0.340 0 0 0</pose><geometry><box><size>0.600 2.000 0.680</size></box></geometry></collision>
+        <visual name='v_t6'><pose>-6.500 -12.200 0.340 0 0 0</pose><geometry><box><size>0.600 2.000 0.680</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_t7'><pose>-1.350 -12.200 0.340 0 0 0</pose><geometry><box><size>0.500 2.000 0.680</size></box></geometry></collision>
+        <visual name='v_t7'><pose>-1.350 -12.200 0.340 0 0 0</pose><geometry><box><size>0.500 2.000 0.680</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d0'><pose>-8.190 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d0'><pose>-8.190 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d0_p'><pose>-8.365 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d0_p'><pose>-8.365 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d0_s'><pose>-8.190 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d0_s'><pose>-8.190 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d0_n'><pose>-8.190 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d0_n'><pose>-8.190 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d0_e'><pose>-7.915 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d0_e'><pose>-7.915 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d1'><pose>-6.950 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d1'><pose>-6.950 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d1_p'><pose>-7.125 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d1_p'><pose>-7.125 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d1_s'><pose>-6.950 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d1_s'><pose>-6.950 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d1_n'><pose>-6.950 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d1_n'><pose>-6.950 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d1_e'><pose>-6.675 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d1_e'><pose>-6.675 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d2'><pose>-5.440 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d2'><pose>-5.440 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d2_p'><pose>-5.615 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d2_p'><pose>-5.615 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d2_s'><pose>-5.440 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d2_s'><pose>-5.440 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d2_n'><pose>-5.440 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d2_n'><pose>-5.440 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d2_e'><pose>-5.165 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d2_e'><pose>-5.165 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d3'><pose>-4.110 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d3'><pose>-4.110 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d3_p'><pose>-4.285 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d3_p'><pose>-4.285 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d3_s'><pose>-4.110 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d3_s'><pose>-4.110 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d3_n'><pose>-4.110 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d3_n'><pose>-4.110 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d3_e'><pose>-3.835 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d3_e'><pose>-3.835 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d4'><pose>-2.700 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d4'><pose>-2.700 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d4_p'><pose>-2.875 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d4_p'><pose>-2.875 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d4_s'><pose>-2.700 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d4_s'><pose>-2.700 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d4_n'><pose>-2.700 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d4_n'><pose>-2.700 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d4_e'><pose>-2.425 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d4_e'><pose>-2.425 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d5'><pose>-1.300 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d5'><pose>-1.300 2.220 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d5_p'><pose>-1.475 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d5_p'><pose>-1.475 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d5_s'><pose>-1.300 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d5_s'><pose>-1.300 1.445 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d5_n'><pose>-1.300 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d5_n'><pose>-1.300 2.995 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d5_e'><pose>-1.025 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d5_e'><pose>-1.025 2.220 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d6'><pose>-8.250 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d6'><pose>-8.250 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d6_p'><pose>-8.425 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d6_p'><pose>-8.425 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d6_s'><pose>-8.250 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d6_s'><pose>-8.250 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d6_n'><pose>-8.250 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d6_n'><pose>-8.250 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d6_e'><pose>-7.975 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d6_e'><pose>-7.975 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d7'><pose>-6.890 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d7'><pose>-6.890 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d7_p'><pose>-7.065 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d7_p'><pose>-7.065 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d7_s'><pose>-6.890 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d7_s'><pose>-6.890 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d7_n'><pose>-6.890 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d7_n'><pose>-6.890 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d7_e'><pose>-6.615 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d7_e'><pose>-6.615 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d8'><pose>-5.580 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d8'><pose>-5.580 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d8_p'><pose>-5.755 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d8_p'><pose>-5.755 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d8_s'><pose>-5.580 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d8_s'><pose>-5.580 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d8_n'><pose>-5.580 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d8_n'><pose>-5.580 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d8_e'><pose>-5.305 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d8_e'><pose>-5.305 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d9'><pose>-4.110 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d9'><pose>-4.110 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d9_p'><pose>-4.285 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d9_p'><pose>-4.285 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d9_s'><pose>-4.110 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d9_s'><pose>-4.110 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d9_n'><pose>-4.110 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d9_n'><pose>-4.110 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d9_e'><pose>-3.835 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d9_e'><pose>-3.835 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d10'><pose>-3.020 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d10'><pose>-3.020 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d10_p'><pose>-3.195 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d10_p'><pose>-3.195 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d10_s'><pose>-3.020 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d10_s'><pose>-3.020 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d10_n'><pose>-3.020 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d10_n'><pose>-3.020 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d10_e'><pose>-2.745 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d10_e'><pose>-2.745 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d11'><pose>-1.520 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d11'><pose>-1.520 -0.010 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d11_p'><pose>-1.695 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d11_p'><pose>-1.695 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d11_s'><pose>-1.520 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d11_s'><pose>-1.520 -0.785 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d11_n'><pose>-1.520 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d11_n'><pose>-1.520 0.765 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d11_e'><pose>-1.245 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d11_e'><pose>-1.245 -0.010 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d12'><pose>-8.050 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d12'><pose>-8.050 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d12_p'><pose>-8.225 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d12_p'><pose>-8.225 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d12_s'><pose>-8.050 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d12_s'><pose>-8.050 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d12_n'><pose>-8.050 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d12_n'><pose>-8.050 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d12_e'><pose>-7.775 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d12_e'><pose>-7.775 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d13'><pose>-6.910 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d13'><pose>-6.910 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d13_p'><pose>-7.085 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d13_p'><pose>-7.085 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d13_s'><pose>-6.910 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d13_s'><pose>-6.910 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d13_n'><pose>-6.910 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d13_n'><pose>-6.910 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d13_e'><pose>-6.635 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d13_e'><pose>-6.635 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d14'><pose>-5.400 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d14'><pose>-5.400 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d14_p'><pose>-5.575 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d14_p'><pose>-5.575 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d14_s'><pose>-5.400 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d14_s'><pose>-5.400 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d14_n'><pose>-5.400 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d14_n'><pose>-5.400 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d14_e'><pose>-5.125 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d14_e'><pose>-5.125 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d15'><pose>-4.050 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d15'><pose>-4.050 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d15_p'><pose>-4.225 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d15_p'><pose>-4.225 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d15_s'><pose>-4.050 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d15_s'><pose>-4.050 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d15_n'><pose>-4.050 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d15_n'><pose>-4.050 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d15_e'><pose>-3.775 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d15_e'><pose>-3.775 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d16'><pose>-2.840 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d16'><pose>-2.840 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d16_p'><pose>-3.015 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d16_p'><pose>-3.015 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d16_s'><pose>-2.840 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d16_s'><pose>-2.840 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d16_n'><pose>-2.840 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d16_n'><pose>-2.840 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d16_e'><pose>-2.565 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d16_e'><pose>-2.565 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d17'><pose>-1.720 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d17'><pose>-1.720 -2.440 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d17_p'><pose>-1.895 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d17_p'><pose>-1.895 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d17_s'><pose>-1.720 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d17_s'><pose>-1.720 -3.215 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d17_n'><pose>-1.720 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d17_n'><pose>-1.720 -1.665 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d17_e'><pose>-1.445 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d17_e'><pose>-1.445 -2.440 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d18'><pose>-8.030 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d18'><pose>-8.030 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d18_p'><pose>-8.205 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d18_p'><pose>-8.205 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d18_s'><pose>-8.030 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d18_s'><pose>-8.030 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d18_n'><pose>-8.030 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d18_n'><pose>-8.030 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d18_e'><pose>-7.755 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d18_e'><pose>-7.755 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d19'><pose>-6.710 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d19'><pose>-6.710 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d19_p'><pose>-6.885 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d19_p'><pose>-6.885 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d19_s'><pose>-6.710 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d19_s'><pose>-6.710 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d19_n'><pose>-6.710 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d19_n'><pose>-6.710 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d19_e'><pose>-6.435 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d19_e'><pose>-6.435 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d20'><pose>-5.460 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d20'><pose>-5.460 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d20_p'><pose>-5.635 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d20_p'><pose>-5.635 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d20_s'><pose>-5.460 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d20_s'><pose>-5.460 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d20_n'><pose>-5.460 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d20_n'><pose>-5.460 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d20_e'><pose>-5.185 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d20_e'><pose>-5.185 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d21'><pose>-4.210 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d21'><pose>-4.210 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d21_p'><pose>-4.385 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d21_p'><pose>-4.385 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d21_s'><pose>-4.210 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d21_s'><pose>-4.210 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d21_n'><pose>-4.210 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d21_n'><pose>-4.210 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d21_e'><pose>-3.935 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d21_e'><pose>-3.935 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d22'><pose>-3.060 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d22'><pose>-3.060 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d22_p'><pose>-3.235 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d22_p'><pose>-3.235 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d22_s'><pose>-3.060 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d22_s'><pose>-3.060 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d22_n'><pose>-3.060 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d22_n'><pose>-3.060 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d22_e'><pose>-2.785 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d22_e'><pose>-2.785 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d23'><pose>-1.580 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d23'><pose>-1.580 -5.280 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d23_p'><pose>-1.755 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d23_p'><pose>-1.755 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d23_s'><pose>-1.580 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d23_s'><pose>-1.580 -6.055 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d23_n'><pose>-1.580 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d23_n'><pose>-1.580 -4.505 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d23_e'><pose>-1.305 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d23_e'><pose>-1.305 -5.280 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d24'><pose>-8.000 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d24'><pose>-8.000 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d24_p'><pose>-8.175 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d24_p'><pose>-8.175 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d24_s'><pose>-8.000 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d24_s'><pose>-8.000 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d24_n'><pose>-8.000 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d24_n'><pose>-8.000 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d24_e'><pose>-7.725 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d24_e'><pose>-7.725 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d25'><pose>-6.700 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d25'><pose>-6.700 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d25_p'><pose>-6.875 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d25_p'><pose>-6.875 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d25_s'><pose>-6.700 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d25_s'><pose>-6.700 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d25_n'><pose>-6.700 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d25_n'><pose>-6.700 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d25_e'><pose>-6.425 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d25_e'><pose>-6.425 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d26'><pose>-5.600 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d26'><pose>-5.600 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d26_p'><pose>-5.775 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d26_p'><pose>-5.775 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d26_s'><pose>-5.600 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d26_s'><pose>-5.600 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d26_n'><pose>-5.600 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d26_n'><pose>-5.600 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d26_e'><pose>-5.325 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d26_e'><pose>-5.325 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d27'><pose>-4.300 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d27'><pose>-4.300 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d27_p'><pose>-4.475 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d27_p'><pose>-4.475 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d27_s'><pose>-4.300 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d27_s'><pose>-4.300 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d27_n'><pose>-4.300 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d27_n'><pose>-4.300 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d27_e'><pose>-4.025 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d27_e'><pose>-4.025 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d28'><pose>-3.100 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d28'><pose>-3.100 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d28_p'><pose>-3.275 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d28_p'><pose>-3.275 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d28_s'><pose>-3.100 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d28_s'><pose>-3.100 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d28_n'><pose>-3.100 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d28_n'><pose>-3.100 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d28_e'><pose>-2.825 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d28_e'><pose>-2.825 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d29'><pose>-1.800 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry></collision>
+        <visual name='v_d29'><pose>-1.800 -7.300 0.660 0 0 0</pose><geometry><box><size>0.600 1.600 0.040</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d29_p'><pose>-1.975 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d29_p'><pose>-1.975 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d29_s'><pose>-1.800 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d29_s'><pose>-1.800 -8.075 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d29_n'><pose>-1.800 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry></collision>
+        <visual name='v_d29_n'><pose>-1.800 -6.525 0.320 0 0 0</pose><geometry><box><size>0.600 0.050 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+        <collision name='c_d29_e'><pose>-1.525 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry></collision>
+        <visual name='v_d29_e'><pose>-1.525 -7.300 0.320 0 0 0</pose><geometry><box><size>0.050 1.600 0.640</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material></visual>
+      </link>
+    </model>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>-2.9 -3.6 19 0 1.5707 1.5707</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <include>
+      <uri>model://chain_robot</uri>
+      <pose>4.4 5.0 0.0 0 0 0</pose>
+
+      <plugin name="chain_robot_plugin2" filename="libchain_robot_plugin2.so"/>
+
+      <plugin name="gazebo_ros_joint_state_publisher"
+              filename="libgazebo_ros_joint_state_publisher.so">
+        <ros>
+          <remapping>~/out:=joint_states</remapping>
+        </ros>
+        <update_rate>100</update_rate>
+        <joint_name>joint_module_1_joint</joint_name>
+        <joint_name>joint_module_2_joint</joint_name>
+        <joint_name>joint_module_3_joint</joint_name>
+        <joint_name>joint_module_4_joint</joint_name>
+        <joint_name>joint_module_5_joint</joint_name>
+        <joint_name>joint_module_6_joint</joint_name>
+      </plugin>
+    </include>
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so"><ros><namespace>/gazebo</namespace></ros><update_rate>1.0</update_rate></plugin>
+  </world>
+</sdf>

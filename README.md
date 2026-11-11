@@ -29,6 +29,7 @@ FAIR_CHAIN_RELAY_PROJECT/
 │   └── gt/                    the GT grid: .npy + .json metadata + .png renders
 ├── rssi/                      RSSI model (paper eq. 1), heatmaps, noise, live ROS 2 node
 │   └── README.md              ** parameters, measured P0, how to run **
+├── sim2real_port/             copies of the files the real robots need + PORTING_GUIDE.md
 └── mesh_sim_ws/               the original Gazebo Harmonic two-robot sim + shared Nav2 config
     ├── CLAUDE.md              ** operator notes: machines, invariants, traps **
     ├── RUNBOOK.md, WORKFLOW.md
@@ -40,6 +41,7 @@ FAIR_CHAIN_RELAY_PROJECT/
 
 Start with **`hospital_world/CHECKPOINT.md`** for the current system and
 **`mesh_sim_ws/CLAUDE.md`** for operator notes and the list of traps.
+To move the relay code to the real robots, start with **`sim2real_port/PORTING_GUIDE.md`**.
 
 ---
 

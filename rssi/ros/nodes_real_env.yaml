@@ -1,0 +1,23 @@
+# Nodes for the real environment (hospital_world/real_env/real_env.world, from the FAST-LIO scan).
+# World = the scan's frame. First entry is the GCS.
+gcs:
+  # A virtual radio in the lobby next to the stairwell.
+  xy: [5.5, 7.7]
+
+# park: side by side in the lobby, 0.6 and 1.5 m from the GCS, nose south with nothing ahead (relays one behind
+# the other: relay1 boxed in, real_full), 0.9 m off the north wall because they creep backwards while parked.
+relay1:
+  topic: /relay1/odom
+  offset: [0.0, 0.0]
+  park: [4.0, 7.4]
+  park_yaw: -1.5708
+
+relay2:
+  topic: /relay2/odom
+  offset: [0.0, 0.0]
+  park: [4.9, 7.4]
+  park_yaw: -1.5708
+
+head:
+  topic: /Odometry
+  offset: [4.4, 5.0]   # chain_robot's spawn, SPAWN in hospital_world/tools/real_env_layout.py

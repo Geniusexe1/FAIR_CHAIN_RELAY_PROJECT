@@ -16,12 +16,13 @@ END=$(date -d "${DEADLINE:?}" +%s); PLATEAU_MIN="${PLATEAU_MIN:-30}"; DONE_PCT="
 # on the GCS when COORD_SSH names one
 G() { if [ -n "${COORD_SSH:-}" ]; then timeout 60 ssh -n -o BatchMode=yes -o ConnectTimeout=15 "$COORD_SSH" "$@"; else "$@"; fi; }
 stop_run() {
-  pkill -f "[l]ive_logger.sh"; G docker rm -f fair_coord fair_rssi >/dev/null 2>&1
+  pkill -f "[r]un_full_live.sh"; pkill -f "[l]ive_logger.sh"; G docker rm -f fair_coord fair_rssi >/dev/null 2>&1
   docker exec safe_robot pkill -f "[f]air_explore_loop" 2>/dev/null
   hospital_world/stop_all.sh >/dev/null 2>&1
   docker restart safe_robot >/dev/null 2>&1; sleep 5
 }
-coverage() { G "cd $PWD_REMOTE && $PY rssi/map_coverage.py $OUT/$1_maps --gt $2 --start $3 $4" 2>/dev/null | awk '{print $3}' | tr -d '%'; }
+COV_ARGS=""; REPLAY_ARGS=""
+coverage() { G "cd $PWD_REMOTE && $PY rssi/map_coverage.py $OUT/$1_maps --gt $2 --start $3 $4 $COV_ARGS" 2>/dev/null | awk '{print $3}' | tr -d '%'; }
 
 mapfile -t QUEUE < <(grep -v '^#' "$Q" | grep .)
 for i in "${!QUEUE[@]}"; do
@@ -35,20 +36,39 @@ for i in "${!QUEUE[@]}"; do
     export WORLD_FILE=/hw/unist/unist_indoor.world MAPPING_LAUNCH=/hw/unist/unist_mapping.launch.xml MAP_ODOM_X=0.5 MAP_ODOM_Y=6.0 \
            NODES=${UNIST_NODES:-rssi/ros/nodes_unist.yaml} PARK_YAW=1.5708
     GT=hospital_world/unist/gt/unist_gt; GCS="1.5 -6.1"; SX=-0.5; SY=-6
-    ARGS="--config /fair/$NODES --gt $GT --map-offset -0.5 -6 --marker-offset 0.5 6"
+    ARGS="--config /fair/$NODES --gt $GT --map-offset -0.5 -6 --marker-offset 0.5 6"; COV_ARGS=""; REPLAY_ARGS=""
+  elif [ "$WORLD" = real ]; then
+    export WORLD_FILE=/hw/real_env/real_env.world MAPPING_LAUNCH=/hw/real_env/real_env_mapping.launch.xml MAP_ODOM_X=-4.4 MAP_ODOM_Y=-5.0 \
+           NODES=rssi/ros/nodes_real_env.yaml PARK_YAW=1.5708
+    GT=hospital_world/real_env/gt/real_env_gt; GCS="5.5 7.7"; SX=4.4; SY=5.0; COV_ARGS=""
+    REPLAY_ARGS="--radio-gt hospital_world/real_env/gt/real_env_radio"
+    ARGS="--config /fair/$NODES --gt $GT --radio-gt hospital_world/real_env/gt/real_env_radio --map-offset 4.4 5.0 --marker-offset -4.4 -5.0 --state-log /live_runs/${NAME}_relay_states.jsonl"
   else
     unset WORLD_FILE MAPPING_LAUNCH MAP_ODOM_X MAP_ODOM_Y NODES PARK_YAW
-    GT=hospital_world/gt/hospital_gt; GCS="0 14"; SX=0; SY=12; ARGS=""
+    GT=hospital_world/gt/hospital_gt; GCS="0 14"; SX=0; SY=12; ARGS=""; COV_ARGS=""; REPLAY_ARGS=""
   fi
-  T0=$(date +%s)
-  # Gazebo's window appears partway through the launch: keep trying until the recorder starts
-  ( for _ in $(seq 60); do rssi/ros/record_gazebo.sh start "$OUT/$NAME" 2>/dev/null | grep -q recording && break; sleep 10; done ) &
-  REC=$!
-  LOG_PERIOD=5 rssi/ros/run_full_live.sh "$NAME" --P0 "$P0" $ARGS --map-log "/live_runs/${NAME}_maps" $EXTRA > "$OUT/${NAME}_launch.log" 2>&1
-  wait "$REC"
-  echo "$(date +%T) $NAME launched in $(( $(date +%s) - T0 )) s: $(grep -c '!!' "$OUT/${NAME}_launch.log") launch problems"
+  # A launch with any '!!' never explores (real_full_live8: Nav2 left unconfigured, 96 min at 0%):
+  # tear it down and launch again, up to 3 times.
+  LAUNCHED=0
+  for TRY in 1 2 3; do
+    T0=$(date +%s)
+    # Gazebo's window appears partway through the launch: keep trying until the recorder starts
+    ( for _ in $(seq 60); do rssi/ros/record_gazebo.sh start "$OUT/$NAME" 2>/dev/null | grep -q recording && break; sleep 10; done ) &
+    REC=$!
+    LOG_PERIOD=5 rssi/ros/run_full_live.sh "$NAME" --P0 "$P0" $ARGS --map-log "/live_runs/${NAME}_maps" $EXTRA > "$OUT/${NAME}_launch.log" 2>&1
+    RC=$?
+    wait "$REC"
+    NBAD=$(grep -c '!!' "$OUT/${NAME}_launch.log")
+    echo "$(date +%T) $NAME launched in $(( $(date +%s) - T0 )) s: $NBAD launch problems (try $TRY, exit $RC)"
+    [ "$RC" -eq 0 ] && [ "$NBAD" -eq 0 ] && { LAUNCHED=1; break; }
+    cp "$OUT/${NAME}_launch.log" "$OUT/${NAME}_launch_try$TRY.log"
+    rssi/ros/record_gazebo.sh stop "$OUT/$NAME" > /dev/null 2>&1
+    stop_run
+    rm -rf "$OUT/${NAME}_maps" "$OUT/$NAME.csv"; G rm -rf "$PWD_REMOTE/$OUT/${NAME}_maps"
+  done
   WHY=share; BEST=0; TBEST=$(date +%s); BAD=0; COV=0
-  while [ $(( $(date +%s) - T0 )) -lt "$SHARE" ]; do
+  [ "$LAUNCHED" = 1 ] || WHY=launch_failed
+  while [ "$LAUNCHED" = 1 ] && [ $(( $(date +%s) - T0 )) -lt "$SHARE" ]; do
     sleep 120
     COV=$(coverage "$NAME" "$GT" "$SX" "$SY"); COV=${COV:-0}
     if python3 -c "import sys; sys.exit(0 if $COV > $BEST + 0.2 else 1)"; then BEST=$COV; TBEST=$(date +%s); fi
@@ -73,6 +93,9 @@ for i in "${!QUEUE[@]}"; do
   G docker logs fair_coord > "$OUT/${NAME}_coordinator.log" 2>&1
   G docker logs fair_rssi > "$OUT/${NAME}_rssi.log" 2>&1
   [ -n "${COORD_SSH:-}" ] && rsync -a "$COORD_SSH:$PWD_REMOTE/$OUT/${NAME}_maps" "$OUT/"
+  [ -n "${COORD_SSH:-}" ] && rsync -a "$COORD_SSH:$PWD_REMOTE/$OUT/${NAME}_relay_states.jsonl" "$OUT/" 2>/dev/null
+  docker cp safe_robot:/tmp/contacts.jsonl "$OUT/${NAME}_contacts.jsonl" 2>/dev/null
+  docker cp safe_robot:/tmp/contact_log.err "$OUT/${NAME}_contact_log.err" 2>/dev/null
   mkdir -p "$OUT/${NAME}_stacklogs"
   docker exec safe_robot bash -c 'cd /tmp; tar cf - 1_gazebo.log 2_fastlio.log 3_occ.log 4_ctrl.log 5_planner.log 6_nav2.log 7a_detector.log 7b_explore.log 2>/dev/null' | tar xf - -C "$OUT/${NAME}_stacklogs"
   while read -r ns target container; do
@@ -80,11 +103,11 @@ for i in "${!QUEUE[@]}"; do
     T="docker exec $container tail -c 3000000 /tmp/${ns}_nav.log"
     if [ "$target" = local ]; then bash -c "$T"; else ssh -n -o BatchMode=yes -o ConnectTimeout=10 "$target" "$T"; fi > "$OUT/${NAME}_stacklogs/${ns}_nav.log" 2>/dev/null
   done < "${RELAY_HOSTS:-hospital_world/relay_hosts.conf}"
-  $PY rssi/map_coverage.py "$OUT/${NAME}_maps" --gt "$GT" --start "$SX" "$SY" --all > "$OUT/${NAME}_coverage.txt" 2>&1
+  $PY rssi/map_coverage.py "$OUT/${NAME}_maps" --gt "$GT" --start "$SX" "$SY" --all $COV_ARGS > "$OUT/${NAME}_coverage.txt" 2>&1
   CROP="${CROP:-690:1232:270:68}" SPEEDUP=40 rssi/ros/record_gazebo.sh stop "$OUT/$NAME" > "$OUT/${NAME}_video.log" 2>&1
   stop_run
-  $PY rssi/plot_live_run.py "$OUT/$NAME.csv" "$OUT/${NAME}_coordinator.log" >> "$OUT/${NAME}_video.log" 2>&1
-  $PY rssi/replay_live_run.py "$OUT/$NAME.csv" "$OUT/${NAME}_coordinator.log" --gt "$GT" --gcs $GCS --P0 "$P0" --maps "$OUT/${NAME}_maps" >> "$OUT/${NAME}_video.log" 2>&1
+  FAIR_GT="$GT" FAIR_GCS="${GCS/ /,}" $PY rssi/plot_live_run.py "$OUT/$NAME.csv" "$OUT/${NAME}_coordinator.log" >> "$OUT/${NAME}_video.log" 2>&1
+  $PY rssi/replay_live_run.py "$OUT/$NAME.csv" "$OUT/${NAME}_coordinator.log" --gt "$GT" --gcs $GCS --P0 "$P0" --maps "$OUT/${NAME}_maps" $REPLAY_ARGS $([ -s "$OUT/${NAME}_relay_states.jsonl" ] && echo --states "$OUT/${NAME}_relay_states.jsonl") >> "$OUT/${NAME}_video.log" 2>&1
   L=$(tail -n 1 "$OUT/${NAME}_coverage.txt" | awk '{print $3}')
   echo "$NAME result=$WHY coverage=$L wall_min=$(( ($(date +%s) - T0) / 60 )) world=$WORLD P0=$P0 extra=$EXTRA" | tee -a "$OUT/overnight_results.txt"
 done

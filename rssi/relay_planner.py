@@ -152,7 +152,12 @@ class RelayPlanner:
         self.allowed = None                       # optional bool grid: where robots may drive
         self.p = params
         self.rng = np.random.default_rng(seed)
+        self.set_map(grid, rg)
+
+    def set_map(self, grid: GridMap, rg: RoadGraph, allowed=None):
+        """Where robots can go. May change while exploring; the radio model (pred) does not."""
         from scipy.ndimage import distance_transform_edt, maximum_filter
+        self.grid, self.rg, self.allowed = grid, rg, allowed
         clr = distance_transform_edt(grid.free) * grid.res
         k = int(round(1.0 / grid.res)) * 2 + 1                     # corridor half-width around a
         self.clear = maximum_filter(clr, size=k)                   # point: max clearance within 1 m
@@ -344,6 +349,13 @@ class RelayPlanner:
                         if not np.isfinite(o[t]).all():
                             continue
                         o0 = o[t - 1] if np.isfinite(o[t - 1]).all() else o[t]
+                        # standing still this interval with room around it: Nav2 drives around it, as
+                        # passable() allows for a robot still for the whole plan. A relay at its spot in
+                        # the corridor to the south classroom walled it off (real_full_live6)  (ours)
+                        if math.dist(o0, o[t]) < 0.05:
+                            r_, c_ = self.pred.cell(tuple(o[t]))
+                            if self.clear[r_, c_] >= self.p.pass_clear:
+                                continue
                         for f, a_ in zip(fs, mine):
                             b_ = (o0[0] + f * (o[t][0] - o0[0]), o0[1] + f * (o[t][1] - o0[1]))
                             if math.dist(a_, b_) < thr:
@@ -410,7 +422,7 @@ class RelayPlanner:
         ok = all(Q(j, i, t) > -1 for j, i, t in seq[1:])
         if not ok:
             # the search is random: a long route that works only if driven straight through can
-            # be missed. Check each candidate driven straight through, shortest first  (ours)
+            # be missed. Check each candidate driven straight through, shortest first.  (ours)
             for j in sorted(range(len(W)), key=lambda j: Ls[j]):
                 straight = [(j, t, t) for t in range(1, tf + 1)]
                 if all(Q(*n_) > -1 for n_ in straight):
@@ -496,9 +508,25 @@ class RelayPlanner:
                 ass = {n: i for i, n in enumerate(order)}
             # placement feasibility with the ASSIGNED names (shadowing is per radio): the
             # client at the goal must have a route through the final positions
-            final = {self.G: self.gcs, **static, **{r.name: r.xy for r in relays}}
-            final.update({n: spots[ass[n]] for n in order})
-            w_final, route_final = self.route({**final, client.name: goal}, client.name)
+            def at_goal(ass):
+                final = {self.G: self.gcs, **static, **{r.name: r.xy for r in relays}}
+                final.update({n: spots[i] for n, i in ass.items()})
+                return self.route({**final, client.name: goal}, client.name)
+            w_final, route_final = at_goal(ass)
+            if w_final < self.p.req and not self.p.keep_deployed:
+                # spots were placed for one name order and the shortest-travel assignment may swap
+                # them; with per-radio shadowing the swap can cost a hop several dB (real_full_live6:
+                # -79.3 placed, -84.5 swapped, the south classroom skipped for an hour). Try the rest,
+                # least travel first.  (ours)
+                from itertools import permutations
+                alts = [dict(zip(p_, range(len(spots)))) for p_ in permutations([r.name for r in pool], len(spots))]
+                alts.sort(key=lambda a_: sum(self._travel(byname[n].xy, spots[i]) for n, i in a_.items()))
+                for alt in alts:
+                    w_, r_ = at_goal(alt)
+                    if w_ >= self.p.req:
+                        ass, w_final, route_final = alt, w_, r_
+                        order = sorted(ass, key=lambda n: ass[n])
+                        break
             if w_final < self.p.req:
                 continue
             idle = [r for r in relays if r.name not in order]
@@ -531,13 +559,31 @@ class RelayPlanner:
                 if not all_ok:
                     continue
                 traj, seg, ok = self.mcts(client.name, client.xy, goal, anchors, others=planned)
+                staged = False
+                if not ok and all(math.dist(p_, client.xy) >= d for n in order for p_ in plan.traj[n]):
+                    # Staged: the relays first while the client holds still, then the client through
+                    # them standing at their spots. Moving together, the client tails a relay through
+                    # the same doorway (a clash), and waiting it loses the relay it was using
+                    # (real_full_live6: the south classroom, reachable, skipped for an hour). The client
+                    # may dip below the requirement only while it stands still.  (ours)
+                    fin = {n: np.repeat([plan.targets[n]], tf + 1, axis=0) for n in order}
+                    traj, seg, ok = self.mcts(client.name, client.xy, goal, {**anchors, **fin},
+                                              others=list(stay.values()) + list(fin.values()))
+                    staged = ok
                 if not ok:
                     continue
+                if staged:
+                    for n in order:
+                        plan.traj[n] = np.vstack([plan.traj[n], fin[n][1:]])
+                        plan.seg[n] = np.concatenate([plan.seg[n], np.zeros(tf)])
+                    traj = np.vstack([np.repeat([client.xy], tf + 1, axis=0), traj[1:]])
+                    seg = np.concatenate([np.zeros(tf), seg])
+                    stay = {n: np.repeat(tr[:1], 2 * tf + 1, axis=0) for n, tr in stay.items()}
                 plan.targets[client.name], plan.traj[client.name], plan.seg[client.name] = goal, traj, seg
                 for n, tr in stay.items():                      # idle relays / static radios stay put
-                    plan.traj[n] = tr; plan.seg[n] = np.zeros(tf)
-                plan.note = (f"{k} relay(s) moved (t_f {tf}); final route {' > '.join(route_final)}, "
-                             f"weakest hop {w_final:.1f}")
+                    plan.traj[n] = tr; plan.seg[n] = np.zeros(len(seg))
+                plan.note = (f"{k} relay(s) moved (t_f {tf}{', staged: client waits for the relays' if staged else ''}); "
+                             f"final route {' > '.join(route_final)}, weakest hop {w_final:.1f}")
                 self._fill_hops(plan, client.name)
                 return plan
             why = f"{k} relay(s) could be placed but no trajectories keep every step"
